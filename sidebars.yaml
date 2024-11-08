@@ -1,6 +1,9 @@
-- group: Museum API
-  page: apis/@v1_1/openapi.yaml
-
-- group: GraphQL
-  page: apis/schema.graphql
-
+- page: ./docs/zample.md
+  label: Foo bar
+- group: RPC
+  page: ./rpcs/openapi.yaml
+  expanded: always
+  menuStyle: none
+- group: API
+  page: ./apis/openapi.yaml
+  expanded: always

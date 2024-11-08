@@ -1,0 +1,55 @@
+openapi: 3.1.0
+info:
+  title: FastNEAR API
+  description: Useful NEAR Protocol endpoints for advanced caching and aggregation.
+servers:
+  - url: "https://api.fastnear.com"
+
+paths:
+  /museum-hours:
+    get:
+      summary: Get museum hours
+      description: Retrieve operating hours.
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+      x-examples:
+        curl: |
+          curl -X GET "https://redocly.com/_mock/docs/openapi/museum-api/museum-hours"
+  /special-events:
+    get:
+      summary: List special events
+      description: Retrieve upcoming special events.
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json: {}
+      x-examples:
+        curl: |
+          curl -X GET "https://redocly.com/_mock/docs/openapi/museum-api/special-events"
+
+  /tickets:
+    post:
+      summary: Buy museum tickets
+      description: Purchase tickets.
+      requestBody:
+        required: true
+        content:
+          application/json: {}
+      responses:
+        "201":
+          description: Ticket purchased
+          content:
+            application/json: {}
+      x-examples:
+        curl: |
+          curl -X POST "https://redocly.com/_mock/docs/openapi/museum-api/tickets" \
+          -H "Content-Type: application/json" \
+          -d '{"ticketType": "general", "ticketDate": "2023-09-07", "email": "example@example.com"}'
+
+tags:
+  - name: Blockchain Snapshots
+    description: Placeholder for download blockchain snapshots.

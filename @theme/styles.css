@@ -1,23 +1,63 @@
 :root {
-  --font-size-base: 12px;
-
-  --primary-1: #762cad;
-  --primary-2: #8843ab;
-  --primary-bg: #fff9a9;
-
-  --h1-text-color: var(--primary-1);
-  --heading-text-color: var(--primary-2);
+  --font-size-base: 16px;
   
-  --sidebar-bg-color: var(--primary-bg);
-  --navbar-bg-color: var(--primary-bg);
-  --menu-item-text-color: var(--primary-2);
+  --primary-1: #ffafcc;
+  --primary-2: #ff5d8f;
+  --secondary-1: #caffbf;
+  --secondary-2: #9bf6ff;
 
-  --toc-item-text-color-active: var(--primary-2);
-  --breadcrumbs-text-color-active: var(--primary-2);
+  --background-gradient-start: #240046;
+  --background-gradient-end: #3a0ca3;
+  --text-color: #ffffff;
+  --link-color: #ff5d8f;
+  --hover-color: #ffafcc;
+
+  --sidebar-bg-color: #1a0734;
+  --navbar-bg-color: #1a0734;
+  --menu-item-text-color: #ffffff;
+  --menu-item-hover-bg-color: #3a0ca3;
+
+  --toc-item-text-color-active: #ff5d8f;
+  --breadcrumbs-text-color-active: #caffbf;
+  --button-text-color: #ffffff;
+
 }
 
 :root.dark {
-  --primary-1: #fff189;
-  --primary-2: #fff189;
-  --primary-bg: #281433;
+  --background-gradient-start: #12002b;
+  --background-gradient-end: #4a148c;
+  --text-color: #e0aaff;
+  --link-color: #ffafcc;
+  --hover-color: #ff5d8f;
+
+  --sidebar-bg-color: #10011e;
+
+  --menu-item-text-color: #e0aaff;
+  --menu-item-hover-bg-color: #4a148c;
+
+  --toc-item-text-color-active: #ffafcc;
+  --breadcrumbs-text-color-active: #caffbf;
+  --button-text-color: #ffffff;
+  --button-border-color: #ffffff; 
+
+  /* Seems like this needs to be here */
+  --panel-body-font-size: 19px;
+  
+  --code-font-size: 16px;
+  --panel-samples-width: 66%;
+  --panel-samples-border: 1px solid #efefef;
+
+  --code-word-break: break-all;
+  --font-family-base: 'DM Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', Arial, sans-serif;
+  --bg-color: rgba(3, 3, 3, 0.6);
+  --navbar-bg-color: rgba(3, 3, 3, 0.6);
+  --panel-border-radius: 6px;
+  --panel-font-size: 16px;
+  --panel-samples-font-size: 16px;
+  --panel-samples-bg-color: rgba(137, 51, 37, 0.1);
+
+}
+
+body {
+    background: linear-gradient(to bottom, var(--background-gradient-start), var(--background-gradient-end));
 }
