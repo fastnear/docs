@@ -1,9 +1,7 @@
-- page: ./docs/zample.md
-  label: Foo bar
 - group: RPC
-  page: ./rpcs/openapi.yaml
+  page: rpcs/openapi.yaml
   expanded: always
   menuStyle: none
 - group: API
-  page: ./apis/openapi.yaml
+  page: apis/openapi.yaml
   expanded: always
