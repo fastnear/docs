@@ -49,7 +49,3 @@ paths:
           curl -X POST "https://redocly.com/_mock/docs/openapi/museum-api/tickets" \
           -H "Content-Type: application/json" \
           -d '{"ticketType": "general", "ticketDate": "2023-09-07", "email": "example@example.com"}'
-
-tags:
-  - name: Blockchain Snapshots
-    description: Placeholder for download blockchain snapshots.

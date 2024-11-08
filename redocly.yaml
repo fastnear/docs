@@ -1,17 +1,21 @@
 openapi:  
-  showExtensions: true
-  jsonSamplesExpandLevel: 6
+  hideReplay: true
   codeSamples:
     skipOptionalParameters: true
     languages:
       - lang: 'curl'
         label: 'cURL'
-      # - lang: 'JavaScript'
-      #   label: 'JS'
-
-ignore:
-  - CONTRIBUTING.md
-
+markdown:
+  frontMatterKeysToResolve: ['screen-recordings', 'image', 'links']
+  lastUpdatedBlock:
+    format: long
+    locale: en-US
+  toc:
+    header: Page sections
+    depth: 3
+  editPage:
+    baseUrl: 'https://github.com/Redocly/redocly-cli/tree/main/docs'
+    hide: false
 navbar:
   items:
     - page: docs/zample.md
