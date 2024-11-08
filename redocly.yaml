@@ -18,7 +18,7 @@ markdown:
     hide: false
 navbar:
   items:
-    - page: docs/zample.md
+    - page: docs/zample.mdx
       label: Home      
     - page: example-page.md
       label: Link with icon

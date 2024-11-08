@@ -5,3 +5,4 @@
 - group: API
   page: apis/openapi.yaml
   expanded: always
+- page: docs/zample.mdx
