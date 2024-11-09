@@ -37,7 +37,7 @@ Also, visit <a href="https://near-nodes.io" target="_blank">https://near-nodes.i
    DATA_PATH=~/mainnet-snap ./download-mainnet-snapshot.sh
    ```
 
-### Code
+### Shell script
 
 ```sh
 set -e
@@ -117,7 +117,7 @@ main "$@"
    DATA_PATH=~/testnet-snap ./download-testnet-snapshot.sh
    ```
 
-### Code
+### Shell script
 
 ```sh
 set -e

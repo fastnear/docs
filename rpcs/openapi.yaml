@@ -4,7 +4,7 @@ info:
   description: |-
     NEAR Protocol JSON RPC
 
-    You may also reference the [NEAR documentation](https://docs.near.org/api/rpc/transactions) on this subject.
+    For exhaustive list of endpoints, refer to the [NEAR documentation](https://docs.near.org/api/rpc/transactions).
 servers:
   - url: "https://rpc.mainnet.fastnear.com"
   - url: "https://rpc.testnet.fastnear.com"
@@ -12,46 +12,40 @@ servers:
   - url: "https://archival-rpc.testnet.fastnear.com"
 
 paths:
-  send_tx:
+  view_account:
     post:
-      summary: send transaction
-      description: Broadcast a NEAR transaction to a FastNEAR RPC.
+      summary: view account
+      description: Request details on a NEAR account.
       responses:
         "200":
           description: Successful response
           content:
-            application/json: {}
-      x-examples:
-        curl: |
-          curl -X GET "https://redocly.com/_mock/docs/openapi/museum-api/museum-hours"
-  /special-events:
-    get:
-      summary: List special events
-      description: Retrieve upcoming special events.
-      responses:
-        "200":
-          description: Successful response
-          content:
-            application/json: {}
-      x-examples:
-        curl: |
-          curl -X GET "https://redocly.com/_mock/docs/openapi/museum-api/special-events"
+            application/json: 
+              example:
+                jsonrpc: "2.0"
+                "result": 
+                  "amount": "166616133734086239835140361"
+                  "block_hash": "qBa4QiqGQQoodxqdn7gY9uJApfVFBAAzQ27ZEcLHz6b"
+                  "block_height": 132283656
+                  "code_hash": "11111111111111111111111111111111"
+                  "locked": "0"
+                  "storage_paid_at": 0
+                  "storage_usage": 17703
+                "id": "fastnear"            
+      x-codeSamples:
+        - lang: curl
+          label: "cURL"
+          source: |
+            curl -s -X POST "https://rpc.mainnet.fastnear.com" \
+              -H "Content-Type: application/json" \
+              -d '{
+                "jsonrpc": "2.0",
+                "id": "fastnear",
+                "method": "query",
+                "params": {
+                  "request_type": "view_account",
+                  "finality": "final",
+                  "account_id": "mike.near"
+                }
+              }'
 
-  /tickets:
-    post:
-      summary: Buy museum tickets
-      description: Purchase tickets.
-      requestBody:
-        required: true
-        content:
-          application/json: {}
-      responses:
-        "201":
-          description: Ticket purchased
-          content:
-            application/json: {}
-      x-examples:
-        curl: |
-          curl -X POST "https://redocly.com/_mock/docs/openapi/museum-api/tickets" \
-          -H "Content-Type: application/json" \
-          -d '{"ticketType": "general", "ticketDate": "2023-09-07", "email": "example@example.com"}'

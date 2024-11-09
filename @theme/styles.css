@@ -14,7 +14,6 @@
 
   --menu-item-separator-line-height: 1px;
   --menu-item-separator-line-bg-color: #ff69b4;
-  --sidebar-bg-color: #10011e;
 
   --menu-item-text-color: #e0aaff;
   --menu-item-hover-bg-color: #4a148c;
@@ -36,8 +35,9 @@
   --navbar-height: 42px;
   --bg-color: rgba(255, 165, 0, 0.06);
   
-  --navbar-bg-color: linear-gradient(to right, black 12%, #330066 37%);
+  --navbar-bg-color: linear-gradient(to right, black 12%, #330066 37%, transparent 66%);
   --navbar-font-size: 16px;
+  --navbar-border: none;
 
   --panel-border-radius: 6px;
   --panel-font-size: 16px;
@@ -47,13 +47,18 @@
   --md-content-max-width: 919px;
   --admonition-icon-size: 36px;
   --admonition-margin-horizontal: 6%;
-  --layout-controls-height: 0 !important;
-  --layout-controls-width: 0 !important;
+  --sidebar-bg-color: rgb(37, 6, 48);
+  --sidebar-border-color: yellow;
+  --sidebar-controls-collapsed-padding-vertical: -60px;
+
+  --menu-item-bg-color-hover: linear-gradient(to right, rgba(0, 190, 19, 0.4) 12%, rgba(0, 190, 19, 0.2) 66%, transparent 100%);
+  --menu-item-bg-color-active: rgba(240, 0, 240, 0.4);
+  --navbar-item-bg-color-active: transparent;
 }
 
 /* sheesh couldn't get it except thru this */
 .button-size-small {
-  --button-icon-size: 32px !important;
+  --button-icon-size: 26px !important;
 }
 
 body {
@@ -70,4 +75,8 @@ body {
 
 .panel-response-samples, .panel-request-samples {
   padding: 2px 4px 4px 2px;
+}
+
+.panel-servers-list span {
+  font-size: 19px;
 }

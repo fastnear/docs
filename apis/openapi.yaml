@@ -4,48 +4,40 @@ info:
   description: Useful NEAR Protocol endpoints for advanced caching and aggregation.
 servers:
   - url: "https://api.fastnear.com"
+  - url: "https://test.api.fastnear.com"
 
 paths:
-  /museum-hours:
+  /status:
     get:
-      summary: Get museum hours
-      description: Retrieve operating hours.
+      summary: Status
       responses:
         "200":
           description: Successful response
           content:
-            application/json: {}
-      x-examples:
-        curl: |
-          curl -X GET "https://redocly.com/_mock/docs/openapi/museum-api/museum-hours"
-  /special-events:
+            application/json: 
+              example: 
+                sync_balance_block_height: 179038439
+                sync_block_height: 179038439
+                sync_block_timestamp_nanosec: "1731131048798003067"
+                sync_latency_sec: 2.960060157
+                version: "0.10.0"
+      x-codeSamples:
+        - lang: curl
+          label: "cURL"
+          source: |
+            curl -s "https://api.fastnear.com/status"
+  /health:
     get:
-      summary: List special events
-      description: Retrieve upcoming special events.
+      summary: Health
       responses:
         "200":
           description: Successful response
           content:
-            application/json: {}
-      x-examples:
-        curl: |
-          curl -X GET "https://redocly.com/_mock/docs/openapi/museum-api/special-events"
-
-  /tickets:
-    post:
-      summary: Buy museum tickets
-      description: Purchase tickets.
-      requestBody:
-        required: true
-        content:
-          application/json: {}
-      responses:
-        "201":
-          description: Ticket purchased
-          content:
-            application/json: {}
-      x-examples:
-        curl: |
-          curl -X POST "https://redocly.com/_mock/docs/openapi/museum-api/tickets" \
-          -H "Content-Type: application/json" \
-          -d '{"ticketType": "general", "ticketDate": "2023-09-07", "email": "example@example.com"}'
+            application/json: 
+              example: 
+                status: "ok"
+      x-codeSamples:
+        - lang: curl
+          label: "cURL"
+          source: |
+            curl -s "https://api.fastnear.com/health"

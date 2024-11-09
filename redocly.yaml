@@ -12,6 +12,8 @@ markdown:
     hide: true
   editPage:
     hide: true
+sidebar:
+  linePosition: bottom
 navbar:
   items:
     - page: docs/snapshots.md
