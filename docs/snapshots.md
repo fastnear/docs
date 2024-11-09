@@ -15,7 +15,7 @@ Also, visit <a href="https://near-nodes.io" target="_blank">https://near-nodes.i
 
 {% admonition type="info" %}
   MD5 hash verification will be available shortly.<br/>
-  _(By end of year, 2024)_
+  _(Certainly by end of year, 2024)_
 {% /admonition %}
 
 ## Mainnet

@@ -40,6 +40,11 @@ apis:
     root: apis/openapi.yaml
     openapi:
       hideDownloadButtons: true
+mockServer:
+  position: 'off'
+codeSnippet:
+  report:
+    hide: true        
       
         
       

@@ -1,12 +1,12 @@
 - group: RPC
-  expanded: true
+  expanded: false
   items:
     - separator: "⚡️ ⚡️ ⚡️"
     - page: rpcs/openapi.yaml
       label: All endpoints
     - separatorLine: true
 - group: API
-  expanded: false
+  expanded: true
   items:
     - separator: "🏃‍♂️ 💨"
     - page: apis/openapi.yaml  
