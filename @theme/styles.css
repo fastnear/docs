@@ -51,9 +51,25 @@
   --sidebar-border-color: yellow;
   --sidebar-controls-collapsed-padding-vertical: -60px;
 
-  --menu-item-bg-color-hover: rgb(0, 190, 19);
-  --menu-item-bg-color-active: rgb(240, 0, 240);
+  --menu-item-bg-color-hover: rgba(186, 104, 200, 0.5)
+;
+  --menu-item-bg-color-active: rgb(240, 0, 240, 0.6);
+  --menu-mobile-bg: transparent;
+  /* cannot seem to remove the gap on mobile menu but pretty good */
+  --menu-mobile-items-padding-top: 0;
+  --menu-mobile-margin: 0;
+  --menu-container-padding-top: 12px;
+  --menu-mobile-control-button-padding-vertical: 6px;
+  --menu-mobile-control-button-margin-vertical: 0;
+  --menu-mobile-control-button-margin: 0;
+  --menu-mobile-items-margin-top: 0;
+  --menu-mobile-product-name-margin: 0;
 }
+
+.menu-item-type-default, .menu-item-type-group {
+  background: var(--sidebar-bg-color);
+}
+
 
 /* sheesh couldn't get it except thru this */
 .button-size-small {
