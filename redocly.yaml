@@ -47,6 +47,8 @@ mockServer:
 codeSnippet:
   report:
     hide: true        
-      
-        
-      
+navigation:
+  previousButton: 
+    hide: true
+  nextButton: 
+    hide: true

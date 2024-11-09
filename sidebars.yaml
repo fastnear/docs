@@ -1,3 +1,4 @@
+- page: docs/snapshots.md
 - group: RPC
   expanded: false
   items:
@@ -13,4 +14,3 @@
     - page: apis/openapi.yaml
     - separator: all endpoints soon™
     - separatorLine: true
-- page: docs/snapshots.md
