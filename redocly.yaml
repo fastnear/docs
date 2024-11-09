@@ -52,3 +52,5 @@ navigation:
     hide: true
   nextButton: 
     hide: true
+breadcrumbs:
+  hide: true

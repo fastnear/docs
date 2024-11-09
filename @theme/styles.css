@@ -51,9 +51,8 @@
   --sidebar-border-color: yellow;
   --sidebar-controls-collapsed-padding-vertical: -60px;
 
-  --menu-item-bg-color-hover: linear-gradient(to right, rgba(0, 190, 19, 0.4) 12%, rgba(0, 190, 19, 0.2) 66%, transparent 100%);
-  --menu-item-bg-color-active: rgba(240, 0, 240, 0.4);
-  --navbar-item-bg-color-active: transparent;
+  --menu-item-bg-color-hover: rgb(0, 190, 19);
+  --menu-item-bg-color-active: rgb(240, 0, 240);
 }
 
 /* sheesh couldn't get it except thru this */
@@ -83,4 +82,8 @@ body {
 
 code {
   font-size: 16px !important;
+}
+
+.api-info {
+    padding-top: 19px;
 }
