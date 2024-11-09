@@ -1,8 +1,14 @@
 - group: RPC
-  page: rpcs/openapi.yaml
-  expanded: always
-  menuStyle: none
+  expanded: true
+  items:
+    - separator: "⚡️ ⚡️ ⚡️"
+    - page: rpcs/openapi.yaml
+      label: All endpoints
+    - separatorLine: true
 - group: API
-  page: apis/openapi.yaml
-  expanded: always
-- page: docs/zample.mdx
+  expanded: false
+  items:
+    - separator: "🏃‍♂️ 💨"
+    - page: apis/openapi.yaml  
+    - separatorLine: true
+- page: docs/snapshots.md

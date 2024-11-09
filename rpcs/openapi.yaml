@@ -1,15 +1,21 @@
 openapi: 3.1.0
 info:
   title: FastNEAR RPC
-  description: NEAR Protocol JSON RPC
+  description: |-
+    NEAR Protocol JSON RPC
+
+    You may also reference the [NEAR documentation](https://docs.near.org/api/rpc/transactions) on this subject.
 servers:
   - url: "https://rpc.mainnet.fastnear.com"
+  - url: "https://rpc.testnet.fastnear.com"
+  - url: "https://archival-rpc.mainnet.fastnear.com"
+  - url: "https://archival-rpc.testnet.fastnear.com"
 
 paths:
   send_tx:
-    get:
-      summary: Get museum hours
-      description: Retrieve operating hours.
+    post:
+      summary: send transaction
+      description: Broadcast a NEAR transaction to a FastNEAR RPC.
       responses:
         "200":
           description: Successful response

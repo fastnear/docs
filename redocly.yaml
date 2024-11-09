@@ -1,28 +1,45 @@
-openapi:  
+openapi:
   hideReplay: true
   codeSamples:
     skipOptionalParameters: true
     languages:
       - lang: 'curl'
-        label: 'cURL'
+        label: 'cURL'      
 markdown:
-  frontMatterKeysToResolve: ['screen-recordings', 'image', 'links']
   lastUpdatedBlock:
     format: long
     locale: en-US
-  toc:
-    header: Page sections
-    depth: 3
+    hide: true
   editPage:
-    baseUrl: 'https://github.com/Redocly/redocly-cli/tree/main/docs'
-    hide: false
+    hide: true
 navbar:
   items:
-    - page: docs/zample.mdx
-      label: Home      
-    - page: example-page.md
-      label: Link with icon
-    - label: Redocly docs
-      href: 'https://redocly.com/docs'
+    - page: docs/snapshots.md
+      label: Docs Home
+    - label: Status
+      href: 'https://status.fastnear.com'
+      external: true      
+    - label: Subscriptions
+      href: 'https://subscriptions.fastnear.com'
+      external: true
+    - label: FastNEAR Company
+      href: 'https://fastnear.com'
+      external: true
+feedback:
+  hide: true      
 search:
   hide: true
+colorMode:
+  hide: true
+apis:
+  rpc:
+    root: rpcs/openapi.yaml
+    openapi:
+      hideDownloadButtons: true
+  api:
+    root: apis/openapi.yaml
+    openapi:
+      hideDownloadButtons: true
+      
+        
+      

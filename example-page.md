@@ -1,7 +1,0 @@
-# hide
-
-asdf
-
-```bash
-haha
-```
