@@ -71,12 +71,17 @@
   --sidebar-bg-color: rgb(37, 6, 48);
   --sidebar-border-color: yellow;
   --sidebar-controls-collapsed-padding-vertical: -60px;
+  --menu-mobile-product-name-text-color: #000;
 
   --menu-item-bg-color-hover: rgba(186, 104, 200, 0.5)
 ;
   --menu-item-bg-color-active: rgb(240, 0, 240, 0.6);
+  /* --layer-color: rgba(33, 33, 33, 0.73); you must never ever use this, mike */
   --menu-mobile-bg: transparent;
   /* cannot seem to remove the gap on mobile menu but pretty good */
+  --menu-mobile-control-button-color: #ffffff;
+  
+  --menu-mobile-control-button-font-size: var(--font-size-md);
   --menu-mobile-items-padding-top: 0;
   --menu-mobile-margin: 0;
   --menu-container-padding-top: 12px;
@@ -162,6 +167,10 @@ code {
 }
 
 .panel-container-response-samples span, .panel-container-response-samples div, #api-content button {
-    color: #000000;
-    
+    color: #000000;   
+}
+
+/* pluck you */
+#app_root > div > nav > div > div > div > li > span {
+  color: #000000;
 }
