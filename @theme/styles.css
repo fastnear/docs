@@ -108,6 +108,11 @@ body, #api-content {
 
 #api-content .panel-servers-list {
   background: linear-gradient(to bottom, rgba(255, 255, 255, 0.8) 19%, rgb(255, 242, 255) 50%, rgba(255, 255, 255, 0.9) 83%);
+  
+}
+
+#api-content .panel-servers-list div span {
+  color: black;
 }
 
 #api-content .panel-servers-list > div {
@@ -149,4 +154,9 @@ code {
 
 .api-info {
     padding-top: 19px;
+}
+
+.panel-container-response-samples span, .panel-container-response-samples div, #api-content button {
+    color: #000000;
+    
 }
