@@ -29,6 +29,7 @@
 
   --menu-item-separator-line-height: 1px;
   --menu-item-separator-line-bg-color: #ff69b4;
+  --border-color-primary: #ff69b4;
 
   --menu-item-text-color: #efffff;
   --menu-item-hover-bg-color: #4a148c;
@@ -50,10 +51,14 @@
   --font-family-base: 'DM Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', Arial, sans-serif;
   --navbar-height: 42px;
   --bg-color: rgba(255, 165, 0, 0.06);
+
+  --link-color-primary: #ffafcc;
   
   --navbar-bg-color: linear-gradient(to right, black 12%, #330066 37%, transparent 66%);
   --navbar-font-size: 16px;
   --navbar-border: none;
+  --navbar-item-bg-color-active: transparent;
+  --navbar-item-bg-color: rgba(242, 237, 242, 0.3);
 
   --panel-border-radius: 6px;
   --panel-font-size: 16px;
