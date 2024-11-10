@@ -8,6 +8,7 @@
 
   --button-color: #fffeef;
   --text-color-primary: #ffffff;
+  --inline-code-text-color: var(--text-color-primary);
 
   /* --background-gradient-start: hsl(265, 98%, 22%);
   --background-gradient-end: #4a148c; */
@@ -28,11 +29,16 @@
   --toc-item-text-color: #ffefff;
 
   --menu-item-separator-line-height: 1px;
-  --menu-item-separator-line-bg-color: #ff69b4;
-  --border-color-primary: #ff69b4;
+  --menu-item-separator-line-bg-color: rgb(92, 219, 211);
+  --button-content-color-custom: rgba(37, 255, 37, 0.6);
+  --border-color-primary: rgb(92, 219, 211);  
+  --border-color-secondary: rgba(33, 33, 33, 0.25);
+
+  /* chevon in sidebar for group */
+  --tree-content-color-default: #ffffff;
 
   --menu-item-text-color: #efffff;
-  --menu-item-hover-bg-color: #4a148c;
+  --menu-item-hover-bg-color: #968da0;
 
   --toc-item-text-color-active: #ffafcc;
   --breadcrumbs-text-color-active: #caffbf;
@@ -73,6 +79,8 @@
   --sidebar-controls-collapsed-padding-vertical: -60px;
   --menu-mobile-product-name-text-color: #000;
 
+  --menu-item-label-chevron-size: 16px;
+
   --menu-item-bg-color-hover: rgba(186, 104, 200, 0.5)
 ;
   --menu-item-bg-color-active: rgb(240, 0, 240, 0.6);
@@ -97,10 +105,14 @@
   --navbar-text-color: #ffffef;
   --navbar-menu-items-gap: var(--spacing-md);
   /* --code-block-controls-bg-color: rgba(33, 37, 33, 0.91); */
-  --code-block-controls-bg-color: #efefef;
-  --code-block-bg-color: rgba(255, 242, 255, 0.91);
+  /* --code-block-controls-bg-color:  */
+  /* --code-block-bg-color: rgba(255, 242, 255, 0.91); */
+  --code-block-bg-color: rgb(235, 235, 225);
   --code-block-controls-border: 3px solid rgba(255, 204, 0, .73);
-  --panel-heading-text-color:: red;
+}
+
+.code-block-header {
+  background: linear-gradient(to bottom, rgb(247, 247, 247) 6%, rgb(235, 235, 225) 88%);
 }
 
 .menu-item-type-default, .menu-item-type-group {
@@ -118,7 +130,6 @@ body, #api-content {
 
 #api-content .panel-servers-list {
   background: linear-gradient(to bottom, rgba(255, 255, 255, 0.8) 19%, rgb(255, 242, 255) 50%, rgba(255, 255, 255, 0.9) 83%);
-  
 }
 
 #api-content .panel-servers-list div span {
@@ -129,8 +140,12 @@ body, #api-content {
   background-color: rgba(178, 251, 165, 0.66);
 }
   
-#app_root .panel-request-samples {
+#app_root .panel-request-samples, #app_root .panel-response-samples {
   background-color: lightgray;
+}
+
+#app_root .menu-item-type-group > li > svg {
+  color: #ffffff;
 }
 
 /* #api-content .panel-servers-list .button-variant-text, #api-content .panel-request-samples .button-variant-text { */
