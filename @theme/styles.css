@@ -79,6 +79,8 @@
   --sidebar-controls-collapsed-padding-vertical: -60px;
   --menu-mobile-product-name-text-color: #000;
 
+  --toc-item-border-color-active: yellow;
+
   --menu-item-label-chevron-size: 16px;
 
   --menu-item-bg-color-hover: rgba(186, 104, 200, 0.5)
