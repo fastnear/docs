@@ -6,16 +6,29 @@
   --secondary-1: #caffbf;
   --secondary-2: #9bf6ff;
 
-  --background-gradient-start: hsl(265, 98%, 22%);
-  --background-gradient-end: #4a148c;
-  --text-color: #e0aaff;
+  --button-color: #fffeef;
+  
+
+  /* --background-gradient-start: hsl(265, 98%, 22%);
+  --background-gradient-end: #4a148c; */
+  --background-gradient-start: hsl(265, 70%, 25%); /* Less saturation, slightly lighter */
+  --background-gradient-end: #5a189a; /* A slightly brighter end color */
+
+  --md-content-text-color: #fffeff;
+  --h1-text-color: rgba(255, 255, 255, 0.91);
+  --h2-text-color: rgba(255, 255, 255, 0.85);
+  --h3-text-color: rgba(255, 255, 255, 0.79);
+  --h4-text-color: rgba(255, 255, 255, 0.73);
+  --text-color: #ffffff;
   --link-color: #ffafcc;
-  --hover-color: #ff5d8f;
+  /* --hover-color: #ff5d8f; */
+  --hover-color: rgba(255, 175, 204, 0.9); /* Slightly more opaque */
+
 
   --menu-item-separator-line-height: 1px;
   --menu-item-separator-line-bg-color: #ff69b4;
 
-  --menu-item-text-color: #e0aaff;
+  --menu-item-text-color: #efffff;
   --menu-item-hover-bg-color: #4a148c;
 
   --toc-item-text-color-active: #ffafcc;
@@ -25,6 +38,7 @@
 
   /* Seems like this needs to be here */
   --panel-body-font-size: 19px;
+  --panel-heading-bg-color: #3333f3;
   
   --code-font-size: 16px;
   --panel-samples-width: 66%;
@@ -33,7 +47,7 @@
   --code-word-break: break-all;
   --font-family-base: 'DM Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', Arial, sans-serif;
   --navbar-height: 42px;
-  --bg-color: rgba(255, 165, 0, 0.06);
+  /* --bg-color: rgba(255, 165, 0, 0.06); */
   
   --navbar-bg-color: linear-gradient(to right, black 12%, #330066 37%, transparent 66%);
   --navbar-font-size: 16px;
@@ -64,21 +78,48 @@
   --menu-mobile-control-button-margin: 0;
   --menu-mobile-items-margin-top: 0;
   --menu-mobile-product-name-margin: 0;
+  --menu-item-external-icon-size: 23px;
+  --menu-item-color-hover: #feffff;
+  --menu-item-color-active: #fffffe;
+  --menu-content-color: #ffffef;
+  --navbar-text-color: #ffffef;
+  --navbar-menu-items-gap: var(--spacing-md);
+  /* --code-block-controls-bg-color: rgba(33, 37, 33, 0.91); */
+  --code-block-controls-bg-color: #efefef;
+  --code-block-bg-color: rgba(255, 242, 255, 0.91);
+  --code-block-controls-border: 3px solid rgba(255, 204, 0, .73);
+  --docs-dropdown-text-color: #ffffff;
 }
 
 .menu-item-type-default, .menu-item-type-group {
   background: var(--sidebar-bg-color);
 }
 
-
 /* sheesh couldn't get it except thru this */
 .button-size-small {
   --button-icon-size: 26px !important;
 }
 
-body {
+body, #api-content {
     background: linear-gradient(to bottom, var(--background-gradient-start), var(--background-gradient-end));
 }
+
+#api-content .panel-servers-list {
+  background: linear-gradient(to right, #FFC0CB 19%, rgb(255, 204, 255) 50%, #FFC0CB 83%);
+}
+
+#api-content .panel-servers-list > div {
+  background-color: rgba(255, 192, 203, 0.83);
+}
+  
+#app_root .panel-request-samples {
+  background-color: lightgray;
+}
+
+#api-content .panel-servers-list .button-variant-text, #api-content .panel-request-samples .button-variant-text {
+  color: #000010;
+}
+
 
 .menu-item-type-separator {
   padding: 6px;

@@ -1,5 +1,7 @@
 openapi:
   hideReplay: true
+  hideSchemaTitles: true
+  hideInfoMetadata: false
   codeSamples:
     skipOptionalParameters: true
     languages:
@@ -33,6 +35,10 @@ search:
   hide: true
 colorMode:
   hide: true
+  ignoreDetection: true
+  modes:
+    - 'dark-contrast'
+    - 'dark'
 apis:
   rpc:
     root: rpcs/openapi.yaml
