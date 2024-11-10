@@ -25,6 +25,9 @@
   /* --hover-color: #ff5d8f; */
   --hover-color: rgba(255, 175, 204, 0.9); /* Slightly more opaque */
 
+  --heading-anchor-color: #ffffff;
+  --heading-anchor-offset-right: 6px;
+
   --toc-heading-text-color: #efefef;
   --toc-item-text-color: #ffefff;
 
@@ -191,5 +194,13 @@ code {
 
 /* pluck you */
 #app_root > div > nav > div > div > div > li > span {
+  color: #000000;
+}
+
+#app_root > div > nav > div > button {
+  color: #ffffff;
+}
+
+#app_root > div > nav > div > button:hover {
   color: #000000;
 }
