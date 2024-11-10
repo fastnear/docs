@@ -107,12 +107,13 @@
   /* --code-block-controls-bg-color: rgba(33, 37, 33, 0.91); */
   /* --code-block-controls-bg-color:  */
   /* --code-block-bg-color: rgba(255, 242, 255, 0.91); */
-  --code-block-bg-color: rgb(235, 235, 225);
+  --code-block-controls-bg-color: lightgray;
+  --code-block-bg-color: rgb(235, 235, 229);
   --code-block-controls-border: 3px solid rgba(255, 204, 0, .73);
 }
 
 .code-block-header {
-  background: linear-gradient(to bottom, rgb(247, 247, 247) 6%, rgb(235, 235, 225) 88%);
+  background: linear-gradient(to bottom, rgb(247, 247, 247) 6%, rgb(235, 235, 229) 88%);
 }
 
 .menu-item-type-default, .menu-item-type-group {
@@ -149,7 +150,8 @@ body, #api-content {
 }
 
 /* #api-content .panel-servers-list .button-variant-text, #api-content .panel-request-samples .button-variant-text { */
-#api-content .button-variant-text {
+/* #api-content .button-variant-text { */
+.button-variant-text {
   color: #000010;
 }
 
