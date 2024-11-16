@@ -1,25 +1,22 @@
 :root {
   --font-size-base: 16px;
-
-  /* Updated brand colors */
-  --primary-1: #00aaff; /* Soft blue accent */
-  --primary-2: rgb(10, 31, 61); /* Vibrant pink for CTA */
-  --secondary-1: #ffffff; /* White text */
-  --secondary-2: #c0c0c0; /* Light gray for descriptions */
+  --primary-1: #00aaff;
+  --primary-2: rgb(10, 31, 61);
+  --secondary-1: #ffffff;
+  --secondary-2: #c0c0c0;
 
   --button-color: var(--primary-2);
   --text-color-primary: #ffffff;
   --inline-code-text-color: var(--text-color-primary);
 
-  /* Background gradient matching new branding */
   --background-gradient-start: #001333;
   --background-gradient-end: #001f4d;
 
   --md-content-text-color: var(--secondary-1);
   --h1-text-color: var(--secondary-1);
-  --h2-text-color: rgba(255, 255, 255, 0.85);
-  --h3-text-color: rgba(255, 255, 255, 0.79);
-  --h4-text-color: rgba(255, 255, 255, 0.73);
+  --h2-text-color: #fffff3;
+  --h3-text-color: #fffff3;
+  --h4-text-color: #fffff3;
   --text-color: #ffffff;
   --link-color: #00ffff;
   --link-color-visited: #00afff;
@@ -33,27 +30,21 @@
   --toc-heading-text-color: #c0c0c0;
   --toc-item-text-color: #ffffff;
 
-  /* --menu-item-separator-line-height: 1px;
-  --menu-item-separator-line-bg-color: #003366; */
   --button-content-color-custom: rgba(37, 255, 37, 0.6);
   --border-color-primary: #003366;
   --border-color-secondary: #006f66;
 
-  /* Sidebar and menu styles */
   --sidebar-bg-color: #001f4d;
   --menu-item-text-color: #fffff6;
   --tree-content-color-default: #fffff6;
   --menu-item-hover-bg-color: #00284d;
   --menu-item-bg-color-active: #0000cf;
   --menu-item-color-active: #00ffff;
+  --menu-item-label-transition: background-color 0.6s, color 0.6s;
   --menu-mobile-bg: #001f4d;
 
-  
   --button-text-color: #ffffff;
   --button-border-color: transparent;
-  
-
-  
   --navbar-bg-color: linear-gradient(to right, black 12%, rgb(10, 37, 64) 37%, transparent 66%);
   
   --navbar-text-color: #ffffff;
@@ -71,12 +62,10 @@
   --color-info-bg: rgb(35, 48, 97);
   --inline-code-bg-color: transparent;
   --code-block-controls-bg-color: #33333d;
-  /* --panel-samples-bg-color: #33333d; */
 
   --panel-heading-bg-color: #33333d;
   --code-block-bg-color: #fffff3;
-  /* --code-block-controls-border: 3px solid transparent; */
-  --code-block-controls-font-size: 14px;
+  --code-block-controls-font-size: 15px;
   --code-block-controls-font-family: monospace;
   --panel-border-radius: 6px;
   --panel-font-size: 16px;
@@ -84,15 +73,23 @@
   --md-content-max-width: 919px;
   --admonition-icon-size: 36px;
 
-  --button-icon-size: 26px;
+  --button-icon-size: 23px;
+  --button-font-size: 19px;
   --panel-samples-heading-text-color: #000000;
   --control-height-base: 42px;
   --spacing-unit: 3px;
 
   --code-block-padding: var(--spacing-md);
+  --panel-body-bg-color: #fffee6;
+  /* --spacing-vertical: 12px; */
+  --panel-gap-horizontal: 19px;
+  --admonition-warning-icon-color: rgb(253, 219, 191);
 
 }
 
+.button-size-small {
+  --button-icon-size: 23px !important;
+}
 
 /* hover on nav item link */
 #app_root > div > nav > div > a:hover {
@@ -107,8 +104,12 @@ body, #api-content {
   background: transparent;
 }
 
+#api-content h2 {
+  margin-block-start: 0px;
+  margin-block-end: 0px;
+}
+
 #api-content ol li button {
-  /* padding: 6px 6px; */
   background: transparent;
 }
 
@@ -116,11 +117,9 @@ button {
   background-color: var(--button-color);
   color: var(--button-text-color);
   border: 2px solid var(--button-border-color);
-  /* padding: 6px 16px; */
   border-radius: 4px;
   font-weight: bold;
 }
-
 
 #app_root article > div, #app_root #api-content div {
   border: none;
@@ -130,12 +129,12 @@ button {
   display: none;
 }
 
-/* .panel-response-samples, .panel-request-samples {
-  padding: 2px 4px 4px 2px;
-} */
-
 .panel-servers-list span {
   font-size: 16px;
+}
+
+#api-content .panel-servers-list {
+  background: #ffffe3;
 }
 
 .button-variant-text, #app_root .code-block-header .button-variant-text {
@@ -157,4 +156,14 @@ button {
 #app_root .panel-response-samples div div pre {
   border-bottom-left-radius: 6px;
   border-bottom-right-radius: 6px;
+}
+
+/* mobile menu */
+#app_root > div > nav > div > div > div > li > span {
+  color: #000000;
+}
+
+/* finallly!!!!!!!! */
+#app_root .menu-item-type-group > div:hover::before {
+  border: none;
 }
