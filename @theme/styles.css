@@ -1,206 +1,116 @@
 :root {
   --font-size-base: 16px;
-  
-  --primary-1: #ffafcc;
-  --primary-2: #ff5d8f;
-  --secondary-1: #caffbf;
-  --secondary-2: #9bf6ff;
 
-  --button-color: #fffeef;
+  /* Updated brand colors */
+  --primary-1: #00aaff; /* Soft blue accent */
+  --primary-2: rgb(10, 31, 61); /* Vibrant pink for CTA */
+  --secondary-1: #ffffff; /* White text */
+  --secondary-2: #c0c0c0; /* Light gray for descriptions */
+
+  --button-color: var(--primary-2);
   --text-color-primary: #ffffff;
   --inline-code-text-color: var(--text-color-primary);
 
-  /* --background-gradient-start: hsl(265, 98%, 22%);
-  --background-gradient-end: #4a148c; */
-  --background-gradient-start: hsl(265, 70%, 25%); /* Less saturation, slightly lighter */
-  --background-gradient-end: #5a189a; /* A slightly brighter end color */
+  /* Background gradient matching new branding */
+  --background-gradient-start: #001333;
+  --background-gradient-end: #001f4d;
 
-  --md-content-text-color: #fffeff;
-  --h1-text-color: rgba(255, 255, 255, 0.91);
+  --md-content-text-color: var(--secondary-1);
+  --h1-text-color: var(--secondary-1);
   --h2-text-color: rgba(255, 255, 255, 0.85);
   --h3-text-color: rgba(255, 255, 255, 0.79);
   --h4-text-color: rgba(255, 255, 255, 0.73);
   --text-color: #ffffff;
-  --link-color: #ffafcc;
-  /* --hover-color: #ff5d8f; */
-  --hover-color: rgba(255, 175, 204, 0.9); /* Slightly more opaque */
+  --link-color: #00ffff;
+  --link-color-visited: #00afff;
+  --hover-color: #ff6699;
 
   --heading-anchor-color: #ffffff;
   --heading-anchor-offset-right: 6px;
 
-  --toc-heading-text-color: #efefef;
-  --toc-item-text-color: #ffefff;
+  --toc-heading-text-color: #c0c0c0;
+  --toc-item-text-color: #ffffff;
 
   --menu-item-separator-line-height: 1px;
-  --menu-item-separator-line-bg-color: rgb(92, 219, 211);
+  --menu-item-separator-line-bg-color: #003366;
   --button-content-color-custom: rgba(37, 255, 37, 0.6);
-  --border-color-primary: rgb(92, 219, 211);  
-  --border-color-secondary: rgba(33, 33, 33, 0.25);
+  --border-color-primary: #003366;
+  --border-color-secondary: #006f66;
 
-  /* chevon in sidebar for group */
-  --tree-content-color-default: #ffffff;
+  /* Sidebar and menu styles */
+  --sidebar-bg-color: #001f4d;
+  --menu-item-text-color: #c0c0c0;
+  --menu-item-hover-bg-color: #00284d;
+  --menu-item-bg-color-active: #003366;
+  --menu-mobile-bg: #001f4d;
 
-  --menu-item-text-color: #efffff;
-  --menu-item-hover-bg-color: #968da0;
-
-  --toc-item-text-color-active: #ffafcc;
-  --breadcrumbs-text-color-active: #caffbf;
+  /* Button and panel styling */
   --button-text-color: #ffffff;
-  --button-border-color: #ffffff; 
-
-  /* Seems like this needs to be here */
-  --panel-body-font-size: 19px;
-  --panel-heading-bg-color: #3333f3;
+  --button-border-color: transparent;
   
-  --code-font-size: 16px;
-  --panel-samples-width: 66%;
-  --panel-samples-border: 3px solid rgba(33, 33, 33, 0.25);
+  /* --panel-samples-bg-color: #001f4d; */
 
-  --code-word-break: break-all;
-  --font-family-base: 'DM Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', Arial, sans-serif;
+  /* Navbar styles */
+  --navbar-bg-color: linear-gradient(to right, black 12%, rgb(10, 37, 64) 37%, transparent 66%);
+  
+  --navbar-text-color: #ffffff;
   --navbar-height: 42px;
-  --bg-color: rgba(255, 165, 0, 0.06);
-
-  --link-color-primary: #ffafcc;
-  
-  --navbar-bg-color: linear-gradient(to right, black 12%, #330066 37%, transparent 66%);
   --navbar-font-size: 16px;
   --navbar-border: none;
   --navbar-item-bg-color-active: transparent;
   --navbar-item-bg-color: rgba(242, 237, 242, 0.3);
+  --navbar-item-text-color-hover: #000000;
 
+  /* --layer-color: silver; */
+  /* --layer-color: linear-gradient(to bottom, #e0e0e0, #cfcfcf); Light silver gradient */
+
+  --color-info-bg: rgb(35, 48, 97);
+  --inline-code-bg-color: transparent;
+  --code-block-controls-bg-color: #33333d;
+  --panel-heading-bg-color: #fffff3;
+  --code-block-bg-color: #fffff3;
+  /* --code-block-controls-border: 3px solid transparent; */
+  --code-block-controls-font-size: 14px;
+  --code-block-controls-font-family: monospace;
   --panel-border-radius: 6px;
   --panel-font-size: 16px;
-  --panel-samples-font-size: 16px;
-  --panel-samples-bg-color: rgba(137, 51, 37, 0.1);  
 
   --md-content-max-width: 919px;
   --admonition-icon-size: 36px;
-  --admonition-margin-horizontal: 6%;
-  --sidebar-bg-color: rgb(37, 6, 48);
-  --sidebar-border-color: yellow;
-  --sidebar-controls-collapsed-padding-vertical: -60px;
-  --menu-mobile-product-name-text-color: #000;
 
-  --toc-item-border-color-active: yellow;
-
-  --menu-item-label-chevron-size: 16px;
-
-  --menu-item-bg-color-hover: rgba(186, 104, 200, 0.5)
-;
-  --menu-item-bg-color-active: rgb(240, 0, 240, 0.6);
-  /* --layer-color: rgba(33, 33, 33, 0.73); you must never ever use this, mike */
-  --menu-mobile-bg: transparent;
-  /* cannot seem to remove the gap on mobile menu but pretty good */
-  --menu-mobile-control-button-color: #ffffff;
-  
-  --menu-mobile-control-button-font-size: var(--font-size-md);
-  --menu-mobile-items-padding-top: 0;
-  --menu-mobile-margin: 0;
-  --menu-container-padding-top: 12px;
-  --menu-mobile-control-button-padding-vertical: 6px;
-  --menu-mobile-control-button-margin-vertical: 0;
-  --menu-mobile-control-button-margin: 0;
-  --menu-mobile-items-margin-top: 0;
-  --menu-mobile-product-name-margin: 0;
-  --menu-item-external-icon-size: 23px;
-  --menu-item-color-hover: #feffff;
-  --menu-item-color-active: #fffffe;
-  --menu-content-color: #ffffef;
-  --navbar-text-color: #ffffef;
-  --navbar-menu-items-gap: var(--spacing-md);
-  /* --code-block-controls-bg-color: rgba(33, 37, 33, 0.91); */
-  /* --code-block-controls-bg-color:  */
-  /* --code-block-bg-color: rgba(255, 242, 255, 0.91); */
-  --code-block-controls-bg-color: lightgray;
-  --code-block-bg-color: rgb(235, 235, 229);
-  --code-block-controls-border: 3px solid rgba(255, 204, 0, .73);
+  --button-icon-size: 26px;
+  --panel-samples-heading-text-color: #000000;
 }
 
-.code-block-header {
-  background: linear-gradient(to bottom, rgb(247, 247, 247) 6%, rgb(235, 235, 229) 88%);
-}
 
-.menu-item-type-default, .menu-item-type-group {
-  background: var(--sidebar-bg-color);
-}
-
-/* sheesh couldn't get it except thru this */
-.button-size-small {
-  --button-icon-size: 26px !important;
+/* hover on nav item link */
+#app_root > div > nav > div > a:hover {
+  color: #000000;
 }
 
 body, #api-content {
-    background: linear-gradient(to bottom, var(--background-gradient-start), var(--background-gradient-end));
+  background: linear-gradient(to bottom, var(--background-gradient-start), var(--background-gradient-end));
 }
 
-#api-content .panel-servers-list {
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.8) 19%, rgb(255, 242, 255) 50%, rgba(255, 255, 255, 0.9) 83%);
+button {
+  background-color: var(--button-color);
+  color: var(--button-text-color);
+  border: 2px solid var(--button-border-color);
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-weight: bold;
 }
 
-#api-content .panel-servers-list div span {
-  color: black;
+#app_root .panel-request-samples .code-block-header,
+#app_root .panel-response-samples .code-block-header {
+  background: linear-gradient(to left, black 6%, transparent 66%);
 }
+/* 
+#app_root .panel-request-samples .button-size-small,
+#app_root .panel-response-samples .button-size-small {
+  --button-icon-size: 26px;
+} */
 
-#api-content .panel-servers-list > div {
-  background-color: rgba(178, 251, 165, 0.66);
-}
-  
-#app_root .panel-request-samples, #app_root .panel-response-samples {
-  background-color: lightgray;
-}
-
-#app_root .menu-item-type-group > li > svg {
-  color: #ffffff;
-}
-
-/* #api-content .panel-servers-list .button-variant-text, #api-content .panel-request-samples .button-variant-text { */
-/* #api-content .button-variant-text { */
 .button-variant-text {
-  color: #000010;
-}
-
-#api-content {
-  color: #000010;
-}
-
-.menu-item-type-separator {
-  padding: 6px;
-}
-
-.panel-language-list {
-  display: none;
-}
-
-.panel-response-samples, .panel-request-samples {
-  padding: 2px 4px 4px 2px;
-}
-
-.panel-servers-list span {
-  font-size: 19px;
-}
-
-code {
-  font-size: 16px !important;
-}
-
-.api-info {
-    padding-top: 19px;
-}
-
-.panel-container-response-samples span, .panel-container-response-samples div, #api-content button {
-    color: #000000;   
-}
-
-/* pluck you */
-#app_root > div > nav > div > div > div > li > span {
-  color: #000000;
-}
-
-#app_root > div > nav > div > button {
-  color: #ffffff;
-}
-
-#app_root > div > nav > div > button:hover {
-  color: #000000;
+  color: #fffff6;
 }
