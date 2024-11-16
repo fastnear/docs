@@ -18,9 +18,7 @@ Also, visit <a href="https://near-nodes.io" target="_blank">https://near-nodes.i
   _(Certainly by end of year, 2024)_
 {% /admonition %} -->
 
-CHATGPT HERE!
 The instructions below utilize logic from this FastNEAR repository: <a href="https://github.com/fastnear/static" target="_blank">https://github.com/fastnear/static</a>
-
 
 ## Mainnet
 
