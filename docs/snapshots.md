@@ -18,163 +18,79 @@ Also, visit <a href="https://near-nodes.io" target="_blank">https://near-nodes.i
   _(Certainly by end of year, 2024)_
 {% /admonition %}
 
+CHATGPT HERE!
+The instructions below utilize logic from this FastNEAR repository: <a href="https://github.com/fastnear/static" target="_blank">https://github.com/fastnear/static</a>
+
+
 ## Mainnet
 
-1. Create `download-mainnet-snapshot.sh` and paste the code below.
+### Snapshot (pruned, for syncing)
 
-    ```
-    nano download-mainnet-snapshot.sh
-    ```
-2. Make executable
+**Note**: this is likely the preferred approach, as opposed to downloading an archival snapshot, which is significantly larger and more special-purpose.
 
-   ```
-   chmod +ux download-mainnet-snapshot.sh
-   ```
+Run this command to download and execute the shell script.
 
-3. Run (shows use of local destination path)
+We've added the environment variable `DATA_PATH` to point to a local directory we've created, overriding the default destination location: `/root`
 
-   ```
-   DATA_PATH=~/mainnet-snap ./download-mainnet-snapshot.sh
-   ```
+The `CHAIN_ID` env var defaults to `mainnet`, so we omit it.
 
-### Shell script
+{% admonition type="info" name="Review full command, copy below:" %}
+  &nbsp;    
+  <code>curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/fastnear/static/refs/heads/main/down_rclone.sh | DATA_PATH=~/mainnet-snap sh</code>
+{% /admonition %}        
 
-```sh
-set -e
-
-# The script downloads the latest RPC snapshot from the FASTNEAR snapshot server.
-# It uses rclone for parallel downloads and retries failed downloads.
-#
-# Instructions:
-# - Make sure you have rclone installed, e.g. using `apt install rclone`
-# - Set $DATA_PATH to the path where you want to download the snapshot (default: /root/.near/data)
-# - Set $THREADS to the number of threads you want to use for downloading (default: 16).
-
-if ! command -v rclone &> /dev/null
-then
-    echo "rclone is not installed. Please install it and try again."
-    exit 1
-fi
-
-HTTP_URL="https://snapshot.neardata.xyz"
-PREFIX="mainnet/rpc"
-: "${THREADS:=16}"
-: "${DATA_PATH:=/root/.near/data}"
-
-main() {
-  mkdir -p "$DATA_PATH"
-  LATEST=$(curl -s "$HTTP_URL/$PREFIX/latest.txt")
-  echo "Latest snapshot block: $LATEST"
-
-  FILES_PATH="/tmp/files.txt"
-  curl -s "$HTTP_URL/$PREFIX/$LATEST/files.txt" -o $FILES_PATH
-
-  EXPECTED_NUM_FILES=$(wc -l < $FILES_PATH)
-  echo "Downloading $EXPECTED_NUM_FILES files with $THREADS threads"
-
-  rclone copy \
-    --no-traverse \
-    --http-no-head \
-    --transfers $THREADS \
-    --checkers $THREADS \
-    --buffer-size 128M \
-    --http-url $HTTP_URL \
-    --files-from=$FILES_PATH \
-    --retries 10 \
-    --retries-sleep 1s \
-    --low-level-retries 10 \
-    --progress \
-    :http:$PREFIX/$LATEST/ $DATA_PATH
-
-  ACTUAL_NUM_FILES=$(find $DATA_PATH -type f | wc -l)
-  echo "Downloaded $ACTUAL_NUM_FILES files, expected $EXPECTED_NUM_FILES"
-
-  if [[ $ACTUAL_NUM_FILES -ne $EXPECTED_NUM_FILES ]]; then
-    echo "Error: Downloaded files count mismatch"
-    exit 1
-  fi
-}
-
-main "$@"
+``` {% title="mainnet snapshot » ~/mainnet-snap" %}
+curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/fastnear/static/refs/heads/main/down_rclone.sh | DATA_PATH=~/mainnet-snap sh
 ```
+
+### Archival snapshot
+
+{% admonition type="warning" %}
+  Be prepared for a large download and the inherent time constraints involved.
+{% /admonition %}     
+
+  Here, the `DATA_PATH` environment variable sets the destination download directory to `~/mainnet-snap-archival`
+
+  {% admonition type="info" name="Review full command, copy below:" %}
+    &nbsp;    
+    <code>curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/fastnear/static/refs/heads/main/down_rclone_archival.sh | DATA_PATH=~/mainnet-snap-archival sh</code>
+  {% /admonition %}        
+
+  ``` {% title="mainnet archive » ~/mainnet-snap-archival" %}
+  curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/fastnear/static/refs/heads/main/down_rclone_archival.sh | DATA_PATH=~/mainnet-snap-archival sh
+  ```
 
 ## Testnet
 
-1. Create `download-testnet-snapshot.sh` and paste the code below.
+### Snapshot (pruned, for syncing)
 
-    ```
-    nano download-testnet-snapshot.sh
-    ```
-2. Make executable
+  Environment variables:
 
-   ```
-   chmod +ux download-testnet-snapshot.sh
-   ```
+   - `DATA_PATH` sets the destination download directory to `~/testnet-snap`
+   - `CHAIN_ID` sets the blockchain network to `testnet` (default is `mainnet`)
 
-3. Run (shows use of local destination path)
+  {% admonition type="info" name="Review full command, copy below:" %}
+    &nbsp;    
+    <code>curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/fastnear/static/refs/heads/main/down_rclone.sh | CHAIN_ID=testnet DATA_PATH=~/testnet-snap sh</code>
+  {% /admonition %}        
 
-   ```
-   DATA_PATH=~/testnet-snap ./download-testnet-snapshot.sh
-   ```
+  ``` {% title="testnet snapshot » ~/testnet-snap" %}
+  curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/fastnear/static/refs/heads/main/down_rclone.sh | CHAIN_ID=testnet DATA_PATH=~/testnet-snap-archival sh
+  ```
 
-### Shell script
 
-```sh
-set -e
+### Archival snapshot
 
-# The script downloads the latest RPC snapshot from the FASTNEAR snapshot server.
-# It uses rclone for parallel downloads and retries failed downloads.
-#
-# Instructions:
-# - Make sure you have rclone installed, e.g. using `apt install rclone`
-# - Set $DATA_PATH to the path where you want to download the snapshot (default: /root/.near/data)
-# - Set $THREADS to the number of threads you want to use for downloading (default: 16).
+  Environment variables:
 
-if ! command -v rclone &> /dev/null
-then
-    echo "rclone is not installed. Please install it and try again."
-    exit 1
-fi
+    - `DATA_PATH` sets the destination download directory to `~/testnet-snap-archival`
+    - `CHAIN_ID` sets the blockchain network to `testnet` (default is `mainnet`
 
-HTTP_URL="https://snapshot.neardata.xyz"
-PREFIX="testnet/rpc"
-: "${THREADS:=16}"
-: "${DATA_PATH:=/root/.near/data}"
+  {% admonition type="info" name="Review full command, copy below:" %}
+    &nbsp;    
+    <code>curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/fastnear/static/refs/heads/main/down_rclone_archival.sh | CHAIN_ID=testnet DATA_PATH=~/testnet-snap-archival sh</code>
+  {% /admonition %}        
 
-main() {
-  mkdir -p "$DATA_PATH"
-  LATEST=$(curl -s "$HTTP_URL/$PREFIX/latest.txt")
-  echo "Latest snapshot block: $LATEST"
-
-  FILES_PATH="/tmp/files.txt"
-  curl -s "$HTTP_URL/$PREFIX/$LATEST/files.txt" -o $FILES_PATH
-
-  EXPECTED_NUM_FILES=$(wc -l < $FILES_PATH)
-  echo "Downloading $EXPECTED_NUM_FILES files with $THREADS threads"
-
-  rclone copy \
-    --no-traverse \
-    --http-no-head \
-    --transfers $THREADS \
-    --checkers $THREADS \
-    --buffer-size 128M \
-    --http-url $HTTP_URL \
-    --files-from=$FILES_PATH \
-    --retries 10 \
-    --retries-sleep 1s \
-    --low-level-retries 10 \
-    --progress \
-    :http:$PREFIX/$LATEST/ $DATA_PATH
-
-  ACTUAL_NUM_FILES=$(find $DATA_PATH -type f | wc -l)
-  echo "Downloaded $ACTUAL_NUM_FILES files, expected $EXPECTED_NUM_FILES"
-
-  if [[ $ACTUAL_NUM_FILES -ne $EXPECTED_NUM_FILES ]]; then
-    echo "Error: Downloaded files count mismatch"
-    exit 1
-  fi
-}
-
-main "$@"
-```
-
+  ``` {% title="testnet archive » ~/testnet-snap-archival" %}
+  curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/fastnear/static/refs/heads/main/down_rclone_archival.sh | CHAIN_ID=testnet DATA_PATH=~/testnet-snap-archival sh
+  ```
