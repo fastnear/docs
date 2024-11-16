@@ -84,7 +84,8 @@
   /* --spacing-vertical: 12px; */
   --panel-gap-horizontal: 19px;
   --admonition-warning-icon-color: rgb(253, 219, 191);
-
+  --admonition-margin-horizontal: 19px 24px;
+  --admonition-warning-heading-text-color: #00000d;
 }
 
 .button-size-small {

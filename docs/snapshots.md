@@ -43,7 +43,9 @@ curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/fastnear/
 
 ### Archival snapshot
 
-{% admonition type="warning" %}
+{% admonition type="warning" name="Time and storage intensive" %}
+  &nbsp;
+  
   Be prepared for a large download and the inherent time constraints involved.
 {% /admonition %}     
 
