@@ -86,6 +86,7 @@
   --admonition-warning-icon-color: rgb(253, 219, 191);
   --admonition-margin-horizontal: 19px 24px;
   --admonition-warning-heading-text-color: #00000d;
+  --bg-color: transparent;
 }
 
 .button-size-small {
