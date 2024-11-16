@@ -25,49 +25,55 @@
   --link-color-visited: #00afff;
   --hover-color: #ff6699;
 
+  --admonition-info-bg-color: #001fff;
+
   --heading-anchor-color: #ffffff;
   --heading-anchor-offset-right: 6px;
 
   --toc-heading-text-color: #c0c0c0;
   --toc-item-text-color: #ffffff;
 
-  --menu-item-separator-line-height: 1px;
-  --menu-item-separator-line-bg-color: #003366;
+  /* --menu-item-separator-line-height: 1px;
+  --menu-item-separator-line-bg-color: #003366; */
   --button-content-color-custom: rgba(37, 255, 37, 0.6);
   --border-color-primary: #003366;
   --border-color-secondary: #006f66;
 
   /* Sidebar and menu styles */
   --sidebar-bg-color: #001f4d;
-  --menu-item-text-color: #c0c0c0;
+  --menu-item-text-color: #fffff6;
+  --tree-content-color-default: #fffff6;
   --menu-item-hover-bg-color: #00284d;
-  --menu-item-bg-color-active: #003366;
+  --menu-item-bg-color-active: #0000cf;
+  --menu-item-color-active: #00ffff;
   --menu-mobile-bg: #001f4d;
 
-  /* Button and panel styling */
+  
   --button-text-color: #ffffff;
   --button-border-color: transparent;
   
-  /* --panel-samples-bg-color: #001f4d; */
 
-  /* Navbar styles */
+  
   --navbar-bg-color: linear-gradient(to right, black 12%, rgb(10, 37, 64) 37%, transparent 66%);
   
   --navbar-text-color: #ffffff;
   --navbar-height: 42px;
   --navbar-font-size: 16px;
   --navbar-border: none;
+  --navbar-item-bg-color-hover: transparent;
   --navbar-item-bg-color-active: transparent;
+  --navbar-item-text-color-active: #fffff6;
   --navbar-item-bg-color: rgba(242, 237, 242, 0.3);
-  --navbar-item-text-color-hover: #000000;
-
-  /* --layer-color: silver; */
-  /* --layer-color: linear-gradient(to bottom, #e0e0e0, #cfcfcf); Light silver gradient */
+  --navbar-item-text-color-hover: #fff666;
+  --menu-item-bg-color-hover: #fff666;
+  --toc-item-text-color-active: #fff666;
 
   --color-info-bg: rgb(35, 48, 97);
   --inline-code-bg-color: transparent;
   --code-block-controls-bg-color: #33333d;
-  --panel-heading-bg-color: #fffff3;
+  /* --panel-samples-bg-color: #33333d; */
+
+  --panel-heading-bg-color: #33333d;
   --code-block-bg-color: #fffff3;
   /* --code-block-controls-border: 3px solid transparent; */
   --code-block-controls-font-size: 14px;
@@ -80,6 +86,11 @@
 
   --button-icon-size: 26px;
   --panel-samples-heading-text-color: #000000;
+  --control-height-base: 42px;
+  --spacing-unit: 3px;
+
+  --code-block-padding: var(--spacing-md);
+
 }
 
 
@@ -92,25 +103,58 @@ body, #api-content {
   background: linear-gradient(to bottom, var(--background-gradient-start), var(--background-gradient-end));
 }
 
+#api-content ol {
+  background: transparent;
+}
+
+#api-content ol li button {
+  /* padding: 6px 6px; */
+  background: transparent;
+}
+
 button {
   background-color: var(--button-color);
   color: var(--button-text-color);
   border: 2px solid var(--button-border-color);
-  padding: 10px 20px;
+  /* padding: 6px 16px; */
   border-radius: 4px;
   font-weight: bold;
 }
 
-#app_root .panel-request-samples .code-block-header,
-#app_root .panel-response-samples .code-block-header {
-  background: linear-gradient(to left, black 6%, transparent 66%);
+
+#app_root article > div, #app_root #api-content div {
+  border: none;
 }
-/* 
-#app_root .panel-request-samples .button-size-small,
-#app_root .panel-response-samples .button-size-small {
-  --button-icon-size: 26px;
+
+.panel-language-list {
+  display: none;
+}
+
+/* .panel-response-samples, .panel-request-samples {
+  padding: 2px 4px 4px 2px;
 } */
 
-.button-variant-text {
+.panel-servers-list span {
+  font-size: 16px;
+}
+
+.button-variant-text, #app_root .code-block-header .button-variant-text {
   color: #fffff6;
+}
+
+.panel-container-response-samples span, .panel-container-response-samples div, #api-content button {
+  color: #000000;
+}
+
+#app_root .panel-container-request-samples .panel-request-samples > div, #app_root .panel-container-response-samples div div, #app_root .panel-container-response-samples > div {
+  background: #fffff3;
+}
+
+#app_root .panel-response-samples .code-block-header, #app_root .panel-response-samples .code-block-header div, #app_root .panel-request-samples .code-block-header, #app_root .panel-request-samples .code-block-header div {
+  background: #33333d;
+}
+
+#app_root .panel-response-samples div div pre {
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
 }
