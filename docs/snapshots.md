@@ -13,10 +13,10 @@ Download blockchains state in order to set up a validator node or RPC. See <a hr
 
 Also, visit <a href="https://near-nodes.io" target="_blank">https://near-nodes.io</a> for comprehensive details.
 
-{% admonition type="info" %}
+<!-- {% admonition type="info" %}
   MD5 hash verification will be available shortly.<br/>
   _(Certainly by end of year, 2024)_
-{% /admonition %}
+{% /admonition %} -->
 
 CHATGPT HERE!
 The instructions below utilize logic from this FastNEAR repository: <a href="https://github.com/fastnear/static" target="_blank">https://github.com/fastnear/static</a>
@@ -24,9 +24,9 @@ The instructions below utilize logic from this FastNEAR repository: <a href="htt
 
 ## Mainnet
 
-### Snapshot (pruned, for syncing)
+### Snapshot (pruned)
 
-**Note**: this is likely the preferred approach, as opposed to downloading an archival snapshot, which is significantly larger and more special-purpose.
+**Note**: this is likely the preferred approach for syncing, as opposed to downloading an archival snapshot, which is significantly larger and more special-purpose.
 
 Run this command to download and execute the shell script.
 
@@ -62,7 +62,7 @@ curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/fastnear/
 
 ## Testnet
 
-### Snapshot (pruned, for syncing)
+### Snapshot (pruned)
 
   Environment variables:
 
@@ -79,7 +79,7 @@ curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/fastnear/
   ```
 
 
-### Archival snapshot
+<!-- ### Archival snapshot
 
   Environment variables:
 
@@ -93,4 +93,4 @@ curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/fastnear/
 
   ``` {% title="testnet archive » ~/testnet-snap-archival" %}
   curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/fastnear/static/refs/heads/main/down_rclone_archival.sh | CHAIN_ID=testnet DATA_PATH=~/testnet-snap-archival sh
-  ```
+  ``` -->
