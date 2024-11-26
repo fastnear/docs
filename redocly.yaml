@@ -1,5 +1,5 @@
 openapi:
-  hideReplay: true
+  hideReplay: false
   hideSchemaTitles: true
   hideInfoMetadata: false
   codeSamples:
@@ -34,10 +34,8 @@ feedback:
 search:
   hide: true
 colorMode:
-  hide: true
-  ignoreDetection: true
   modes:
-    - 'dark-contrast'
+    - 'light'
     - 'dark'
 apis:
   rpc:

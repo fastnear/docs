@@ -1,118 +1,51 @@
 :root {
+  --primary-1: #1e4aba;
+  --primary-2: #325ece;
+  --primary-bg: #fffff6;
+  --h1-text-color: var(--primary-1);
+  --heading-text-color: var(--primary-2);
+  --sidebar-bg-color: var(--primary-bg);
+  --navbar-bg-color: var(--primary-bg);
+  --menu-item-text-color: var(--primary-2);
+  --toc-item-text-color-active: var(--primary-2);
+  --breadcrumbs-text-color-active: var(--primary-2);
   --font-size-base: 16px;
-  --primary-1: #00aaff;
-  --primary-2: rgb(10, 31, 61);
-  --secondary-1: #ffffff;
-  --secondary-2: #c0c0c0;
-
-  --button-color: var(--primary-2);
-  --text-color-primary: #ffffff;
-  --inline-code-text-color: var(--text-color-primary);
-
-  --background-gradient-start: #001333;
-  --background-gradient-end: #001f4d;
-
-  --md-content-text-color: var(--secondary-1);
-  --h1-text-color: var(--secondary-1);
-  --h2-text-color: #fffff3;
-  --h3-text-color: #fffff3;
-  --h4-text-color: #fffff3;
-  --text-color: #ffffff;
-  --link-color: #00ffff;
-  --link-color-visited: #00afff;
-  --hover-color: #ff6699;
-
-  --admonition-info-bg-color: #001fff;
-
-  --heading-anchor-color: #ffffff;
   --heading-anchor-offset-right: 6px;
-
-  --toc-heading-text-color: #c0c0c0;
-  --toc-item-text-color: #ffffff;
-
-  --button-content-color-custom: rgba(37, 255, 37, 0.6);
-  --border-color-primary: #003366;
-  --border-color-secondary: #006f66;
-
-  --sidebar-bg-color: #001f4d;
-  --menu-item-text-color: #fffff6;
-  --tree-content-color-default: #fffff6;
-  --menu-item-hover-bg-color: #00284d;
-  --menu-item-bg-color-active: #0000cf;
-  --menu-item-color-active: #00ffff;
-  --menu-item-label-transition: background-color 0.6s, color 0.6s;
-  --menu-mobile-bg: #001f4d;
-
-  --button-text-color: #ffffff;
-  --button-border-color: transparent;
-  --navbar-bg-color: linear-gradient(to right, black 12%, rgb(10, 37, 64) 37%, transparent 66%);
-  
-  --navbar-text-color: #ffffff;
   --navbar-height: 42px;
   --navbar-font-size: 16px;
   --navbar-border: none;
-  --navbar-item-bg-color-hover: transparent;
-  --navbar-item-bg-color-active: transparent;
-  --navbar-item-text-color-active: #fffff6;
-  --navbar-item-bg-color: rgba(242, 237, 242, 0.3);
-  --navbar-item-text-color-hover: #fff666;
-  --menu-item-bg-color-hover: #fff666;
-  --toc-item-text-color-active: #fff666;
-
-  --color-info-bg: rgb(35, 48, 97);
-  --inline-code-bg-color: transparent;
-  --code-block-controls-bg-color: #33333d;
-
-  --panel-heading-bg-color: #33333d;
-  --code-block-bg-color: #fffff3;
   --code-block-controls-font-size: 15px;
   --code-block-controls-font-family: monospace;
   --panel-border-radius: 6px;
   --panel-font-size: 16px;
-
   --md-content-max-width: 919px;
   --admonition-icon-size: 36px;
-
   --button-icon-size: 23px;
   --button-font-size: 19px;
-  --panel-samples-heading-text-color: #000000;
   --control-height-base: 42px;
   --spacing-unit: 3px;
-
   --code-block-padding: var(--spacing-md);
-  --panel-body-bg-color: #fffee6;
-  /* --spacing-vertical: 12px; */
   --panel-gap-horizontal: 19px;
-  --admonition-warning-icon-color: rgb(253, 219, 191);
   --admonition-margin-horizontal: 19px 24px;
-  --admonition-warning-heading-text-color: #00000d;
-  --bg-color: transparent;
+}
+
+:root.dark {
+  --primary-1: #ffffe1;
+  --primary-2: #fff1f6;
+  --primary-bg: #101a3f;
+}
+
+.panel-download {
+    display: none;
 }
 
 .button-size-small {
   --button-icon-size: 23px !important;
 }
 
-/* hover on nav item link */
-#app_root > div > nav > div > a:hover {
-  color: #000000;
-}
-
-body, #api-content {
-  background: linear-gradient(to bottom, var(--background-gradient-start), var(--background-gradient-end));
-}
-
-#api-content ol {
-  background: transparent;
-}
-
 #api-content h2 {
   margin-block-start: 0px;
   margin-block-end: 0px;
-}
-
-#api-content ol li button {
-  background: transparent;
 }
 
 button {
@@ -135,34 +68,9 @@ button {
   font-size: 16px;
 }
 
-#api-content .panel-servers-list {
-  background: #ffffe3;
-}
-
-.button-variant-text, #app_root .code-block-header .button-variant-text {
-  color: #fffff6;
-}
-
-.panel-container-response-samples span, .panel-container-response-samples div, #api-content button {
-  color: #000000;
-}
-
-#app_root .panel-container-request-samples .panel-request-samples > div, #app_root .panel-container-response-samples div div, #app_root .panel-container-response-samples > div {
-  background: #fffff3;
-}
-
-#app_root .panel-response-samples .code-block-header, #app_root .panel-response-samples .code-block-header div, #app_root .panel-request-samples .code-block-header, #app_root .panel-request-samples .code-block-header div {
-  background: #33333d;
-}
-
 #app_root .panel-response-samples div div pre {
   border-bottom-left-radius: 6px;
   border-bottom-right-radius: 6px;
-}
-
-/* mobile menu */
-#app_root > div > nav > div > div > div > li > span {
-  color: #000000;
 }
 
 /* finallly!!!!!!!! */
