@@ -9,7 +9,7 @@ servers:
   - url: "https://rpc.mainnet.fastnear.com"
   - url: "https://rpc.testnet.fastnear.com"
   - url: "https://archival-rpc.mainnet.fastnear.com"
-  # - url: "https://archival-rpc.testnet.fastnear.com"
+  - url: "https://archival-rpc.testnet.fastnear.com"
 
 paths:
   view_account:
