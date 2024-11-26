@@ -32,7 +32,7 @@ navbar:
 feedback:
   hide: true      
 search:
-  hide: true
+  hide: false
 colorMode:
   modes:
     - 'light'
