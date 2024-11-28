@@ -22,75 +22,147 @@ The instructions below utilize logic from this FastNEAR repository: <a href="htt
 
 ## Mainnet
 
-### Snapshot (pruned)
+### RPC Mainnet Snapshot
 
-**Note**: this is likely the preferred approach for syncing, as opposed to downloading an archival snapshot, which is significantly larger and more special-purpose.
+{% admonition type="info" name="" %}
+**Note**: This is likely the preferred approach for syncing, as opposed to downloading an archival snapshot, which is significantly larger and more special-purpose.
+{% /admonition %}
 
-Run this command to download and execute the shell script.
+Make sure you have `rclone` installed. Install it by running:
 
-We've added the environment variable `DATA_PATH` to point to a local directory we've created, overriding the default destination location: `/root`
-
-The `CHAIN_ID` env var defaults to `mainnet`, so we omit it.
-
-{% admonition type="info" name="Review full command, copy below:" %}
-  &nbsp;    
-  <code>curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/fastnear/static/refs/heads/main/down_rclone.sh | DATA_PATH=~/mainnet-snap sh</code>
-{% /admonition %}        
-
-``` {% title="mainnet snapshot » ~/mainnet-snap" %}
-curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/fastnear/static/refs/heads/main/down_rclone.sh | DATA_PATH=~/mainnet-snap sh
+```bash {% title="rclone installation" %}
+sudo -v ; curl https://rclone.org/install.sh | sudo bash
 ```
 
-### Archival snapshot
+Before running the snapshot download script, you can set the following environment variables:
 
-{% admonition type="warning" name="Time and storage intensive" %}
-  &nbsp;
-  
-  Be prepared for a large download and the inherent time constraints involved.
-{% /admonition %}     
+- `CHAIN_ID` to either `mainnet` or `testnet`. (default: `mainnet`)
+- `THREADS` to the number of threads you want to use for downloading. Use `128` for 10Gbps, and `16` for 1Gbps (default: `128`).
+- `TPSLIMIT` to the maximum number of HTTP new actions per second. (default: `4096`)
+- `BWLIMIT` to the maximum bandwidth to use for download in case you want to limit it. (default: `10G`)
+- `DATA_PATH` to the path where you want to download the snapshot (default: `~/.near/data`)
+- `BLOCK` to the block height of the snapshot you want to download. If not set, it will download the latest snapshot.
 
-  Here, the `DATA_PATH` environment variable sets the destination download directory to `~/mainnet-snap-archival`
+**Run this command to download the RPC Mainnet snapshot:**
 
-  {% admonition type="info" name="Review full command, copy below:" %}
-    &nbsp;    
-    <code>curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/fastnear/static/refs/heads/main/down_rclone_archival.sh | DATA_PATH=~/mainnet-snap-archival sh</code>
-  {% /admonition %}        
+{% admonition type="info" name="" %}
+We will set the following environment variables:
+- `DATA_PATH=~/.near/data` - the standard nearcore path
+- `CHAIN_ID=mainnet` - to explicitly specify the mainnet data
+  {% /admonition %}
 
-  ``` {% title="mainnet archive » ~/mainnet-snap-archival" %}
-  curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/fastnear/static/refs/heads/main/down_rclone_archival.sh | DATA_PATH=~/mainnet-snap-archival sh
-  ```
+```bash {% title="RPC Mainnet Snapshot » ~/.near/data" %}
+curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/fastnear/static/refs/heads/main/down_rclone.sh | DATA_PATH=~/.near/data CHAIN_ID=mainnet bash
+```
+
+### Archival Mainnet snapshot
+
+{% admonition type="warning" name="" %}
+**Time and storage intensive.**
+
+Be prepared for a large download and the inherent time constraints involved.
+
+The snapshot size is ~60Tb and contains more than 1M files.
+{% /admonition %}
+
+{% admonition type="danger" name="" %}
+**Work in progress**
+
+The archival snapshots are work in progress. We are updating the docs and the scripts to make it easier to download.
+One concern is the snapshot `BLOCK` has to be the same between hot and cold data runs.
+Also you have to run script twice to download hot and cold data.
+{% /admonition %}
+
+Make sure you have `rclone` installed. Install it by running:
+
+```bash {% title="rclone installation" %}
+sudo -v ; curl https://rclone.org/install.sh | sudo bash
+```
+
+Before running the download script, you can set the following environment variables:
+
+- `CHAIN_ID` to either `mainnet` or `testnet`. (default: `mainnet`)
+- `THREADS` to the number of threads you want to use for downloading. Use `128` for 10Gbps, and `16` for 1Gbps (default: `128`).
+- `TPSLIMIT` to the maximum number of HTTP new actions per second. (default: `4096`)
+- `DATA_TYPE` to either `hot-data` or `cold-data` (default: `cold-data`)
+- `BWLIMIT` to the maximum bandwidth to use for download in case you want to limit it. (default: `10G`)
+- `DATA_PATH` to the path where you want to download the snapshot (default: `/mnt/nvme/data/$DATA_TYPE`)
+- `BLOCK` to the block height of the snapshot you want to download. If not set, it will download the latest snapshot.
+
+By default the script assumes the paths for the data:
+- Hot data (has to be on NVME): `/mnt/nvme/data/hot-data`
+- Cold data (can be on HDDs): `/mnt/nvme/data/cold-data`
+
+
+**Run the following commands to download the Archival Mainnet snapshot:**
+
+1. Download the latest snapshot block height:
+
+```bash {% title="Latest archival mainnet snapshot block" %}
+LATEST=$(curl -s "https://snapshot.neardata.xyz/mainnet/archival/latest.txt")
+echo "Latest snapshot block: $LATEST"
+```
+
+2. Download the HOT data from the snapshot. It has to be placed on NVME.
+
+{% admonition type="info" name="" %}
+We will set the following environment variables:
+- `DATA_TYPE=hot-data` - downloads the Hot data
+- `DATA_PATH=~/.near/data` - the standard nearcore path
+- `CHAIN_ID=mainnet` - to explicitly specify the mainnet data
+- `BLOCK=$LATEST` - specify the snapshot block
+  {% /admonition %}
+
+```bash {% title="Archival Mainnet Snapshot (hot-data) » ~/.near/data" %}
+curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/fastnear/static/refs/heads/main/down_rclone_archival.sh | DATA_TYPE=hot-data DATA_PATH=~/.near/data CHAIN_ID=mainnet BLOCK=$LATEST bash
+```
+
+3. Download the COLD data from the snapshot. It can be placed on HDDs.
+
+{% admonition type="info" name="" %}
+We will set the following environment variables:
+- `DATA_TYPE=cold-data` - downloads the Hot data
+- `DATA_PATH=/mnt/hdds/cold-data` - the path where to place cold data. **Note**: the nearcore config should point cold data store to the same path.
+- `CHAIN_ID=mainnet` - to explicitly specify the mainnet data
+- `BLOCK=$LATEST` - specify the snapshot block
+  {% /admonition %}
+
+```bash {% title="Archival Mainnet Snapshot (cold-data) » /mnt/hdds/cold-data" %}
+curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/fastnear/static/refs/heads/main/down_rclone_archival.sh | DATA_TYPE=cold-data DATA_PATH=/mnt/hdds/cold-data CHAIN_ID=mainnet BLOCK=$LATEST bash
+```
+
 
 ## Testnet
 
-### Snapshot (pruned)
+### RPC Testnet Snapshot
 
-  Environment variables:
+{% admonition type="info" name="" %}
+**Note**: This is likely the preferred approach for syncing, as opposed to downloading an archival snapshot, which is significantly larger and more special-purpose.
+{% /admonition %}
 
-   - `DATA_PATH` sets the destination download directory to `~/testnet-snap`
-   - `CHAIN_ID` sets the blockchain network to `testnet` (default is `mainnet`)
+Make sure you have `rclone` installed. Install it by running:
 
-  {% admonition type="info" name="Review full command, copy below:" %}
-    &nbsp;    
-    <code>curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/fastnear/static/refs/heads/main/down_rclone.sh | CHAIN_ID=testnet DATA_PATH=~/testnet-snap sh</code>
-  {% /admonition %}        
+```bash {% title="rclone installation" %}
+sudo -v ; curl https://rclone.org/install.sh | sudo bash
+```
 
-  ``` {% title="testnet snapshot » ~/testnet-snap" %}
-  curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/fastnear/static/refs/heads/main/down_rclone.sh | CHAIN_ID=testnet DATA_PATH=~/testnet-snap-archival sh
-  ```
+Before running the snapshot download script, you can set the following environment variables:
 
+- `CHAIN_ID` to either `mainnet` or `testnet`. (default: `mainnet`)
+- `THREADS` to the number of threads you want to use for downloading. Use `128` for 10Gbps, and `16` for 1Gbps (default: `128`).
+- `TPSLIMIT` to the maximum number of HTTP new actions per second. (default: `4096`)
+- `BWLIMIT` to the maximum bandwidth to use for download in case you want to limit it. (default: `10G`)
+- `DATA_PATH` to the path where you want to download the snapshot (default: `~/.near/data`)
+- `BLOCK` to the block height of the snapshot you want to download. If not set, it will download the latest snapshot.
 
-<!-- ### Archival snapshot
+**Run this command to download the RPC Testnet snapshot:**
 
-  Environment variables:
+{% admonition type="info" name="" %}
+We will set the following environment variables:
+- `DATA_PATH=~/.near/data` - the standard nearcore path
+- `CHAIN_ID=testnet` - to explicitly specify the testnet data
+  {% /admonition %}
 
-    - `DATA_PATH` sets the destination download directory to `~/testnet-snap-archival`
-    - `CHAIN_ID` sets the blockchain network to `testnet` (default is `mainnet`
-
-  {% admonition type="info" name="Review full command, copy below:" %}
-    &nbsp;    
-    <code>curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/fastnear/static/refs/heads/main/down_rclone_archival.sh | CHAIN_ID=testnet DATA_PATH=~/testnet-snap-archival sh</code>
-  {% /admonition %}        
-
-  ``` {% title="testnet archive » ~/testnet-snap-archival" %}
-  curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/fastnear/static/refs/heads/main/down_rclone_archival.sh | CHAIN_ID=testnet DATA_PATH=~/testnet-snap-archival sh
-  ``` -->
+```bash {% title="RPC Testnet Snapshot » ~/.near/data" %}
+curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/fastnear/static/refs/heads/main/down_rclone.sh | DATA_PATH=~/.near/data CHAIN_ID=testnet bash
+```
