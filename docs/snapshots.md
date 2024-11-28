@@ -49,7 +49,7 @@ Before running the snapshot download script, you can set the following environme
 We will set the following environment variables:
 - `DATA_PATH=~/.near/data` - the standard nearcore path
 - `CHAIN_ID=mainnet` - to explicitly specify the mainnet data
-  {% /admonition %}
+{% /admonition %}
 
 ```bash {% title="RPC Mainnet Snapshot » ~/.near/data" %}
 curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/fastnear/static/refs/heads/main/down_rclone.sh | DATA_PATH=~/.near/data CHAIN_ID=mainnet bash
@@ -111,7 +111,7 @@ We will set the following environment variables:
 - `DATA_PATH=~/.near/data` - the standard nearcore path
 - `CHAIN_ID=mainnet` - to explicitly specify the mainnet data
 - `BLOCK=$LATEST` - specify the snapshot block
-  {% /admonition %}
+{% /admonition %}
 
 ```bash {% title="Archival Mainnet Snapshot (hot-data) » ~/.near/data" %}
 curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/fastnear/static/refs/heads/main/down_rclone_archival.sh | DATA_TYPE=hot-data DATA_PATH=~/.near/data CHAIN_ID=mainnet BLOCK=$LATEST bash
@@ -125,7 +125,7 @@ We will set the following environment variables:
 - `DATA_PATH=/mnt/hdds/cold-data` - the path where to place cold data. **Note**: the nearcore config should point cold data store to the same path.
 - `CHAIN_ID=mainnet` - to explicitly specify the mainnet data
 - `BLOCK=$LATEST` - specify the snapshot block
-  {% /admonition %}
+{% /admonition %}
 
 ```bash {% title="Archival Mainnet Snapshot (cold-data) » /mnt/hdds/cold-data" %}
 curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/fastnear/static/refs/heads/main/down_rclone_archival.sh | DATA_TYPE=cold-data DATA_PATH=/mnt/hdds/cold-data CHAIN_ID=mainnet BLOCK=$LATEST bash
@@ -161,7 +161,7 @@ Before running the snapshot download script, you can set the following environme
 We will set the following environment variables:
 - `DATA_PATH=~/.near/data` - the standard nearcore path
 - `CHAIN_ID=testnet` - to explicitly specify the testnet data
-  {% /admonition %}
+{% /admonition %}
 
 ```bash {% title="RPC Testnet Snapshot » ~/.near/data" %}
 curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/fastnear/static/refs/heads/main/down_rclone.sh | DATA_PATH=~/.near/data CHAIN_ID=testnet bash
