@@ -23,6 +23,6 @@
   },
   "homepage": "https://github.com/Redocly/apidocs-starter#readme",
   "dependencies": {
-      "@redocly/realm": "0.108.4"
+      "@redocly/realm": "0.109.2"
   }
 }
