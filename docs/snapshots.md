@@ -22,11 +22,13 @@ The instructions below utilize logic from this FastNEAR repository: <a href="htt
 
 ## Mainnet
 
-### RPC Mainnet Snapshot
+### Optimized Mainnet Snapshot
 
 {% admonition type="info" name="" %}
 **Note**: This is likely the preferred approach for syncing, as opposed to downloading an archival snapshot, which is significantly larger and more special-purpose.
 {% /admonition %}
+
+Nodes with sufficient resources can take advantage of setting the `$RPC_TYPE` flag to `fast-rpc`. (Default is `rpc`)
 
 Make sure you have `rclone` installed. Install it by running:
 
@@ -37,6 +39,39 @@ sudo -v ; curl https://rclone.org/install.sh | sudo bash
 Before running the snapshot download script, you can set the following environment variables:
 
 - `CHAIN_ID` to either `mainnet` or `testnet`. (default: `mainnet`)
+- `RPC_TYPE` to either `rpc` (default) or `fast-rpc`
+- `THREADS` to the number of threads you want to use for downloading. Use `128` for 10Gbps, and `16` for 1Gbps (default: `128`).
+- `TPSLIMIT` to the maximum number of HTTP new actions per second. (default: `4096`)
+- `BWLIMIT` to the maximum bandwidth to use for download in case you want to limit it. (default: `10G`)
+- `DATA_PATH` to the path where you want to download the snapshot (default: `~/.near/data`)
+- `BLOCK` to the block height of the snapshot you want to download. If not set, it will download the latest snapshot.
+
+**Run this command to download the RPC Mainnet snapshot:**
+
+{% admonition type="info" name="" %}
+We will set the following environment variables:
+- `DATA_PATH=~/.near/data` - the standard nearcore path
+- `CHAIN_ID=mainnet` - to explicitly specify the mainnet data
+  {% /admonition %}
+
+```bash {% title="RPC Mainnet Snapshot » ~/.near/data" %}
+curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/fastnear/static/refs/heads/main/down_rclone.sh | DATA_PATH=~/.near/data CHAIN_ID=mainnet RPC_TYPE=fast-rpc bash
+```
+
+### RPC Mainnet Snapshot
+
+This is the standard method to obtain a snapshot without the high performance from the previous section covering optimized snapshots. 
+
+Make sure you have `rclone` installed. Install it by running:
+
+```bash {% title="rclone installation" %}
+sudo -v ; curl https://rclone.org/install.sh | sudo bash
+```
+
+Before running the snapshot download script, you can set the following environment variables:
+
+- `CHAIN_ID` to either `mainnet` or `testnet`. (default: `mainnet`)
+- `RPC_TYPE` to either `rpc` (default) or `fast-rpc`
 - `THREADS` to the number of threads you want to use for downloading. Use `128` for 10Gbps, and `16` for 1Gbps (default: `128`).
 - `TPSLIMIT` to the maximum number of HTTP new actions per second. (default: `4096`)
 - `BWLIMIT` to the maximum bandwidth to use for download in case you want to limit it. (default: `10G`)
