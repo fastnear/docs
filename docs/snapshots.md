@@ -253,7 +253,7 @@ We will set the following environment variables:
 - `DATA_PATH=~/.near/data` - the standard nearcore path
 - `CHAIN_ID=testnet` - set to testnet network
 - `BLOCK=$LATEST` - specify the snapshot block
-  {% /admonition %}
+{% /admonition %}
 
 ```bash {% title="Archival Testnet Snapshot (hot-data) » ~/.near/data" %}
 curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/fastnear/static/refs/heads/main/down_rclone_archival.sh | DATA_TYPE=hot-data DATA_PATH=~/.near/data CHAIN_ID=testnet BLOCK=$LATEST bash
