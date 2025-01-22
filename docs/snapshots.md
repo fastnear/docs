@@ -52,7 +52,8 @@ Before running the snapshot download script, you can set the following environme
 We will set the following environment variables:
 - `DATA_PATH=~/.near/data` - the standard nearcore path
 - `CHAIN_ID=mainnet` - to explicitly specify the mainnet data
-  {% /admonition %}
+- `RPC_TYPE=fast-rpc` - select optimized approach
+{% /admonition %}
 
 ```bash {% title="RPC Mainnet Snapshot » ~/.near/data" %}
 curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/fastnear/static/refs/heads/main/down_rclone.sh | DATA_PATH=~/.near/data CHAIN_ID=mainnet RPC_TYPE=fast-rpc bash
