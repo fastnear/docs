@@ -3,8 +3,8 @@ info:
   title: FastNEAR API
   description: Useful NEAR Protocol endpoints for advanced caching and aggregation.
 servers:
-  - url: "https://api.fastnear.com"
-  - url: "https://test.api.fastnear.com"
+  - url: "https://api.fastnear.com/"
+  - url: "https://test.api.fastnear.com/"
 
 paths:
   /status:
@@ -14,8 +14,8 @@ paths:
         "200":
           description: Successful response
           content:
-            application/json: 
-              example: 
+            application/json:
+              example:
                 sync_balance_block_height: 179038439
                 sync_block_height: 179038439
                 sync_block_timestamp_nanosec: "1731131048798003067"
@@ -33,8 +33,8 @@ paths:
         "200":
           description: Successful response
           content:
-            application/json: 
-              example: 
+            application/json:
+              example:
                 status: "ok"
       x-codeSamples:
         - lang: curl

@@ -6,10 +6,10 @@ info:
 
     For exhaustive list of endpoints, refer to the [NEAR documentation](https://docs.near.org/api/rpc/transactions).
 servers:
-  - url: "https://rpc.mainnet.fastnear.com"
-  - url: "https://rpc.testnet.fastnear.com"
-  - url: "https://archival-rpc.mainnet.fastnear.com"
-  - url: "https://archival-rpc.testnet.fastnear.com"
+  - url: "https://rpc.mainnet.fastnear.com/"
+  - url: "https://rpc.testnet.fastnear.com/"
+  - url: "https://archival-rpc.mainnet.fastnear.com/"
+  - url: "https://archival-rpc.testnet.fastnear.com/"
 
 paths:
   view_account:
@@ -20,10 +20,10 @@ paths:
         "200":
           description: Successful response
           content:
-            application/json: 
+            application/json:
               example:
                 jsonrpc: "2.0"
-                "result": 
+                "result":
                   "amount": "166616133734086239835140361"
                   "block_hash": "qBa4QiqGQQoodxqdn7gY9uJApfVFBAAzQ27ZEcLHz6b"
                   "block_height": 132283656
@@ -31,7 +31,7 @@ paths:
                   "locked": "0"
                   "storage_paid_at": 0
                   "storage_usage": 17703
-                "id": "fastnear"            
+                "id": "fastnear"
       x-codeSamples:
         - lang: curl
           label: "cURL"
