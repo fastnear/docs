@@ -17,7 +17,7 @@ markdown:
     hide: true
 sidebar:
   # mike: hide will be true, helpful in early dev
-  hide: true
+  hide: false
   linePosition: bottom
 navbar:
   hide: true
