@@ -1,28 +1,32 @@
 openapi:
+  showExtensions: true
   hideReplay: false
   hideSchemaTitles: true
   hideInfoMetadata: false
+  hidePropertiesPrefix: false
+  sortRequiredPropsFirst: true
   codeSamples:
-    skipOptionalParameters: true
+    skipOptionalParameters: false
     languages:
       - lang: 'curl'
-        label: 'cURL'      
+        label: 'curl'
 markdown:
   lastUpdatedBlock:
     format: long
     locale: en-US
     hide: true
-  editPage:
-    hide: true
 sidebar:
+  # mike: hide will be true, helpful in early dev
+  hide: false
   linePosition: bottom
 navbar:
+  hide: true
   items:
     - page: docs/snapshots.md
       label: Docs Home
     - label: Status
       href: 'https://status.fastnear.com'
-      external: true      
+      external: true
     - label: Subscriptions
       href: 'https://subscriptions.fastnear.com'
       external: true
@@ -30,7 +34,7 @@ navbar:
       href: 'https://fastnear.com'
       external: true
 feedback:
-  hide: true      
+  hide: true
 search:
   hide: false
 colorMode:
@@ -42,19 +46,21 @@ apis:
     root: rpcs/openapi.yaml
     openapi:
       hideDownloadButtons: true
+      expandDefaultServerVariables: true
   api:
     root: apis/openapi.yaml
     openapi:
       hideDownloadButtons: true
+      expandDefaultServerVariables: true
 mockServer:
   position: 'off'
 codeSnippet:
   report:
-    hide: true        
-navigation:
-  previousButton: 
     hide: true
-  nextButton: 
+navigation:
+  previousButton:
+    hide: true
+  nextButton:
     hide: true
 breadcrumbs:
   hide: true

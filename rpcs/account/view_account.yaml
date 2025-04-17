@@ -1,0 +1,109 @@
+openapi: 3.1.0
+
+info:
+  description: "Queries details for a NEAR account"
+servers:
+  - url: "https://rpc.mainnet.fastnear.com/"
+    description: "NEAR Mainnet RPC"
+  - url: "https://rpc.testnet.fastnear.com/"
+    description: "NEAR Testnet RPC"
+
+paths:
+  /:
+    post:
+      operationId: view_account
+      summary: "View account"
+      description: "Retrieves detailed information about a NEAR account including balance and storage usage"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - jsonrpc
+                - id
+                - method
+                - params
+              properties:
+                jsonrpc:
+                  type: string
+                  enum: ["2.0"]
+                id:
+                  type: string
+                  example: "fastnear"
+                method:
+                  type: string
+                  enum: ["query"]
+                params:
+                  type: object
+                  required:
+                    - request_type
+                    - finality
+                    - account_id
+                  properties:
+                    request_type:
+                      type: string
+                      enum: ["view_account"]
+                    finality:
+                      type: string
+                      enum: ["final", "optimistic"]
+                      description: "Block finality used for the query"
+                    account_id:
+                      type: string
+                      description: "Account ID format should match the network (*.near for mainnet, *.testnet for testnet)"
+            examples:
+              mainnet:
+                summary: "View Mainnet Account"
+                value:
+                  jsonrpc: "2.0"
+                  id: "fastnear"
+                  method: "query"
+                  params:
+                    request_type: "view_account"
+                    finality: "final"
+                    account_id: "mike.near"
+              testnet:
+                summary: "View Testnet Account"
+                value:
+                  jsonrpc: "2.0"
+                  id: "fastnear"
+                  method: "query"
+                  params:
+                    request_type: "view_account"
+                    finality: "final"
+                    account_id: "mike.testnet"
+      responses:
+        "200":
+          description: "Successful response"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JsonRpcResponse"
+
+components:
+  schemas:
+    JsonRpcResponse:
+      type: object
+      required:
+        - jsonrpc
+        - id
+      properties:
+        jsonrpc:
+          type: string
+          enum: ["2.0"]
+        id:
+          oneOf:
+            - type: string
+            - type: number
+        result:
+          type: object
+        error:
+          type: object
+          properties:
+            code:
+              type: integer
+            message:
+              type: string
+            data:
+              type: object
