@@ -16,11 +16,12 @@ markdown:
     locale: en-US
     hide: true
 sidebar:
-  # mike: hide will be true, helpful in early dev
+  # mike: hide will be true, after migration
   hide: false
   linePosition: bottom
 navbar:
-  hide: true
+  # mike: hide will be true, after migration
+  hide: false
   items:
     - page: docs/snapshots.md
       label: Docs Home
