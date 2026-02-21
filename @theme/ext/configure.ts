@@ -12,6 +12,7 @@ const API_KEY_SCHEMES = ["ApiKeyAuth", "api_key", "api_keys", "fastnear_api_key"
 const BEARER_SCHEMES = ["bearerAuth", "jwt", "BearerAuth"];
 
 let configureCallCount = 0;
+let isSyncing = false;
 
 export function configure(context: any) {
   configureCallCount++;
@@ -115,7 +116,31 @@ function syncServerSelector(network: string) {
   console.warn(`[configure.ts] Server menu item for ${network} not found`);
 }
 
+/**
+ * Programmatically switch the example selector to match the given network.
+ * This is the reverse of syncServerSelector — when the user picks a server,
+ * we update the example dropdown to show the matching named example.
+ */
+function syncExampleSelector(network: string) {
+  const selects = document.querySelectorAll<HTMLSelectElement>('select.dropdown-select');
+  for (const select of selects) {
+    for (const option of select.options) {
+      const text = option.textContent || '';
+      if (text.toLowerCase().includes(network.toLowerCase())) {
+        if (select.value !== option.value) {
+          select.value = option.value;
+          select.dispatchEvent(new Event('change', { bubbles: true }));
+          console.log(`[configure.ts] Example auto-switched to ${network}`);
+        }
+        return;
+      }
+    }
+  }
+  console.warn(`[configure.ts] Example option for ${network} not found`);
+}
+
 function setupEnvironmentObserver() {
+  // Example → Server sync (existing direction)
   document.addEventListener('change', (e) => {
     const target = e.target as HTMLSelectElement;
     if (target.tagName === 'SELECT' && target.classList.contains('dropdown-select')) {
@@ -123,10 +148,33 @@ function setupEnvironmentObserver() {
       const network = /testnet/i.test(selectedText) ? 'Testnet'
                     : /mainnet/i.test(selectedText) ? 'Mainnet'
                     : null;
-      if (network) {
+      if (network && !isSyncing) {
+        isSyncing = true;
         // Small delay: let Redocly finish processing the example change first
         setTimeout(() => syncServerSelector(network), 50);
+        setTimeout(() => { isSyncing = false; }, 200);
       }
+    }
+  }, true);
+
+  // Server → Example sync (new reverse direction)
+  document.addEventListener('click', (e) => {
+    const item = (e.target as HTMLElement).closest?.(
+      '[data-component-name="Dropdown/DropdownMenuItem"]'
+    ) as HTMLElement | null;
+    if (!item) return;
+
+    const text = item.textContent || '';
+    // Only react to server dropdown items (contain fastnear RPC URLs)
+    if (!text.includes('fastnear.com')) return;
+
+    const network = /testnet/i.test(text) ? 'Testnet'
+                  : /mainnet/i.test(text) ? 'Mainnet'
+                  : null;
+    if (network && !isSyncing) {
+      isSyncing = true;
+      setTimeout(() => syncExampleSelector(network), 50);
+      setTimeout(() => { isSyncing = false; }, 200);
     }
   }, true);
 }
