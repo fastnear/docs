@@ -17,9 +17,7 @@ mike-docs/
 │   ├── transaction/            # 6 operations (tx_status, send_tx, broadcast_tx_async, ...)
 │   └── validators/             # 3 operations (validators_current, validators_by_epoch, ...)
 ├── apis/                       # REST API specs
-│   ├── openapi.yaml            # Aggregate REST API spec
-│   ├── @v0/                    # v0 endpoints (openapi.yaml, public_key.yaml)
-│   └── @v1/                    # v1 endpoints (openapi.yaml, public_key.yaml)
+│   └── openapi.yaml            # REST API spec (public key lookup endpoints)
 ├── @theme/
 │   └── ext/
 │       └── configure.ts        # Redocly extension — injects auth, body, and env vars into Try-It

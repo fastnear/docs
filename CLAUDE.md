@@ -29,7 +29,7 @@ The aggregate spec `rpcs/openapi.yaml` uses `$ref` to reference all individual o
 
 ### REST API Specs (`apis/`)
 
-REST API definitions under `apis/@v0/` and `apis/@v1/`, each with their own `openapi.yaml`.
+REST API definition at `apis/openapi.yaml` (public key lookup endpoints).
 
 ### Configure Extension (`@theme/ext/configure.ts`)
 
