@@ -37,14 +37,8 @@ scripts:
   head:
     - src: ./scripts/dark-mode.js
 apis:
-  v0:
-    root: apis/@v0/public_key.yaml
-    openapi:
-      hideDownloadButtons: true
-      expandDefaultServerVariables: true
-      expandResponses: all
-  v1:
-    root: apis/@v1/public_key.yaml
+  api:
+    root: apis/openapi.yaml
     openapi:
       hideDownloadButtons: true
       expandDefaultServerVariables: true
