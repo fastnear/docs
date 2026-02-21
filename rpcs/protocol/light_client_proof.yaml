@@ -62,9 +62,9 @@ paths:
                   method: light_client_proof
                   params:
                     type: receipt
-                    transaction_hash: 4T7xSkmVv21ddGVQzcGT6EiwGm47SSgSxPhFogYbNEnc
-                    sender_id: sweat-relayer.near
-                    light_client_head: DYf4gXPNrdRE2JNCaKH7ZJyfAvk1vL13QNJK35qU6uvx
+                    transaction_hash: 8a8HR2Gf8NkLLeNcuHet4JeEz9kWa1fhs6qAnBdiewrR
+                    sender_id: 0-relay.hot.tg
+                    light_client_head: BnHU4MCqsNVgLRCiZteef85VYxCbNzwkWEo1cEG8Z6VX
               testnet:
                 summary: Testnet Light Client Proof
                 value:
@@ -73,9 +73,9 @@ paths:
                   method: light_client_proof
                   params:
                     type: receipt
-                    transaction_hash: 6tfZVXodt2JuzfF3wyAsvGpp6kXBGERJ3N4ivQJKNNkn
+                    transaction_hash: Ac5D9MWqo5wKmRBZiqQfyuJfz4SMsgc3tDCjMoQBBeRK
                     sender_id: relay.aurora
-                    light_client_head: FLvphksgEysEbhr8uMqWkQoogjvk2UZrkiBGC3kcmaE5
+                    light_client_head: G92i6jYNUcJ6nZpPPF6TUghBoYbewqBQeUNquF3Qz38i
       responses:
         200:
           description: Successful response

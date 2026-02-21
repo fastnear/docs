@@ -46,7 +46,7 @@ paths:
                   id: fastnear
                   method: chunk
                   params:
-                    chunk_id: 38eckshypnTxxH4oTYvXXiBTdKE9DBeYr1Lbxc5vYA3v
+                    chunk_id: 2GPYNPnguQaHBnvTZyExDHfVESgDhbcjMXeCakRsHWDN
               testnet:
                 summary: Testnet Chunk Example
                 value:
@@ -54,7 +54,7 @@ paths:
                   id: fastnear
                   method: chunk
                   params:
-                    chunk_id: 57TxY8LTZZ6bUt9ii8TLgLkA9krT7gijGqLtA8DbP2Ko
+                    chunk_id: GfuJc8kGsjmbeJVARxaKwZUFagqGDcs9TvYeEjj4Wy7z
       responses:
         200:
           description: Successful response

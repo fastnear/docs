@@ -42,7 +42,7 @@ paths:
                   id: fastnear
                   method: block_effects
                   params:
-                    block_id: 186543785
+                    block_id: 186561182
               testnet:
                 summary: Get block effects (Testnet)
                 value:
@@ -50,7 +50,7 @@ paths:
                   id: fastnear
                   method: block_effects
                   params:
-                    block_id: 237892044
+                    block_id: 237911138
       responses:
         200:
           description: Successful response

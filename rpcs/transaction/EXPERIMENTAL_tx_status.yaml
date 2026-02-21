@@ -64,8 +64,8 @@ paths:
                   params:
                     wait_until: EXECUTED_OPTIMISTIC
                     signed_tx_base64: ExampleBase64EncodedTransaction
-                    sender_account_id: sweat-relayer.near
-                    tx_hash: 4T7xSkmVv21ddGVQzcGT6EiwGm47SSgSxPhFogYbNEnc
+                    sender_account_id: 0-relay.hot.tg
+                    tx_hash: 8a8HR2Gf8NkLLeNcuHet4JeEz9kWa1fhs6qAnBdiewrR
               testnet:
                 summary: Get detailed transaction status (Testnet)
                 value:
@@ -76,7 +76,7 @@ paths:
                     wait_until: EXECUTED_OPTIMISTIC
                     signed_tx_base64: ExampleBase64EncodedTransaction
                     sender_account_id: relay.aurora
-                    tx_hash: 6tfZVXodt2JuzfF3wyAsvGpp6kXBGERJ3N4ivQJKNNkn
+                    tx_hash: Ac5D9MWqo5wKmRBZiqQfyuJfz4SMsgc3tDCjMoQBBeRK
       responses:
         200:
           description: Successful response

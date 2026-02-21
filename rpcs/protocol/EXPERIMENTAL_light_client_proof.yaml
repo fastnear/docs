@@ -61,12 +61,12 @@ paths:
                   id: fastnear
                   method: EXPERIMENTAL_light_client_proof
                   params:
-                    light_client_head: DYf4gXPNrdRE2JNCaKH7ZJyfAvk1vL13QNJK35qU6uvx
-                    sender_id: sweat-relayer.near
-                    transaction_hash: 4T7xSkmVv21ddGVQzcGT6EiwGm47SSgSxPhFogYbNEnc
+                    light_client_head: BnHU4MCqsNVgLRCiZteef85VYxCbNzwkWEo1cEG8Z6VX
+                    sender_id: 0-relay.hot.tg
+                    transaction_hash: 8a8HR2Gf8NkLLeNcuHet4JeEz9kWa1fhs6qAnBdiewrR
                     type: receipt
-                    receipt_id: 4CfT6H3fgqAwU1KhxMaUNfUscVXvjfyGYGxBBtDmuFV2
-                    receiver_id: sweat-relayer.near
+                    receipt_id: Fdt2JqfAh8s1xNC32wyYjjH2QrPmHJYRrbv4ytyt3ra4
+                    receiver_id: 0-relay.hot.tg
               testnet:
                 summary: Get light client execution proof (Testnet)
                 value:
@@ -74,11 +74,11 @@ paths:
                   id: fastnear
                   method: EXPERIMENTAL_light_client_proof
                   params:
-                    light_client_head: FLvphksgEysEbhr8uMqWkQoogjvk2UZrkiBGC3kcmaE5
+                    light_client_head: G92i6jYNUcJ6nZpPPF6TUghBoYbewqBQeUNquF3Qz38i
                     sender_id: relay.aurora
-                    transaction_hash: 6tfZVXodt2JuzfF3wyAsvGpp6kXBGERJ3N4ivQJKNNkn
+                    transaction_hash: Ac5D9MWqo5wKmRBZiqQfyuJfz4SMsgc3tDCjMoQBBeRK
                     type: receipt
-                    receipt_id: 6SgvZtZhcnVWjNWQuog7Jtwvi7JBAgSCEfS6RrQtf9hR
+                    receipt_id: J4zDz1wsdqYqHHn2QkTNnMq1Pr9LKY7v5rspPi3Xehz9
                     receiver_id: relay.aurora
       responses:
         200:

@@ -46,7 +46,7 @@ paths:
                   id: fastnear
                   method: next_light_client_block
                   params:
-                    last_block_hash: DYf4gXPNrdRE2JNCaKH7ZJyfAvk1vL13QNJK35qU6uvx
+                    last_block_hash: BnHU4MCqsNVgLRCiZteef85VYxCbNzwkWEo1cEG8Z6VX
               testnet:
                 summary: Get next light client block (Testnet)
                 value:
@@ -54,7 +54,7 @@ paths:
                   id: fastnear
                   method: next_light_client_block
                   params:
-                    last_block_hash: FLvphksgEysEbhr8uMqWkQoogjvk2UZrkiBGC3kcmaE5
+                    last_block_hash: G92i6jYNUcJ6nZpPPF6TUghBoYbewqBQeUNquF3Qz38i
       responses:
         200:
           description: Successful response

@@ -62,8 +62,8 @@ paths:
                   id: fastnear
                   method: tx
                   params:
-                    tx_hash: 4T7xSkmVv21ddGVQzcGT6EiwGm47SSgSxPhFogYbNEnc
-                    sender_account_id: sweat-relayer.near
+                    tx_hash: 8a8HR2Gf8NkLLeNcuHet4JeEz9kWa1fhs6qAnBdiewrR
+                    sender_account_id: 0-relay.hot.tg
               testnet:
                 summary: Testnet Example
                 value:
@@ -71,7 +71,7 @@ paths:
                   id: fastnear
                   method: tx
                   params:
-                    tx_hash: 6tfZVXodt2JuzfF3wyAsvGpp6kXBGERJ3N4ivQJKNNkn
+                    tx_hash: Ac5D9MWqo5wKmRBZiqQfyuJfz4SMsgc3tDCjMoQBBeRK
                     sender_account_id: relay.aurora
       responses:
         200:
