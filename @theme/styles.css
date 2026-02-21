@@ -10,7 +10,6 @@
   --toc-item-text-color-active: var(--primary-2);
   --breadcrumbs-text-color-active: var(--primary-2);
   --font-size-base: 16px;
-  --heading-anchor-offset-right: 6px;
   --navbar-height: 42px;
   --navbar-font-size: 16px;
   --navbar-border: none;
@@ -19,14 +18,6 @@
   --panel-border-radius: 6px;
   --panel-font-size: 16px;
   --md-content-max-width: 919px;
-  --admonition-icon-size: 36px;
-  --button-icon-size: 23px;
-  --button-font-size: 19px;
-  --control-height-base: 42px;
-  --spacing-unit: 3px;
-  --code-block-padding: var(--spacing-md);
-  --panel-gap-horizontal: 19px;
-  --admonition-margin-horizontal: 19px 24px;
 }
 
 :root.dark {
@@ -35,12 +26,9 @@
   --primary-bg: #101a3f;
 }
 
-.panel-download {
+.panel-download,
+.panel-language-list {
     display: none;
-}
-
-.button-size-small {
-  --button-icon-size: 23px !important;
 }
 
 #api-content h2 {
@@ -48,32 +36,21 @@
   margin-block-end: 0px;
 }
 
-button {
-  background-color: var(--button-color);
-  color: var(--button-text-color);
-  border: 2px solid var(--button-border-color);
-  border-radius: 4px;
-  font-weight: bold;
-}
-
-#app_root article > div, #app_root #api-content div {
-  border: none;
-}
-
-.panel-language-list {
-  display: none;
-}
-
 .panel-servers-list span {
   font-size: 16px;
 }
 
-#app_root .panel-response-samples div div pre {
-  border-bottom-left-radius: 6px;
-  border-bottom-right-radius: 6px;
-}
-
-/* finallly!!!!!!!! */
-#app_root .menu-item-type-group > div:hover::before {
-  border: none;
+/* Show full hashes/values without ellipsis truncation */
+#api-content [class*="SelectionTitle"],
+#api-content [class*="FieldValue"],
+#api-content [class*="ExampleValue"],
+#api-content [class*="Dropdown__"] span,
+#api-content [class*="DropdownMenu"] span,
+#api-content [class*="ServerList__"] span,
+#api-content .dropdown-select span,
+#api-content .dropdown-option span {
+  text-overflow: unset !important;
+  overflow: visible !important;
+  white-space: normal !important;
+  word-break: break-all !important;
 }

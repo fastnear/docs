@@ -1,0 +1,41 @@
+openapi: 3.1.0
+info:
+  title: "NEAR Protocol RPC: Transaction Operations"
+  description: |
+    # Transaction Operations Overview
+
+    Transactions represent the fundamental mechanism through which state changes are proposed and propagated throughout the NEAR Protocol blockchain. This category encompasses the complete transaction lifecycle management operations.
+
+    ## Conceptual Framework
+    
+    NEAR Protocol transactions utilize an asynchronous execution model, allowing for:
+    - Multiple actions bundled within a single transaction
+    - Directed targeting to specific accounts
+    - Varied state modification operations
+
+    ## Technical Implementation
+
+    Each transaction operation represents a distinct phase in the transaction lifecycle:
+    - **Broadcasting** - Initial submission to the network
+    - **Validation** - Cryptographic and semantic verification
+    - **Execution** - State transition application
+    - **Finalization** - Consensus commitment
+
+    ## Available Operations
+
+    | Operation | Description | Documentation |
+    |-----------|-------------|---------------|
+    | Broadcast Transaction (Async) | Submit a transaction without awaiting execution confirmation | [View Documentation](/rpcs/transaction/broadcast_tx_async.yaml) |
+    | Broadcast Transaction (Commit) | Submit a transaction and wait for full blockchain commitment | [View Documentation](/rpcs/transaction/broadcast_tx_commit.yaml) |
+    | Transaction Status | Query execution details and outcome of a submitted transaction | [View Documentation](/rpcs/transaction/tx_status.yaml) |
+  version: "1.0.0"
+servers:
+  - url: "https://rpc.mainnet.fastnear.com"
+    description: "Mainnet RPC"
+  - url: "https://rpc.testnet.fastnear.com"
+    description: "Testnet RPC"
+tags:
+  - name: "Transaction Operations"
+    description: "JSON-RPC methods for managing NEAR Protocol transactions"
+paths: {}
+components: {}

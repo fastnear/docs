@@ -1,0 +1,107 @@
+openapi: 3.1.0
+info:
+  title: "NEAR Protocol RPC: View global contract code by account"
+  description: Returns the globally deployed contract code used by a specific account
+  version: 1.0.0
+servers:
+  - url: "https://rpc.mainnet.fastnear.com"
+    description: Mainnet
+  - url: "https://rpc.testnet.fastnear.com"
+    description: Testnet
+paths:
+  /:
+    post:
+      operationId: view_global_contract_code_by_account_id
+      summary: View global contract code by account
+      description: Returns the globally deployed contract code used by a specific account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [jsonrpc, id, method, params]
+              properties:
+                jsonrpc:
+                  type: string
+                  enum: ["2.0"]
+                id:
+                  type: string
+                  example: fastnear
+                method:
+                  type: string
+                  enum: [query]
+                params:
+                  type: object
+                  properties:
+                    account_id:
+                      type: string
+                      description: NEAR account ID
+                    request_type:
+                      type: string
+                      enum: [view_global_contract_code_by_account_id]
+                    finality:
+                      type: string
+                      enum: [final, optimistic]
+                      description: Block finality
+                  required: [request_type, account_id, finality]
+            examples:
+              mainnet:
+                summary: View global contract code by account (Mainnet)
+                value:
+                  jsonrpc: "2.0"
+                  id: fastnear
+                  method: query
+                  params:
+                    account_id: example.near
+                    request_type: view_global_contract_code_by_account_id
+                    finality: final
+              testnet:
+                summary: View global contract code by account (Testnet)
+                value:
+                  jsonrpc: "2.0"
+                  id: fastnear
+                  method: query
+                  params:
+                    account_id: example.near
+                    request_type: view_global_contract_code_by_account_id
+                    finality: final
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JsonRpcResponse"
+components:
+  schemas:
+    JsonRpcResponse:
+      type: object
+      required: [jsonrpc, id]
+      properties:
+        jsonrpc:
+          type: string
+          enum: ["2.0"]
+        id:
+          oneOf:
+            - type: string
+            - type: number
+        result:
+          type: object
+          description: A view of the contract code.
+          properties:
+            code_base64:
+              type: string
+            hash:
+              type: string
+              description: Base58-encoded hash
+          required: [code_base64, hash]
+        error:
+          type: object
+          properties:
+            code:
+              type: integer
+            message:
+              type: string
+            data:
+              type: object

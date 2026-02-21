@@ -1,0 +1,152 @@
+openapi: 3.1.0
+info:
+  title: "NEAR Protocol RPC: Get next light client block"
+  description: Returns the next light client block
+  version: 1.0.0
+servers:
+  - url: "https://rpc.mainnet.fastnear.com"
+    description: Mainnet
+  - url: "https://rpc.testnet.fastnear.com"
+    description: Testnet
+paths:
+  /:
+    post:
+      operationId: next_light_client_block
+      summary: Get next light client block
+      description: Returns the next light client block
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [jsonrpc, id, method, params]
+              properties:
+                jsonrpc:
+                  type: string
+                  enum: ["2.0"]
+                id:
+                  type: string
+                  example: fastnear
+                method:
+                  type: string
+                  enum: [next_light_client_block]
+                params:
+                  type: object
+                  properties:
+                    last_block_hash:
+                      type: string
+                      description: Base58-encoded hash
+                  required: [last_block_hash]
+            examples:
+              mainnet:
+                summary: Get next light client block (Mainnet)
+                value:
+                  jsonrpc: "2.0"
+                  id: fastnear
+                  method: next_light_client_block
+                  params:
+                    last_block_hash: DYf4gXPNrdRE2JNCaKH7ZJyfAvk1vL13QNJK35qU6uvx
+              testnet:
+                summary: Get next light client block (Testnet)
+                value:
+                  jsonrpc: "2.0"
+                  id: fastnear
+                  method: next_light_client_block
+                  params:
+                    last_block_hash: FLvphksgEysEbhr8uMqWkQoogjvk2UZrkiBGC3kcmaE5
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JsonRpcResponse"
+components:
+  schemas:
+    JsonRpcResponse:
+      type: object
+      required: [jsonrpc, id]
+      properties:
+        jsonrpc:
+          type: string
+          enum: ["2.0"]
+        id:
+          oneOf:
+            - type: string
+            - type: number
+        result:
+          type: object
+          description: "A state for the current head of a light client. More info [here](https://nomicon.io/ChainSpec/LightClient)."
+          properties:
+            approvals_after_next:
+              type: array
+              items:
+                type: [string, "null"]
+                description: Base58-encoded cryptographic signature
+            inner_lite:
+              type: object
+              description: "A part of a state for the current head of a light client. More info [here](https://nomicon.io/ChainSpec/LightClient)."
+              properties:
+                block_merkle_root:
+                  type: string
+                  description: Base58-encoded hash
+                epoch_id:
+                  type: string
+                  description: Base58-encoded hash
+                height:
+                  type: integer
+                  format: uint64
+                  minimum: 0
+                next_bp_hash:
+                  type: string
+                  description: Base58-encoded hash
+                next_epoch_id:
+                  type: string
+                  description: Base58-encoded hash
+                outcome_root:
+                  type: string
+                  description: Base58-encoded hash
+                prev_state_root:
+                  type: string
+                  description: Base58-encoded hash
+                timestamp:
+                  type: integer
+                  description: Legacy json number. Should not be used.
+                  format: uint64
+                  minimum: 0
+                timestamp_nanosec:
+                  type: string
+              required:
+                - height
+                - epoch_id
+                - next_epoch_id
+                - prev_state_root
+                - outcome_root
+                - timestamp
+                - timestamp_nanosec
+                - next_bp_hash
+                - block_merkle_root
+            inner_rest_hash:
+              type: string
+              description: Base58-encoded hash
+            next_block_inner_hash:
+              type: string
+              description: Base58-encoded hash
+            next_bps:
+              type: array
+              items:
+                type: object
+                description: One of multiple possible types
+            prev_block_hash:
+              type: string
+              description: Base58-encoded hash
+        error:
+          type: object
+          properties:
+            code:
+              type: integer
+            message:
+              type: string
+            data:
+              type: object

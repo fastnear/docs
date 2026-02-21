@@ -1,0 +1,18 @@
+# Reference page configuration for single-operation pages
+type: reference-docs
+definitionId: rpc
+label: FastNEAR RPC
+settings:
+  pagination: item        # Enable single-operation pages
+  showConsole: true       # Keep Try-It console
+  hideInfoSection: true   # Clean up for embedding
+  hideDownloadButton: true # Remove download button
+  disableSidebar: true    # No internal sidebar for clean embed
+  expandResponses: all    # Show all response examples
+  expandDefaultServerVariables: true
+  generateCodeSamples:
+    languages:
+      - lang: curl
+        label: cURL
+      - lang: javascript
+        label: JavaScript

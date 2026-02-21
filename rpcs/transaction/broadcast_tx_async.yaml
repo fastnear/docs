@@ -1,0 +1,100 @@
+openapi: 3.1.0
+info:
+  title: "NEAR Protocol RPC: Broadcast Transaction Async"
+  description: Send transaction asynchronously without waiting for execution
+  version: 1.0.0
+servers:
+  - url: "https://rpc.mainnet.fastnear.com"
+    description: Mainnet
+  - url: "https://rpc.testnet.fastnear.com"
+    description: Testnet
+paths:
+  /:
+    post:
+      operationId: broadcast_tx_async
+      summary: Send transaction asynchronously
+      description: Submits a transaction to the network without waiting for its execution
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [jsonrpc, id, method, params]
+              properties:
+                jsonrpc:
+                  type: string
+                  enum: ["2.0"]
+                id:
+                  type: string
+                  example: fastnear
+                method:
+                  type: string
+                  enum: [broadcast_tx_async]
+                params:
+                  type: object
+                  properties:
+                    signed_tx_base64:
+                      type: string
+                      description: Base64-encoded signed transaction
+                    wait_until:
+                      type: string
+                      enum:
+                        - NONE
+                        - INCLUDED
+                        - INCLUDED_FINAL
+                        - EXECUTED
+                        - EXECUTED_OPTIMISTIC
+                        - FINAL
+                      description: Desired level of execution status guarantee
+                      default: EXECUTED_OPTIMISTIC
+                  required: [signed_tx_base64]
+            examples:
+              mainnet:
+                summary: Mainnet Example
+                value:
+                  jsonrpc: "2.0"
+                  id: fastnear
+                  method: broadcast_tx_async
+                  params:
+                    signed_tx_base64: DgAAAG1pa2UubmVhcgCpPJgEEFUwQjFQvL8V3CnZ0h688WG5sVsKE8JYM37ax2cUjgEAAAAAAAAADQAAAG1pa2V0ZXN0Lm5lYXIPfFBmYNAIe2/MicVhDXbvT3w06LxS2OCF0UHIYgjNDQAAAHRlc3RpbmcgbWVtbwEAAAADAQAAAAAAAAAAAAAAAAAAAA==
+              testnet:
+                summary: Testnet Example
+                value:
+                  jsonrpc: "2.0"
+                  id: fastnear
+                  method: broadcast_tx_async
+                  params:
+                    signed_tx_base64: DgAAAG1pa2UudGVzdG5ldACpPJgEEFUwQjFQvL8V3CnZ0h688WG5sVsKE8JYM37ax2cUjgEAAAAAAAAADQAAAG1pa2V0ZXN0LnRlc3RuZXQPfFBmYNAIe2/MicVhDXbvT3w06LxS2OCF0UHIYgjNDQAAAHRlc3RpbmcgbWVtbwEAAAADAQAAAAAAAAAAAAAAAAAAAA==
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JsonRpcResponse"
+components:
+  schemas:
+    JsonRpcResponse:
+      type: object
+      required: [jsonrpc, id]
+      properties:
+        jsonrpc:
+          type: string
+          enum: ["2.0"]
+        id:
+          oneOf:
+            - type: string
+            - type: number
+        result:
+          type: string
+          description: Base58-encoded hash
+        error:
+          type: object
+          properties:
+            code:
+              type: integer
+            message:
+              type: string
+            data:
+              type: object

@@ -1,0 +1,118 @@
+openapi: 3.1.0
+info:
+  title: "NEAR Protocol RPC: View Contract State"
+  description: Query contract state data for a NEAR account
+  version: 1.0.0
+servers:
+  - url: "https://rpc.mainnet.fastnear.com"
+    description: Mainnet
+  - url: "https://rpc.testnet.fastnear.com"
+    description: Testnet
+paths:
+  /:
+    post:
+      operationId: view_state
+      summary: View contract state
+      description: Retrieves the state (key-value pairs) stored for a contract account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [jsonrpc, id, method, params]
+              properties:
+                jsonrpc:
+                  type: string
+                  enum: ["2.0"]
+                id:
+                  type: string
+                  example: fastnear
+                method:
+                  type: string
+                  enum: [query]
+                params:
+                  type: object
+                  properties:
+                    account_id:
+                      type: string
+                      description: NEAR account ID
+                    include_proof:
+                      type: boolean
+                    prefix_base64:
+                      type: string
+                      description: Base64-encoded storage key
+                    request_type:
+                      type: string
+                      enum: [view_state]
+                    finality:
+                      type: string
+                      enum: [final, optimistic]
+                      description: Block finality
+                  required: [request_type, account_id, prefix_base64, finality]
+            examples:
+              mainnet:
+                summary: View Mainnet Contract State
+                value:
+                  jsonrpc: "2.0"
+                  id: fastnear
+                  method: query
+                  params:
+                    request_type: view_state
+                    finality: final
+                    account_id: contract.near
+                    prefix_base64: ""
+              testnet:
+                summary: View Testnet Contract State
+                value:
+                  jsonrpc: "2.0"
+                  id: fastnear
+                  method: query
+                  params:
+                    request_type: view_state
+                    finality: final
+                    account_id: contract.testnet
+                    prefix_base64: ""
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JsonRpcResponse"
+components:
+  schemas:
+    JsonRpcResponse:
+      type: object
+      required: [jsonrpc, id]
+      properties:
+        jsonrpc:
+          type: string
+          enum: ["2.0"]
+        id:
+          oneOf:
+            - type: string
+            - type: number
+        result:
+          type: object
+          description: Resulting state values for a view state query request
+          properties:
+            proof:
+              type: array
+              items:
+                type: string
+            values:
+              type: array
+              items:
+                type: object
+                description: "Item of the state, key and value are serialized in base64 and proof for inclusion of given state item."
+          required: [values]
+        error:
+          type: object
+          properties:
+            code:
+              type: integer
+            message:
+              type: string
+            data:
+              type: object

@@ -1,3 +1,9 @@
+extends:
+  - recommended
+rules:
+  security-defined: 'off'
+  operation-4xx-response: 'off'
+  info-license: 'off'
 openapi:
   showExtensions: true
   hideReplay: false
@@ -8,60 +14,59 @@ openapi:
   codeSamples:
     skipOptionalParameters: false
     languages:
-      - lang: 'curl'
-        label: 'curl'
+      - lang: curl
+        label: curl
 markdown:
   lastUpdatedBlock:
     format: long
     locale: en-US
     hide: true
 sidebar:
-  # mike: hide will be true, after migration
-  hide: false
-  linePosition: bottom
+  hide: true
 navbar:
-  # mike: hide will be true, after migration
-  hide: false
-  items:
-    - page: docs/snapshots.md
-      label: Docs Home
-    - label: Status
-      href: 'https://status.fastnear.com'
-      external: true
-    - label: Subscriptions
-      href: 'https://subscriptions.fastnear.com'
-      external: true
-    - label: FastNEAR Company
-      href: 'https://fastnear.com'
-      external: true
+  hide: true
 feedback:
   hide: true
 search:
   hide: false
 colorMode:
   modes:
-    - 'light'
-    - 'dark'
+    - light
+    - dark
+scripts:
+  head:
+    - src: ./scripts/dark-mode.js
 apis:
+  v0:
+    root: apis/@v0/public_key.yaml
+    openapi:
+      hideDownloadButtons: true
+      expandDefaultServerVariables: true
+      expandResponses: all
+  v1:
+    root: apis/@v1/public_key.yaml
+    openapi:
+      hideDownloadButtons: true
+      expandDefaultServerVariables: true
+      expandResponses: all
   rpc:
     root: rpcs/openapi.yaml
     openapi:
       hideDownloadButtons: true
       expandDefaultServerVariables: true
-  api:
-    root: apis/openapi.yaml
-    openapi:
-      hideDownloadButtons: true
-      expandDefaultServerVariables: true
+      layout: stacked
+      schemaExpansionLevel: 0
+      showConsole: true
+      hideSidebar: true
 mockServer:
   position: 'off'
 codeSnippet:
   report:
     hide: true
+breadcrumbs:
+  hide: true
 navigation:
   previousButton:
     hide: true
   nextButton:
     hide: true
-breadcrumbs:
-  hide: true

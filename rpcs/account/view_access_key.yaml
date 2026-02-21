@@ -1,0 +1,114 @@
+openapi: 3.1.0
+info:
+  title: "NEAR Protocol RPC: View Access Key"
+  description: Query details of a specific access key for a NEAR account
+  version: 1.0.0
+servers:
+  - url: "https://rpc.mainnet.fastnear.com"
+    description: Mainnet
+  - url: "https://rpc.testnet.fastnear.com"
+    description: Testnet
+paths:
+  /:
+    post:
+      operationId: view_access_key
+      summary: View account access key
+      description: Retrieves information about a specific access key for a NEAR account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [jsonrpc, id, method, params]
+              properties:
+                jsonrpc:
+                  type: string
+                  enum: ["2.0"]
+                id:
+                  type: string
+                  example: fastnear
+                method:
+                  type: string
+                  enum: [query]
+                params:
+                  type: object
+                  properties:
+                    account_id:
+                      type: string
+                      description: NEAR account ID
+                    public_key:
+                      type: string
+                      description: "ed25519: or secp256k1: prefixed public key"
+                    request_type:
+                      type: string
+                      enum: [view_access_key]
+                    finality:
+                      type: string
+                      enum: [final, optimistic]
+                      description: Block finality
+                  required: [request_type, account_id, public_key, finality]
+            examples:
+              mainnet:
+                summary: View Mainnet Account Access Key
+                value:
+                  jsonrpc: "2.0"
+                  id: fastnear
+                  method: query
+                  params:
+                    request_type: view_access_key
+                    finality: final
+                    account_id: mike.near
+                    public_key: "ed25519:6666666666666666666666666666666666666666666"
+              testnet:
+                summary: View Testnet Account Access Key
+                value:
+                  jsonrpc: "2.0"
+                  id: fastnear
+                  method: query
+                  params:
+                    request_type: view_access_key
+                    finality: final
+                    account_id: mike.testnet
+                    public_key: "ed25519:Bt6gx87fRm99KkkN1Q9UEA8vY9DBLkRSntqcLDuZt3S"
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JsonRpcResponse"
+components:
+  schemas:
+    JsonRpcResponse:
+      type: object
+      required: [jsonrpc, id]
+      properties:
+        jsonrpc:
+          type: string
+          enum: ["2.0"]
+        id:
+          oneOf:
+            - type: string
+            - type: number
+        result:
+          type: object
+          description: Describes access key permission scope and nonce.
+          properties:
+            nonce:
+              type: integer
+              format: uint64
+              minimum: 0
+            permission:
+              type: [string, "null"]
+              enum: [FullAccess]
+          required: [nonce, permission]
+        error:
+          type: object
+          properties:
+            code:
+              type: integer
+            message:
+              type: string
+            data:
+              type: object

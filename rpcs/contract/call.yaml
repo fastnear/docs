@@ -1,0 +1,126 @@
+openapi: 3.1.0
+info:
+  title: "NEAR Protocol RPC: Call Function"
+  description: Call a contract method on a NEAR account
+  version: 1.0.0
+servers:
+  - url: "https://rpc.mainnet.fastnear.com"
+    description: Mainnet
+  - url: "https://rpc.testnet.fastnear.com"
+    description: Testnet
+paths:
+  /:
+    post:
+      operationId: call_function
+      summary: Call contract function
+      description: Execute a view method on a smart contract without modifying state
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [jsonrpc, id, method, params]
+              properties:
+                jsonrpc:
+                  type: string
+                  enum: ["2.0"]
+                id:
+                  type: string
+                  example: fastnear
+                method:
+                  type: string
+                  enum: [query]
+                params:
+                  type: object
+                  properties:
+                    account_id:
+                      type: string
+                      description: NEAR account ID
+                    args_base64:
+                      type: string
+                      description: Base64-encoded method arguments
+                    method_name:
+                      type: string
+                    request_type:
+                      type: string
+                      enum: [call_function]
+                    finality:
+                      type: string
+                      enum: [final, optimistic]
+                      description: Block finality
+                  required:
+                    - request_type
+                    - account_id
+                    - method_name
+                    - args_base64
+                    - finality
+            examples:
+              mainnet:
+                summary: Call Mainnet Contract Function
+                value:
+                  jsonrpc: "2.0"
+                  id: fastnear
+                  method: query
+                  params:
+                    request_type: call_function
+                    finality: final
+                    account_id: contract.near
+                    method_name: get_info
+                    args_base64: e30=
+              testnet:
+                summary: Call Testnet Contract Function
+                value:
+                  jsonrpc: "2.0"
+                  id: fastnear
+                  method: query
+                  params:
+                    request_type: call_function
+                    finality: final
+                    account_id: contract.testnet
+                    method_name: get_info
+                    args_base64: e30=
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JsonRpcResponse"
+components:
+  schemas:
+    JsonRpcResponse:
+      type: object
+      required: [jsonrpc, id]
+      properties:
+        jsonrpc:
+          type: string
+          enum: ["2.0"]
+        id:
+          oneOf:
+            - type: string
+            - type: number
+        result:
+          type: object
+          description: A result returned by contract method
+          properties:
+            logs:
+              type: array
+              items:
+                type: string
+            result:
+              type: array
+              items:
+                type: integer
+                format: uint8
+                minimum: 0
+          required: [result, logs]
+        error:
+          type: object
+          properties:
+            code:
+              type: integer
+            message:
+              type: string
+            data:
+              type: object

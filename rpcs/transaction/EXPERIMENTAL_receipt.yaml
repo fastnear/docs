@@ -1,0 +1,107 @@
+openapi: 3.1.0
+info:
+  title: "NEAR Protocol RPC: Get receipt by ID"
+  description: "Fetches a receipt by its ID (as is, without a status or execution outcome)"
+  version: 1.0.0
+servers:
+  - url: "https://rpc.mainnet.fastnear.com"
+    description: Mainnet
+  - url: "https://rpc.testnet.fastnear.com"
+    description: Testnet
+paths:
+  /:
+    post:
+      operationId: EXPERIMENTAL_receipt
+      summary: Get receipt by ID
+      description: "Fetches a receipt by its ID (as is, without a status or execution outcome)"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [jsonrpc, id, method, params]
+              properties:
+                jsonrpc:
+                  type: string
+                  enum: ["2.0"]
+                id:
+                  type: string
+                  example: fastnear
+                method:
+                  type: string
+                  enum: [EXPERIMENTAL_receipt]
+                params:
+                  type: object
+                  properties:
+                    receipt_id:
+                      type: string
+                      description: Base58-encoded hash
+                  required: [receipt_id]
+            examples:
+              mainnet:
+                summary: Get receipt by ID (Mainnet)
+                value:
+                  jsonrpc: "2.0"
+                  id: fastnear
+                  method: EXPERIMENTAL_receipt
+                  params:
+                    receipt_id: 4CfT6H3fgqAwU1KhxMaUNfUscVXvjfyGYGxBBtDmuFV2
+              testnet:
+                summary: Get receipt by ID (Testnet)
+                value:
+                  jsonrpc: "2.0"
+                  id: fastnear
+                  method: EXPERIMENTAL_receipt
+                  params:
+                    receipt_id: 6SgvZtZhcnVWjNWQuog7Jtwvi7JBAgSCEfS6RrQtf9hR
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JsonRpcResponse"
+components:
+  schemas:
+    JsonRpcResponse:
+      type: object
+      required: [jsonrpc, id]
+      properties:
+        jsonrpc:
+          type: string
+          enum: ["2.0"]
+        id:
+          oneOf:
+            - type: string
+            - type: number
+        result:
+          type: object
+          properties:
+            predecessor_id:
+              type: string
+              description: NEAR account ID
+            priority:
+              type: integer
+              format: uint64
+              default: 0
+              minimum: 0
+            receipt:
+              type: object
+              description: One of multiple possible types
+            receipt_id:
+              type: string
+              description: Base58-encoded hash
+            receiver_id:
+              type: string
+              description: NEAR account ID
+          required: [predecessor_id, receiver_id, receipt_id, receipt]
+        error:
+          type: object
+          properties:
+            code:
+              type: integer
+            message:
+              type: string
+            data:
+              type: object

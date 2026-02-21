@@ -4,11 +4,11 @@
   items:
     - page: rpcs/openapi.yaml
       label: All endpoints
-    - separator:  endpoints soon™
+    - separator: endpoints soon
     - separatorLine: true
 - group: API
   expanded: true
   items:
     - page: apis/openapi.yaml
-    - separator: all endpoints soon™
+    - separator: all endpoints soon
     - separatorLine: true

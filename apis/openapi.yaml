@@ -1,43 +1,73 @@
 openapi: 3.1.0
+
 info:
-  title: FastNEAR API
-  description: Useful NEAR Protocol endpoints for advanced caching and aggregation.
+  title: "FastNEAR API"
+  description: "API endpoints for the NEAR Protocol blockchain"
+  version: "1.0.0"
+
 servers:
-  - url: "https://api.fastnear.com/"
-  - url: "https://test.api.fastnear.com/"
+  - url: "https://api.mainnet.fastnear.com"
+    description: "NEAR Mainnet API"
+  - url: "https://api.testnet.fastnear.com"
+    description: "NEAR Testnet API"
+
+# Define the proper tag structure
+tags:
+  - name: keys
+    description: "Operations for looking up NEAR accounts by public keys"
+  - name: account
+    description: "Operations for retrieving account information"
+  - name: token
+    description: "Operations for fungible tokens and NFTs"
+
+# Group tags by version for better organization
+x-tagGroups:
+  - name: "Public Key Operations"
+    tags:
+      - keys
+  - name: "Account Operations"
+    tags:
+      - account
+  - name: "Token Operations"
+    tags:
+      - token
 
 paths:
-  /status:
+  /public_key/{public_key}:
     get:
-      summary: Status
+      operationId: lookup_by_public_key
+      summary: "Lookup accounts by public key"
+      description: "Returns NEAR accounts associated with the provided public key"
+      tags:
+        - keys
+      parameters:
+        - name: public_key
+          in: path
+          required: true
+          schema:
+            type: string
+          description: "NEAR Protocol public key (ED25519 or secp256k1). Must be a valid base58-encoded public key string."
+          example: "ed25519:2onv9qxBqs5NYqTuLmotXcQbQGPVXZp537JYd3KFpYxV"
       responses:
         "200":
-          description: Successful response
+          description: "Successful response"
           content:
             application/json:
+              schema:
+                type: object
+                properties:
+                  public_key:
+                    type: string
+                    description: "The public key that was queried"
+                  account_ids:
+                    type: array
+                    items:
+                      type: string
+                    description: "List of NEAR account IDs associated with this public key"
               example:
-                sync_balance_block_height: 179038439
-                sync_block_height: 179038439
-                sync_block_timestamp_nanosec: "1731131048798003067"
-                sync_latency_sec: 2.960060157
-                version: "0.10.0"
-      x-codeSamples:
-        - lang: curl
-          label: "cURL"
-          source: |
-            curl -s "https://api.fastnear.com/status"
-  /health:
-    get:
-      summary: Health
-      responses:
-        "200":
-          description: Successful response
-          content:
-            application/json:
-              example:
-                status: "ok"
-      x-codeSamples:
-        - lang: curl
-          label: "cURL"
-          source: |
-            curl -s "https://api.fastnear.com/health"
+                public_key: "ed25519:2onv9qxBqs5NYqTuLmotXcQbQGPVXZp537JYd3KFpYxV"
+                account_ids: ["example.near"]
+        "400":
+          description: "Invalid request parameters"
+        "500":
+          description: "Internal server or database error"

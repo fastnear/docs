@@ -1,0 +1,102 @@
+openapi: 3.1.0
+info:
+  title: "NEAR Protocol RPC: Get congestion level"
+  description: Queries the congestion level of a shard
+  version: 1.0.0
+servers:
+  - url: "https://rpc.mainnet.fastnear.com"
+    description: Mainnet
+  - url: "https://rpc.testnet.fastnear.com"
+    description: Testnet
+paths:
+  /:
+    post:
+      operationId: EXPERIMENTAL_congestion_level
+      summary: Get congestion level
+      description: Queries the congestion level of a shard
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [jsonrpc, id, method, params]
+              properties:
+                jsonrpc:
+                  type: string
+                  enum: ["2.0"]
+                id:
+                  type: string
+                  example: fastnear
+                method:
+                  type: string
+                  enum: [EXPERIMENTAL_congestion_level]
+                params:
+                  type: [object, "null"]
+                  properties:
+                    block_id:
+                      oneOf:
+                        - type: integer
+                          description: Block height
+                        - type: string
+                          description: Base58-encoded block hash
+                      description: Block height (integer) or block hash (string)
+                    shard_id:
+                      type: integer
+                      description: Shard identifier
+                  required: [block_id, shard_id]
+            examples:
+              mainnet:
+                summary: Get congestion level (Mainnet)
+                value:
+                  jsonrpc: "2.0"
+                  id: fastnear
+                  method: EXPERIMENTAL_congestion_level
+                  params:
+                    block_id: 12345
+                    shard_id: 0
+              testnet:
+                summary: Get congestion level (Testnet)
+                value:
+                  jsonrpc: "2.0"
+                  id: fastnear
+                  method: EXPERIMENTAL_congestion_level
+                  params:
+                    block_id: 12345
+                    shard_id: 0
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JsonRpcResponse"
+components:
+  schemas:
+    JsonRpcResponse:
+      type: object
+      required: [jsonrpc, id]
+      properties:
+        jsonrpc:
+          type: string
+          enum: ["2.0"]
+        id:
+          oneOf:
+            - type: string
+            - type: number
+        result:
+          type: object
+          properties:
+            congestion_level:
+              type: number
+              format: double
+          required: [congestion_level]
+        error:
+          type: object
+          properties:
+            code:
+              type: integer
+            message:
+              type: string
+            data:
+              type: object

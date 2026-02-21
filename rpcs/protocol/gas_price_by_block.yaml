@@ -1,0 +1,97 @@
+openapi: 3.1.0
+info:
+  title: "NEAR Protocol RPC: Gas Price By Block"
+  description: Retrieve gas price information for a specific block
+  version: 1.0.0
+servers:
+  - url: "https://rpc.mainnet.fastnear.com"
+    description: Mainnet
+  - url: "https://rpc.testnet.fastnear.com"
+    description: Testnet
+paths:
+  /:
+    post:
+      operationId: gas_price_by_block
+      summary: Get gas price by block
+      description: Retrieves gas price information for a specific block
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [jsonrpc, id, method, params]
+              properties:
+                jsonrpc:
+                  type: string
+                  enum: ["2.0"]
+                id:
+                  type: string
+                  example: fastnear
+                method:
+                  type: string
+                  enum: [gas_price]
+                params:
+                  type: object
+                  required: [block_id]
+                  properties:
+                    block_id:
+                      oneOf:
+                        - type: integer
+                          description: Block height
+                        - type: string
+                          description: Base58-encoded block hash
+                      description: Block height (integer) or block hash (string)
+            examples:
+              mainnet:
+                summary: Get gas price by block (Mainnet)
+                value:
+                  jsonrpc: "2.0"
+                  id: fastnear
+                  method: gas_price
+                  params:
+                    block_id: DYf4gXPNrdRE2JNCaKH7ZJyfAvk1vL13QNJK35qU6uvx
+              testnet:
+                summary: Get gas price by block (Testnet)
+                value:
+                  jsonrpc: "2.0"
+                  id: fastnear
+                  method: gas_price
+                  params:
+                    block_id: FLvphksgEysEbhr8uMqWkQoogjvk2UZrkiBGC3kcmaE5
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JsonRpcResponse"
+components:
+  schemas:
+    JsonRpcResponse:
+      type: object
+      required: [jsonrpc, id]
+      properties:
+        jsonrpc:
+          type: string
+          enum: ["2.0"]
+        id:
+          oneOf:
+            - type: string
+            - type: number
+        result:
+          type: object
+          properties:
+            gas_price:
+              type: string
+              description: Amount in yoctoNEAR
+          required: [gas_price]
+        error:
+          type: object
+          properties:
+            code:
+              type: integer
+            message:
+              type: string
+            data:
+              type: object

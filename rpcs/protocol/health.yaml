@@ -1,0 +1,85 @@
+openapi: 3.1.0
+info:
+  title: "NEAR Protocol RPC: Node Health"
+  description: Check the health status of a NEAR Protocol node
+  version: 1.0.0
+servers:
+  - url: "https://rpc.mainnet.fastnear.com"
+    description: Mainnet
+  - url: "https://rpc.testnet.fastnear.com"
+    description: Testnet
+paths:
+  /:
+    post:
+      operationId: health
+      summary: Check node health
+      description: "Performs a health check on the node to determine if it's operating correctly"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [jsonrpc, id, method, params]
+              properties:
+                jsonrpc:
+                  type: string
+                  enum: ["2.0"]
+                id:
+                  type: string
+                  example: fastnear
+                method:
+                  type: string
+                  enum: [health]
+                params:
+                  type: array
+                  maxItems: 0
+                  description: Empty array as this method takes no parameters
+                  example: []
+            examples:
+              mainnet:
+                summary: Mainnet Node Health
+                value:
+                  jsonrpc: "2.0"
+                  id: fastnear
+                  method: health
+                  params: []
+              testnet:
+                summary: Testnet Node Health
+                value:
+                  jsonrpc: "2.0"
+                  id: fastnear
+                  method: health
+                  params: []
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JsonRpcResponse"
+components:
+  schemas:
+    JsonRpcResponse:
+      type: object
+      required: [jsonrpc, id]
+      properties:
+        jsonrpc:
+          type: string
+          enum: ["2.0"]
+        id:
+          oneOf:
+            - type: string
+            - type: number
+        result:
+          type: object
+          description: Health status of the node
+        error:
+          type: object
+          properties:
+            code:
+              type: integer
+            message:
+              type: string
+            data:
+              type: object

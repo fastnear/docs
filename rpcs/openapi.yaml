@@ -3,8 +3,9 @@ info:
   title: FastNEAR RPC
   description: |-
     NEAR Protocol JSON RPC
-    
+
     For exhaustive list of endpoints, refer to the [NEAR documentation](https://docs.near.org/api/rpc/transactions).
+  version: "1.0.0"
 servers:
   - url: "https://rpc.mainnet.fastnear.com/"
   - url: "https://rpc.testnet.fastnear.com/"
@@ -14,6 +15,7 @@ servers:
 paths:
   /: # Single endpoint for all JSON-RPC methods
     post:
+      operationId: jsonrpc
       summary: JSON-RPC Endpoint
       description: Single endpoint for all NEAR JSON-RPC methods
       requestBody:

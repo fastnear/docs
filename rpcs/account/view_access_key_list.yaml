@@ -1,0 +1,107 @@
+openapi: 3.1.0
+info:
+  title: "NEAR Protocol RPC: View Access Key List"
+  description: Query all access keys for a NEAR account
+  version: 1.0.0
+servers:
+  - url: "https://rpc.mainnet.fastnear.com"
+    description: Mainnet
+  - url: "https://rpc.testnet.fastnear.com"
+    description: Testnet
+paths:
+  /:
+    post:
+      operationId: view_access_key_list
+      summary: View all account access keys
+      description: Retrieves a list of all access keys for a NEAR account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [jsonrpc, id, method, params]
+              properties:
+                jsonrpc:
+                  type: string
+                  enum: ["2.0"]
+                id:
+                  type: string
+                  example: fastnear
+                method:
+                  type: string
+                  enum: [query]
+                params:
+                  type: object
+                  properties:
+                    account_id:
+                      type: string
+                      description: NEAR account ID
+                    request_type:
+                      type: string
+                      enum: [view_access_key_list]
+                    finality:
+                      type: string
+                      enum: [final, optimistic]
+                      description: Block finality
+                  required: [request_type, account_id, finality]
+            examples:
+              mainnet:
+                summary: View Mainnet Account Access Keys
+                value:
+                  jsonrpc: "2.0"
+                  id: fastnear
+                  method: query
+                  params:
+                    request_type: view_access_key_list
+                    finality: final
+                    account_id: mike.near
+              testnet:
+                summary: View Testnet Account Access Keys
+                value:
+                  jsonrpc: "2.0"
+                  id: fastnear
+                  method: query
+                  params:
+                    request_type: view_access_key_list
+                    finality: final
+                    account_id: mike.testnet
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JsonRpcResponse"
+components:
+  schemas:
+    JsonRpcResponse:
+      type: object
+      required: [jsonrpc, id]
+      properties:
+        jsonrpc:
+          type: string
+          enum: ["2.0"]
+        id:
+          oneOf:
+            - type: string
+            - type: number
+        result:
+          type: object
+          description: Lists access keys
+          properties:
+            keys:
+              type: array
+              items:
+                type: object
+                description: Describes information about an access key including the public key.
+          required: [keys]
+        error:
+          type: object
+          properties:
+            code:
+              type: integer
+            message:
+              type: string
+            data:
+              type: object

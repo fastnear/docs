@@ -1,0 +1,100 @@
+openapi: 3.1.0
+info:
+  title: "NEAR Protocol RPC: Latest Block"
+  description: "Retrieve the most recent block data from the NEAR blockchain"
+  version: "1.0.0"
+servers:
+  - url: "https://rpc.mainnet.fastnear.com"
+    description: "Mainnet RPC"
+  - url: "https://rpc.testnet.fastnear.com"
+    description: "Testnet RPC"
+  - url: "https://archival-rpc.mainnet.fastnear.com"
+    description: "Mainnet Archival RPC"
+  - url: "https://archival-rpc.testnet.fastnear.com"
+    description: "Testnet Archival RPC"
+paths:
+  /:
+    post:
+      operationId: latest_block
+      summary: "Get latest block"
+      description: "Retrieves the most recent block from the blockchain"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - jsonrpc
+                - id
+                - method
+                - params
+              properties:
+                jsonrpc:
+                  type: string
+                  enum: ["2.0"]
+                id:
+                  type: string
+                  example: "fastnear"
+                method:
+                  type: string
+                  enum: ["block"]
+                params:
+                  type: object
+                  required:
+                    - block_id
+                  properties:
+                    block_id:
+                      type: string
+                      enum: ["latest"]
+                      description: "Special identifier for the latest block"
+            examples:
+              mainnet:
+                summary: "Mainnet Latest Block"
+                value:
+                  jsonrpc: "2.0"
+                  id: "fastnear"
+                  method: "block"
+                  params:
+                    block_id: "latest"
+              testnet:
+                summary: "Testnet Latest Block"
+                value:
+                  jsonrpc: "2.0"
+                  id: "fastnear"
+                  method: "block"
+                  params:
+                    block_id: "latest"
+      responses:
+        "200":
+          description: "Successful response"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonRpcResponse'
+components:
+  schemas:
+    JsonRpcResponse:
+      type: object
+      required:
+        - jsonrpc
+        - id
+      properties:
+        jsonrpc:
+          type: string
+          enum: ["2.0"]
+        id:
+          oneOf:
+            - type: string
+            - type: number
+        result:
+          type: object
+        error:
+          type: object
+          properties:
+            code:
+              type: integer
+            message:
+              type: string
+            data:
+              type: object

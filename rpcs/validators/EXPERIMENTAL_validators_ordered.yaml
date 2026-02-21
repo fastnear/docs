@@ -1,0 +1,95 @@
+openapi: 3.1.0
+info:
+  title: "NEAR Protocol RPC: Get validators ordered"
+  description: Returns the current epoch validators ordered in the block producer order with repetition
+  version: 1.0.0
+servers:
+  - url: "https://rpc.mainnet.fastnear.com"
+    description: Mainnet
+  - url: "https://rpc.testnet.fastnear.com"
+    description: Testnet
+paths:
+  /:
+    post:
+      operationId: EXPERIMENTAL_validators_ordered
+      summary: Get validators ordered
+      description: Returns the current epoch validators ordered in the block producer order with repetition
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [jsonrpc, id, method, params]
+              properties:
+                jsonrpc:
+                  type: string
+                  enum: ["2.0"]
+                id:
+                  type: string
+                  example: fastnear
+                method:
+                  type: string
+                  enum: [EXPERIMENTAL_validators_ordered]
+                params:
+                  type: object
+                  properties:
+                    block_id:
+                      oneOf:
+                        - type: integer
+                          description: Block height
+                        - type: string
+                          description: Base58-encoded block hash
+                        - type: "null"
+                      description: Block height (integer) or block hash (string)
+            examples:
+              mainnet:
+                summary: Get validators ordered (Mainnet)
+                value:
+                  jsonrpc: "2.0"
+                  id: fastnear
+                  method: EXPERIMENTAL_validators_ordered
+                  params:
+                    block_id: 12345
+              testnet:
+                summary: Get validators ordered (Testnet)
+                value:
+                  jsonrpc: "2.0"
+                  id: fastnear
+                  method: EXPERIMENTAL_validators_ordered
+                  params:
+                    block_id: 12345
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JsonRpcResponse"
+components:
+  schemas:
+    JsonRpcResponse:
+      type: object
+      required: [jsonrpc, id]
+      properties:
+        jsonrpc:
+          type: string
+          enum: ["2.0"]
+        id:
+          oneOf:
+            - type: string
+            - type: number
+        result:
+          type: array
+          items:
+            type: object
+            description: One of multiple possible types
+        error:
+          type: object
+          properties:
+            code:
+              type: integer
+            message:
+              type: string
+            data:
+              type: object

@@ -1,0 +1,89 @@
+openapi: 3.1.0
+info:
+  title: "NEAR Protocol RPC: Gas Price"
+  description: Retrieve current gas price information
+  version: 1.0.0
+servers:
+  - url: "https://rpc.mainnet.fastnear.com"
+    description: Mainnet
+  - url: "https://rpc.testnet.fastnear.com"
+    description: Testnet
+paths:
+  /:
+    post:
+      operationId: gas_price
+      summary: Get current gas price
+      description: Retrieves information about the current gas price
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [jsonrpc, id, method, params]
+              properties:
+                jsonrpc:
+                  type: string
+                  enum: ["2.0"]
+                id:
+                  type: string
+                  example: fastnear
+                method:
+                  type: string
+                  enum: [gas_price]
+                params:
+                  type: array
+                  items:
+                    type: "null"
+                  example: [null]
+            examples:
+              mainnet:
+                summary: Get current gas price (Mainnet)
+                value:
+                  jsonrpc: "2.0"
+                  id: fastnear
+                  method: gas_price
+                  params: [null]
+              testnet:
+                summary: Get current gas price (Testnet)
+                value:
+                  jsonrpc: "2.0"
+                  id: fastnear
+                  method: gas_price
+                  params: [null]
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JsonRpcResponse"
+components:
+  schemas:
+    JsonRpcResponse:
+      type: object
+      required: [jsonrpc, id]
+      properties:
+        jsonrpc:
+          type: string
+          enum: ["2.0"]
+        id:
+          oneOf:
+            - type: string
+            - type: number
+        result:
+          type: object
+          properties:
+            gas_price:
+              type: string
+              description: Amount in yoctoNEAR
+          required: [gas_price]
+        error:
+          type: object
+          properties:
+            code:
+              type: integer
+            message:
+              type: string
+            data:
+              type: object

@@ -1,0 +1,90 @@
+openapi: 3.1.0
+info:
+  title: "NEAR Protocol RPC: Node Metrics"
+  description: "Retrieve performance metrics and statistics from a NEAR Protocol node"
+  version: "1.0.0"
+servers:
+  - url: "https://rpc.mainnet.fastnear.com"
+    description: "Mainnet"
+  - url: "https://rpc.testnet.fastnear.com"
+    description: "Testnet"
+paths:
+  /:
+    post:
+      operationId: metrics
+      summary: "Get node metrics"
+      description: "Retrieves performance metrics and operational statistics from the node"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - jsonrpc
+                - id
+                - method
+                - params
+              properties:
+                jsonrpc:
+                  type: string
+                  enum: ["2.0"]
+                id:
+                  type: string
+                  example: "fastnear"
+                method:
+                  type: string
+                  enum: ["metrics"]
+                params:
+                  type: array
+                  maxItems: 0
+                  description: "Empty array as this method takes no parameters"
+            examples:
+              mainnet:
+                summary: "Mainnet Node Metrics"
+                value:
+                  jsonrpc: "2.0"
+                  id: "fastnear"
+                  method: "metrics"
+                  params: []
+              testnet:
+                summary: "Testnet Node Metrics"
+                value:
+                  jsonrpc: "2.0"
+                  id: "fastnear"
+                  method: "metrics"
+                  params: []
+      responses:
+        "200":
+          description: "Successful response"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonRpcResponse'
+components:
+  schemas:
+    JsonRpcResponse:
+      type: object
+      required:
+        - jsonrpc
+        - id
+      properties:
+        jsonrpc:
+          type: string
+          enum: ["2.0"]
+        id:
+          oneOf:
+            - type: string
+            - type: number
+        result:
+          type: object
+          description: "Detailed metrics on node performance, resource usage, and operational statistics"
+        error:
+          type: object
+          properties:
+            code:
+              type: integer
+            message:
+              type: string
+            data:
+              type: object

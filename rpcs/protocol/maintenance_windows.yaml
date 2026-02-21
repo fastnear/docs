@@ -1,0 +1,100 @@
+openapi: 3.1.0
+info:
+  title: "NEAR Protocol RPC: Get maintenance windows"
+  description: Returns the future windows for maintenance in current epoch for the specified account
+  version: 1.0.0
+servers:
+  - url: "https://rpc.mainnet.fastnear.com"
+    description: Mainnet
+  - url: "https://rpc.testnet.fastnear.com"
+    description: Testnet
+paths:
+  /:
+    post:
+      operationId: maintenance_windows
+      summary: Get maintenance windows
+      description: Returns the future windows for maintenance in current epoch for the specified account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [jsonrpc, id, method, params]
+              properties:
+                jsonrpc:
+                  type: string
+                  enum: ["2.0"]
+                id:
+                  type: string
+                  example: fastnear
+                method:
+                  type: string
+                  enum: [maintenance_windows]
+                params:
+                  type: object
+                  properties:
+                    account_id:
+                      type: string
+                      description: NEAR account ID
+                  required: [account_id]
+            examples:
+              mainnet:
+                summary: Get maintenance windows (Mainnet)
+                value:
+                  jsonrpc: "2.0"
+                  id: fastnear
+                  method: maintenance_windows
+                  params:
+                    account_id: example.near
+              testnet:
+                summary: Get maintenance windows (Testnet)
+                value:
+                  jsonrpc: "2.0"
+                  id: fastnear
+                  method: maintenance_windows
+                  params:
+                    account_id: example.near
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JsonRpcResponse"
+components:
+  schemas:
+    JsonRpcResponse:
+      type: object
+      required: [jsonrpc, id]
+      properties:
+        jsonrpc:
+          type: string
+          enum: ["2.0"]
+        id:
+          oneOf:
+            - type: string
+            - type: number
+        result:
+          type: array
+          items:
+            type: object
+            properties:
+              end:
+                type: integer
+                format: uint64
+                minimum: 0
+              start:
+                type: integer
+                format: uint64
+                minimum: 0
+            required: [start, end]
+        error:
+          type: object
+          properties:
+            code:
+              type: integer
+            message:
+              type: string
+            data:
+              type: object

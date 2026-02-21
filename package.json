@@ -4,6 +4,13 @@
   "description": "A starter project for working with Redoc",
   "main": " ",
   "scripts": {
+    "preview": "node scripts/refresh-examples.js && npx @redocly/cli preview",
+    "preview:headless": "node scripts/toggle-headless.js headless && npm run preview",
+    "preview:portal": "node scripts/toggle-headless.js portal && npm run preview",
+    "build": "node scripts/refresh-examples.js && npx @redocly/cli build",
+    "lint": "npx @redocly/cli lint",
+    "generate-rpc": "node scripts/generate-from-nearcore.js",
+    "refresh-examples": "node scripts/refresh-examples.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -23,6 +30,6 @@
   },
   "homepage": "https://github.com/Redocly/apidocs-starter#readme",
   "dependencies": {
-      "@redocly/realm": "0.109.2"
+      "@redocly/realm": "0.119.1"
   }
 }

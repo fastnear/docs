@@ -1,0 +1,143 @@
+openapi: 3.1.0
+info:
+  title: "NEAR Protocol RPC: Validators By Epoch"
+  description: Retrieve information about validators for a specific epoch
+  version: 1.0.0
+servers:
+  - url: "https://rpc.mainnet.fastnear.com"
+    description: Mainnet
+  - url: "https://rpc.testnet.fastnear.com"
+    description: Testnet
+paths:
+  /:
+    post:
+      operationId: validators_by_epoch
+      summary: Get validators by epoch
+      description: Retrieves the list of validators and their details for a specific epoch
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [jsonrpc, id, method, params]
+              properties:
+                jsonrpc:
+                  type: string
+                  enum: ["2.0"]
+                id:
+                  type: string
+                  example: fastnear
+                method:
+                  type: string
+                  enum: [validators]
+                params:
+                  type: object
+                  required: [epoch_id]
+                  properties:
+                    epoch_id:
+                      type: string
+                      description: Base58-encoded epoch identifier hash
+            examples:
+              mainnet:
+                summary: Get validators by epoch (Mainnet)
+                value:
+                  jsonrpc: "2.0"
+                  id: fastnear
+                  method: validators
+                  params:
+                    epoch_id: GZP8ApSTYZGrn8WnKTuYvJixMvK2MtQBB7eCGZZHQaS6
+              testnet:
+                summary: Get validators by epoch (Testnet)
+                value:
+                  jsonrpc: "2.0"
+                  id: fastnear
+                  method: validators
+                  params:
+                    epoch_id: GZP8ApSTYZGrn8WnKTuYvJixMvK2MtQBB7eCGZZHQaS6
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/JsonRpcResponse"
+components:
+  schemas:
+    JsonRpcResponse:
+      type: object
+      required: [jsonrpc, id]
+      properties:
+        jsonrpc:
+          type: string
+          enum: ["2.0"]
+        id:
+          oneOf:
+            - type: string
+            - type: number
+        result:
+          type: object
+          description: Information about this epoch validators and next epoch validators
+          properties:
+            current_fishermen:
+              type: array
+              items:
+                type: object
+                description: One of multiple possible types
+              description: Fishermen for the current epoch
+            current_proposals:
+              type: array
+              items:
+                type: object
+                description: One of multiple possible types
+              description: Proposals in the current epoch
+            current_validators:
+              type: array
+              items:
+                type: object
+                description: Describes information about the current epoch validator
+              description: Validators for the current epoch
+            epoch_height:
+              type: integer
+              description: Epoch height
+              format: uint64
+              minimum: 0
+            epoch_start_height:
+              type: integer
+              description: Epoch start block height
+              format: uint64
+              minimum: 0
+            next_fishermen:
+              type: array
+              items:
+                type: object
+                description: One of multiple possible types
+              description: Fishermen for the next epoch
+            next_validators:
+              type: array
+              items:
+                type: object
+              description: Validators for the next epoch
+            prev_epoch_kickout:
+              type: array
+              items:
+                type: object
+              description: Kickout in the previous epoch
+          required:
+            - current_validators
+            - next_validators
+            - current_fishermen
+            - next_fishermen
+            - current_proposals
+            - prev_epoch_kickout
+            - epoch_start_height
+            - epoch_height
+        error:
+          type: object
+          properties:
+            code:
+              type: integer
+            message:
+              type: string
+            data:
+              type: object

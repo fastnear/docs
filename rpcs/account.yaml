@@ -1,0 +1,82 @@
+openapi: 3.1.0
+info:
+  title: "NEAR Protocol RPC: Account Operations"
+  description: |
+
+    | Operation | Description | Method |
+    |-----------|-------------|---------------|
+    | [View Account](/rpcs/account/view_account) | Retrieve comprehensive account details including balance and storage | `view_account` |
+    | [View Access Key](/rpcs/account/view_access_key) | Examine specific cryptographic key properties and permissions | `view_access_key` |
+    | [View Access Key List](/rpcs/account/view_access_key_list) | Enumerate all access keys associated with an account | `view_access_key_list` |
+servers:
+  - url: "https://rpc.mainnet.fastnear.com"
+    description: "Mainnet RPC"
+  - url: "https://rpc.testnet.fastnear.com"
+    description: "Testnet RPC"
+paths:
+  # View Account endpoint
+  /view_account:
+      $ref: './account/view_account.yaml#/paths/~1'
+#    $ref: './account/view_account.yaml#/paths/~1/post'
+
+
+  # View Access Key endpoint
+  /view_access_key:
+    $ref: './account/view_access_key.yaml#/paths/~1'
+
+  # View Access Key List endpoint
+  /view_access_key_list:
+    $ref: './account/view_access_key_list.yaml#/paths/~1'
+components:
+  schemas:
+    # Common request schema
+    JsonRpcRequest:
+      type: object
+      required:
+        - jsonrpc
+        - id
+        - method
+        - params
+      properties:
+        jsonrpc:
+          type: string
+          enum: ["2.0"]
+        id:
+          oneOf:
+            - type: string
+            - type: number
+        method:
+          type: string
+          enum: ["query"]
+        params:
+          type: object
+
+    # Common response schema
+    JsonRpcResponse:
+      type: object
+      required:
+        - jsonrpc
+        - id
+      properties:
+        jsonrpc:
+          type: string
+          enum: ["2.0"]
+        id:
+          oneOf:
+            - type: string
+            - type: number
+        result:
+          type: object
+        error:
+          type: object
+          properties:
+            code:
+              type: integer
+            message:
+              type: string
+            data:
+              type: object
+
+    # Account-specific schemas could also be referenced from individual files
+    # AccountSchema:
+    #   $ref: './account/view_account.yaml#/components/schemas/AccountSchema'
