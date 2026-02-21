@@ -69,5 +69,95 @@ paths:
                 account_ids: ["example.near"]
         "400":
           description: "Invalid request parameters"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ArgumentErrorInfo"
         "500":
           description: "Internal server or database error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalErrorInfo"
+
+  /public_key/{public_key}/all:
+    get:
+      operationId: lookup_by_public_key_all
+      summary: "Lookup all accounts by public key"
+      description: "Returns all NEAR accounts associated with the provided public key, including those with different permissions"
+      tags:
+        - keys
+      parameters:
+        - name: public_key
+          in: path
+          required: true
+          schema:
+            type: string
+          description: "NEAR Protocol public key (ED25519 or secp256k1). Must be a valid base58-encoded public key string."
+          example: "ed25519:2onv9qxBqs5NYqTuLmotXcQbQGPVXZp537JYd3KFpYxV"
+      responses:
+        "200":
+          description: "Successful response"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  public_key:
+                    type: string
+                    description: "The public key that was queried"
+                  account_ids:
+                    type: array
+                    items:
+                      type: string
+                    description: "List of all NEAR account IDs associated with this public key"
+              example:
+                public_key: "ed25519:2onv9qxBqs5NYqTuLmotXcQbQGPVXZp537JYd3KFpYxV"
+                account_ids: ["example.near", "example2.near"]
+        "400":
+          description: "Invalid request parameters"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ArgumentErrorInfo"
+        "500":
+          description: "Internal server or database error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InternalErrorInfo"
+
+components:
+  schemas:
+    ArgumentErrorInfo:
+      type: object
+      required:
+        - argument
+        - error_code
+        - message
+      properties:
+        argument:
+          type: string
+          description: "The name of the invalid argument"
+        error_code:
+          type: string
+          description: "Error code for i18n lookup"
+        message:
+          type: string
+          description: "Default English error message"
+    InternalErrorInfo:
+      type: object
+      required:
+        - type
+        - error_code
+        - message
+      properties:
+        type:
+          type: string
+          description: "Type of internal error"
+        error_code:
+          type: string
+          description: "Error code for i18n lookup"
+        message:
+          type: string
+          description: "Default English error message"
