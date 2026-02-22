@@ -4,9 +4,9 @@ info:
   description: "Queries details for a NEAR account"
 servers:
   - url: "https://rpc.mainnet.fastnear.com/"
-    description: "NEAR Mainnet RPC"
+    description: "Mainnet"
   - url: "https://rpc.testnet.fastnear.com/"
-    description: "NEAR Testnet RPC"
+    description: "Testnet"
 
 paths:
   /:
