@@ -43,6 +43,18 @@ REST API definition at `apis/openapi.yaml` (public key lookup endpoints).
 
 Custom CSS overrides for the Redocly portal. Brand colors use `#1e4aba` blue; dark mode inverts to warm yellows. Hides the download button (`.panel-download`) and language selector (`.panel-language-list`) via `display: none`. Also customizes font sizes, panel border radius, and button styles.
 
+### Curl Post-Processing (`scripts/curl-postprocess.js`)
+
+Redocly hardcodes `curl -i` (include response headers) in generated curl samples with no config option to change it. This script fixes that with two mechanisms:
+
+1. **DOM post-processing**: A `MutationObserver` watches for code sample re-renders (triggered by server/example switches) and walks text nodes in `<pre data-component-name="CodeBlock/CodeBlockContainer">` blocks to replace `-i` → `-s` and append `| jq`. Handles Shiki syntax highlighting splitting flags across separate `<span>` elements.
+
+2. **Clipboard interception**: A **capture-phase** `copy` event listener intercepts clipboard writes. When the copied text starts with `curl`, it applies the same `-i` → `-s` and `| jq` transforms before writing to `clipboardData`.
+
+The capture phase (`addEventListener('copy', ..., true)`) is critical. Redocly's copy button reads from React state (not the DOM), so DOM modifications don't affect what gets copied. The copy chain is: `CopyButton` → `ClipboardService.copyCustom()` → `copy-to-clipboard` npm package → creates a hidden `<span>` with the raw source text, selects it, calls `document.execCommand('copy')`. The `copy-to-clipboard` package adds its own listener on that `<span>` that calls `stopPropagation()`, which blocks bubbling-phase listeners. A capture-phase listener on `document` fires first (top-down), before the span's listener can stop propagation.
+
+The `MutationObserver` setup is deferred to `DOMContentLoaded` because the script loads via `scripts.head` in `redocly.yaml`, when `document.body` does not yet exist.
+
 ### URL Patterns
 
 Operations are accessible at two URL formats:
@@ -127,6 +139,7 @@ node scripts/generate-from-nearcore.js /path/to/openapi.json
 | `scripts/generate-from-nearcore.js` | nearcore → YAML generator |
 | `scripts/nearcore-operation-map.js` | Declarative operation mapping |
 | `scripts/toggle-headless.js` | Switch headless/portal mode |
+| `scripts/curl-postprocess.js` | Curl sample fix: `-i`→`-s`, `| jq`, clipboard interception |
 | `scripts/dark-mode.js` | Dark mode via `?darkMode` URL param |
 | `scripts/test-operations.js` | Smoke test operation pages |
 | `test-embed.html` | Local testing harness for iframe embedding |

@@ -25,6 +25,7 @@ mike-docs/
 │   ├── generate-from-nearcore.js   # Generator: nearcore openapi.json → rpcs/*.yaml
 │   ├── nearcore-operation-map.js   # Declarative mapping of nearcore paths → output files
 │   ├── toggle-headless.js          # Switch between headless (embed) and portal (standalone) mode
+│   ├── curl-postprocess.js          # Fixes curl samples: -i→-s, appends | jq, clipboard interception
 │   ├── dark-mode.js                # Client-side dark mode toggle via ?darkMode param
 │   └── test-operations.js          # Smoke test for operation page accessibility
 ├── docs/
@@ -145,6 +146,15 @@ Example URL:
 ```
 
 When `?body=` is absent, the YAML-defined named examples render as normal — fully backward compatible.
+
+## Curl Sample Post-Processing
+
+Redocly hardcodes `curl -i` in generated code samples with no config option to change it. `scripts/curl-postprocess.js` (loaded via `redocly.yaml` `scripts.head`) applies two fixes:
+
+- **DOM**: Replaces `-i` with `-s` (silent mode) and appends `| jq` in the rendered code blocks. A `MutationObserver` re-applies these transforms when samples re-render (e.g., switching servers/examples).
+- **Clipboard**: Intercepts the `copy` event to apply the same transforms when users click the copy button or Cmd+C selected curl text.
+
+The clipboard interception uses a **capture-phase** event listener because Redocly's copy button uses the `copy-to-clipboard` package, which calls `stopPropagation()` on its internal copy handler — blocking standard bubbling listeners. The capture phase fires before the package's handler can suppress the event.
 
 ## URL Patterns
 
