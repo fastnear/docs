@@ -36,6 +36,7 @@ colorMode:
 scripts:
   head:
     - src: ./scripts/dark-mode.js
+    - src: ./scripts/curl-postprocess.js
 apis:
   api:
     root: apis/openapi.yaml
