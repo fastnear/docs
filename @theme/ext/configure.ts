@@ -12,6 +12,31 @@ type RequestValues = {
 const API_KEY_SCHEMES = ["ApiKeyAuth", "api_key", "api_keys", "fastnear_api_key"];
 const BEARER_SCHEMES = ["bearerAuth", "jwt", "BearerAuth"];
 
+/**
+ * Promise-based helper that resolves the instant an element matching
+ * the selector appears in the DOM. Uses MutationObserver for zero-delay
+ * detection; falls back to a timeout to prevent leaked observers.
+ */
+function waitForElement(selector: string, timeoutMs = 3000): Promise<HTMLElement> {
+  return new Promise((resolve, reject) => {
+    const existing = document.querySelector<HTMLElement>(selector);
+    if (existing) { resolve(existing); return; }
+
+    const observer = new MutationObserver(() => {
+      const el = document.querySelector<HTMLElement>(selector);
+      if (el) { cleanup(); resolve(el); }
+    });
+
+    const timer = setTimeout(() => {
+      cleanup();
+      reject(new Error(`waitForElement("${selector}") timed out after ${timeoutMs}ms`));
+    }, timeoutMs);
+    const cleanup = () => { observer.disconnect(); clearTimeout(timer); };
+
+    observer.observe(document.body, { childList: true, subtree: true });
+  });
+}
+
 let configureCallCount = 0;
 let isSyncing = false;
 let currentNetwork: 'testnet' | 'mainnet' | null = null;
@@ -195,11 +220,11 @@ function syncModalExampleViaOpen(network: string) {
       (trigger as HTMLElement).click();
     }
 
-    // Step 2: After dropdown opens, click the matching item
-    setTimeout(() => {
+    // Step 2: After dropdown opens, click the matching item (next frame)
+    requestAnimationFrame(() => {
       console.log(`[configure.ts]   Clicking item "${target.textContent?.trim()}"`);
       target.click();
-    }, 80);
+    });
 
     return;
   }
@@ -219,9 +244,11 @@ function setupEnvironmentObserver() {
       if (network && !isSyncing) {
         currentNetwork = network.toLowerCase() as 'testnet' | 'mainnet';
         isSyncing = true;
-        // Small delay: let Redocly finish processing the example change first
-        setTimeout(() => syncServerSelector(network), 50);
-        setTimeout(() => { isSyncing = false; }, 200);
+        // Let Redocly finish processing the example change, then sync server
+        requestAnimationFrame(() => {
+          syncServerSelector(network);
+          requestAnimationFrame(() => { isSyncing = false; });
+        });
       }
     }
   }, true);
@@ -243,8 +270,11 @@ function setupEnvironmentObserver() {
     if (network && !isSyncing) {
       currentNetwork = network.toLowerCase() as 'testnet' | 'mainnet';
       isSyncing = true;
-      setTimeout(() => syncExampleSelector(network), 50);
-      setTimeout(() => { isSyncing = false; }, 200);
+      // Let Redocly finish processing the server change, then sync example
+      requestAnimationFrame(() => {
+        syncExampleSelector(network);
+        requestAnimationFrame(() => { isSyncing = false; });
+      });
     }
   }, true);
 
@@ -285,10 +315,15 @@ function setupEnvironmentObserver() {
       // Log all Select/Select components currently in DOM
       logModalSelects();
 
-      if (network && prevText !== null) {
-        // Only sync if this is a CHANGE (not the initial detection)
+      if (network) {
         currentNetwork = network;
-        setTimeout(() => syncModalExampleViaOpen(network), 150);
+        // Wait for the example picker to render, then sync it to the network.
+        const selector = '[data-component-name="Select/Select"]:not([data-testid="request-body-type-select"])';
+        waitForElement(selector).then(() => {
+          syncModalExampleViaOpen(network);
+        }).catch(err => {
+          console.warn('[configure.ts]', err.message);
+        });
       }
     }, 300);
 
