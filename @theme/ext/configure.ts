@@ -5,6 +5,7 @@ type RequestValues = {
   query?: Record<string, string>;
   security?: Record<string, any>;
   envVariables?: Record<string, string>;
+  body?: any;
 };
 
 // Security scheme IDs that might be in your OpenAPI spec
@@ -13,14 +14,10 @@ const BEARER_SCHEMES = ["bearerAuth", "jwt", "BearerAuth"];
 
 let configureCallCount = 0;
 let isSyncing = false;
+let currentNetwork: 'testnet' | 'mainnet' | null = null;
 
 export function configure(context: any) {
   configureCallCount++;
-  console.log(`[configure.ts] configure() called (#${configureCallCount})`, {
-    context,
-    contextKeys: context ? Object.keys(context) : [],
-    contextStringified: JSON.stringify(context, null, 2),
-  });
 
   // One-time DOM observer: watch for Environment dropdown changes
   if (typeof window !== "undefined" && configureCallCount === 1) {
@@ -82,17 +79,19 @@ export function configure(context: any) {
     rv.envVariables!.ACCESS_TOKEN = bearer;
   }
 
-  // Log for debugging (remove in production)
+  // NOTE: rv.body injection was tried here but Replay's modal doesn't process it
+  // as expected. Instead, we sync the modal's "Pick an example" dropdown via DOM
+  // interaction in syncModalExampleViaOpen(), triggered when the user
+  // changes the modal's environment dropdown.
+
   if (typeof window !== "undefined" && window.location.hostname === "localhost") {
-    console.log('Redocly configure.ts - Request values configured:', {
+    console.log(`[configure.ts] configure() #${configureCallCount}`, {
+      currentNetwork,
       hasApiKey: !!apiKey,
       hasBearer: !!bearer,
-      queryParams: Object.keys(rv.query || {}),
-      headers: Object.keys(rv.headers || {})
     });
   }
 
-  console.log(`[configure.ts] returning requestValues (#${configureCallCount})`, rv);
   return { requestValues: rv };
 }
 
@@ -139,6 +138,75 @@ function syncExampleSelector(network: string) {
   console.warn(`[configure.ts] Example option for ${network} not found`);
 }
 
+/**
+ * Log all select-like components currently in the DOM for debugging.
+ */
+function logModalSelects() {
+  const redoclySelects = document.querySelectorAll('[data-component-name="Select/Select"]');
+  const reactSelects = document.querySelectorAll('[class*="react-select"]');
+  const nativeSelects = document.querySelectorAll('select');
+
+  console.log(`[configure.ts] DOM selects: ${redoclySelects.length} Select/Select, ${reactSelects.length} react-select, ${nativeSelects.length} native`);
+
+  redoclySelects.forEach((el, i) => {
+    const testId = (el as HTMLElement).dataset.testid || '(none)';
+    const items = el.querySelectorAll('[data-component-name="Dropdown/DropdownMenuItem"]');
+    const texts = Array.from(items).map(li => li.textContent?.trim());
+    console.log(`[configure.ts]   Select/Select[${i}] testid="${testId}" items=[${texts.join(', ')}]`);
+  });
+}
+
+/**
+ * Inside the Replay modal, find the "Pick an example" dropdown
+ * (Redocly's Select/Select component), open it, then click the
+ * DropdownMenuItem matching the given network.
+ *
+ * We open the dropdown first (rather than clicking a hidden item
+ * directly) to ensure the React onClick chain fires reliably.
+ */
+function syncModalExampleViaOpen(network: string) {
+  const selects = document.querySelectorAll<HTMLElement>(
+    '[data-component-name="Select/Select"]'
+  );
+
+  console.log(`[configure.ts] syncModalExampleViaOpen("${network}") — ${selects.length} Select/Select found`);
+
+  for (const select of selects) {
+    if (select.dataset.testid === 'request-body-type-select') continue;
+
+    const items = select.querySelectorAll<HTMLElement>(
+      '[data-component-name="Dropdown/DropdownMenuItem"]'
+    );
+    const itemTexts = Array.from(items).map(i => i.textContent?.trim());
+    console.log(`[configure.ts]   testid="${select.dataset.testid || '(none)'}" items: [${itemTexts.join(', ')}]`);
+
+    // Find the matching item
+    const target = Array.from(items).find(
+      item => item.textContent?.toLowerCase().includes(network)
+    );
+    if (!target) continue;
+
+    // Step 1: Open the dropdown by clicking the SelectInput trigger
+    const trigger = select.querySelector('[placeholder="Pick an example"]')
+                 || select.querySelector('[data-component-name="Select/SelectInput"]')
+                 || select.children[0];
+    if (trigger) {
+      console.log(`[configure.ts]   Opening dropdown via trigger click`);
+      (trigger as HTMLElement).click();
+    }
+
+    // Step 2: After dropdown opens, click the matching item
+    setTimeout(() => {
+      console.log(`[configure.ts]   Clicking item "${target.textContent?.trim()}"`);
+      target.click();
+    }, 80);
+
+    return;
+  }
+
+  console.warn(`[configure.ts]   No example picker found or no matching item for "${network}"`);
+}
+
 function setupEnvironmentObserver() {
   // Example → Server sync (existing direction)
   document.addEventListener('change', (e) => {
@@ -149,6 +217,7 @@ function setupEnvironmentObserver() {
                     : /mainnet/i.test(selectedText) ? 'Mainnet'
                     : null;
       if (network && !isSyncing) {
+        currentNetwork = network.toLowerCase() as 'testnet' | 'mainnet';
         isSyncing = true;
         // Small delay: let Redocly finish processing the example change first
         setTimeout(() => syncServerSelector(network), 50);
@@ -172,9 +241,89 @@ function setupEnvironmentObserver() {
                   : /mainnet/i.test(text) ? 'Mainnet'
                   : null;
     if (network && !isSyncing) {
+      currentNetwork = network.toLowerCase() as 'testnet' | 'mainnet';
       isSyncing = true;
       setTimeout(() => syncExampleSelector(network), 50);
       setTimeout(() => { isSyncing = false; }, 200);
     }
   }, true);
+
+  // --- Modal environment → example sync ---
+  // The modal's environment selector is a react-select component. React-select
+  // may unmount/remount the SingleValue element on selection change, which would
+  // break a MutationObserver watching a specific element ref. Instead we poll:
+  // re-query the DOM each tick so we always read from the live element.
+
+  let modalPollInterval: ReturnType<typeof setInterval> | null = null;
+  let lastEnvText: string | null = null;
+
+  const startModalPoll = () => {
+    if (modalPollInterval) return; // already polling
+    lastEnvText = null;
+
+    modalPollInterval = setInterval(() => {
+      const envEl = document.querySelector('[data-testid="environment-select"]');
+      if (!envEl) {
+        // Modal closed — stop polling
+        console.log('[configure.ts] Modal closed, stopping environment poll');
+        stopModalPoll();
+        return;
+      }
+
+      const text = envEl.textContent?.trim() || '';
+      if (text === lastEnvText) return; // no change
+
+      const prevText = lastEnvText;
+      lastEnvText = text;
+
+      const network = /testnet/i.test(text) ? 'testnet'
+                    : /mainnet/i.test(text) ? 'mainnet'
+                    : null;
+
+      console.log(`[configure.ts] Environment poll: "${prevText}" → "${text}" (network=${network})`);
+
+      // Log all Select/Select components currently in DOM
+      logModalSelects();
+
+      if (network && prevText !== null) {
+        // Only sync if this is a CHANGE (not the initial detection)
+        currentNetwork = network;
+        setTimeout(() => syncModalExampleViaOpen(network), 150);
+      }
+    }, 300);
+
+    console.log('[configure.ts] Started modal environment polling');
+  };
+
+  const stopModalPoll = () => {
+    if (modalPollInterval) {
+      clearInterval(modalPollInterval);
+      modalPollInterval = null;
+      lastEnvText = null;
+    }
+  };
+
+  // Detect modal open via document-level MutationObserver, then start polling
+  new MutationObserver(() => {
+    const envEl = document.querySelector('[data-testid="environment-select"]');
+    if (envEl && !modalPollInterval) {
+      startModalPoll();
+    }
+  }).observe(document.body, { childList: true, subtree: true });
+
+  // --- Initial network detection ---
+  // If the server was persisted from a previous session, detect it on setup
+  const trigger = document.querySelector<HTMLElement>(
+    '[data-component-name="Dropdown/DropdownTrigger"]'
+  );
+  if (trigger) {
+    const triggerText = trigger.textContent || '';
+    if (/testnet/i.test(triggerText)) {
+      currentNetwork = 'testnet';
+      console.log('[configure.ts] Initial network detected: testnet');
+    } else if (/mainnet/i.test(triggerText)) {
+      currentNetwork = 'mainnet';
+      console.log('[configure.ts] Initial network detected: mainnet');
+    }
+  }
 }
