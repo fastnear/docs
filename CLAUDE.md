@@ -75,6 +75,13 @@ Four RPC server URLs are configured in `rpcs/openapi.yaml`:
 - `sidebars.yaml` — Navigation sidebar structure
 - `reference.page.yaml` — Enables single-operation pages (`pagination: item`) with Try-It consoles
 
+### Client-Side Scripts (`scripts.head`)
+
+`redocly.yaml` loads client-side scripts via the `scripts.head` array. These execute in `<head>` before `document.body` exists, so any DOM access must be deferred to `DOMContentLoaded`. Currently loaded:
+
+- `scripts/dark-mode.js` — Reads `?colorSchema=dark|light` or legacy `?darkMode` from the URL, sets the root element class, and persists to localStorage. Runs synchronously at parse time (only touches `document.documentElement`, which exists in `<head>`).
+- `scripts/curl-postprocess.js` — DOM transforms and clipboard interception for curl samples. Defers `MutationObserver` setup to `DOMContentLoaded`; registers the capture-phase `copy` listener immediately (event listeners don't require DOM elements).
+
 ### Headless vs Portal Mode
 
 `scripts/toggle-headless.js` modifies `redocly.yaml` to show/hide sidebar, navbar, breadcrumbs, and navigation buttons. Headless mode is used when pages are embedded as iframes in builder-docs.
@@ -140,14 +147,14 @@ node scripts/generate-from-nearcore.js /path/to/openapi.json
 | `scripts/nearcore-operation-map.js` | Declarative operation mapping |
 | `scripts/toggle-headless.js` | Switch headless/portal mode |
 | `scripts/curl-postprocess.js` | Curl sample fix: `-i`→`-s`, `| jq`, clipboard interception |
-| `scripts/dark-mode.js` | Dark mode via `?darkMode` URL param |
+| `scripts/dark-mode.js` | Dark mode via `?colorSchema=` or `?darkMode` URL param |
 | `scripts/test-operations.js` | Smoke test operation pages |
 | `test-embed.html` | Local testing harness for iframe embedding |
 | `INTEGRATION_GUIDE.md` | Integration reference for embedding in builder-docs |
 
 ## Development Notes
 
-- Redocly CLI version: `@redocly/realm` 0.109.2
+- Redocly CLI version: `@redocly/realm` 0.119.1
 - Preview server default port: 4000
 - Dark mode: append `?darkMode` to any page URL
 - The `redocly.yaml` file is modified in-place by `toggle-headless.js` — check `git diff` after switching modes

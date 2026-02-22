@@ -26,7 +26,7 @@ mike-docs/
 │   ├── nearcore-operation-map.js   # Declarative mapping of nearcore paths → output files
 │   ├── toggle-headless.js          # Switch between headless (embed) and portal (standalone) mode
 │   ├── curl-postprocess.js          # Fixes curl samples: -i→-s, appends | jq, clipboard interception
-│   ├── dark-mode.js                # Client-side dark mode toggle via ?darkMode param
+│   ├── dark-mode.js                # Client-side dark/light mode via ?colorSchema= or ?darkMode
 │   └── test-operations.js          # Smoke test for operation page accessibility
 ├── docs/
 │   └── snapshots.md            # Validator snapshot documentation
@@ -125,7 +125,8 @@ The iframe URL is the full communication channel between the two sites. builder-
 | `?apiKey=KEY` | string | Injected as `?apiKey=` query param, `x-api-key` header, security scheme values, and `{{API_KEY}}` code sample variable |
 | `?token=TOKEN` | string | Injected as `Authorization: Bearer TOKEN` header, security scheme values, and `{{ACCESS_TOKEN}}` code sample variable |
 | `?body=JSON` | URL-encoded JSON | Passed as `requestValues.body` — pre-populates the Try-It request body |
-| `?darkMode` | flag | Activates dark mode (handled by `scripts/dark-mode.js`, not configure.ts) |
+| `?colorSchema=dark\|light` | string | Sets color scheme (handled by `scripts/dark-mode.js`, not configure.ts) |
+| `?darkMode` | flag | Legacy alias for `?colorSchema=dark` |
 
 ### Auth resolution order
 
