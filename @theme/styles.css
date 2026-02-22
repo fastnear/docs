@@ -31,11 +31,14 @@
     display: none;
 }
 
-/* Hide the "Pick an example" dropdown on operation pages.
-   Target the Select/Select wrapper that contains the example picker,
-   so the entire component (gray box + dropdown + hidden menu) collapses. */
+/* Hide the "Pick an example" dropdown visually but keep it in the DOM
+   so programmatic .click() still works for env → example sync.
+   visibility:hidden preserves layout (element.click() needs dimensions);
+   position:absolute removes it from flow so it takes no space. */
 [data-component-name="Select/Select"]:has([placeholder="Pick an example"]) {
-    display: none;
+    visibility: hidden;
+    position: absolute;
+    pointer-events: none;
 }
 
 #api-content h2 {
