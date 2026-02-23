@@ -136,65 +136,46 @@ function syncExampleSelector(network: string) {
           select.dispatchEvent(new Event('change', { bubbles: true }));
           console.log(`[configure.ts] Example auto-switched to ${network}`);
         }
-        return;
+        break;
       }
     }
   }
 }
 
 /**
- * Resolve when an element matching `selector` appears in the DOM.
- * Uses MutationObserver; times out to prevent leaked observers.
+ * In the Try-It modal, open the hidden example picker (a theme Select/Select
+ * component with DropdownMenuItem items) and click the item at the index
+ * matching the selected environment. Environments and examples are aligned:
+ * index 0 = mainnet, index 1 = testnet.
  */
-function waitForElement(selector: string, timeoutMs = 3000): Promise<HTMLElement> {
-  return new Promise((resolve, reject) => {
-    const existing = document.querySelector<HTMLElement>(selector);
-    if (existing) { resolve(existing); return; }
+function syncModalExample(network: string) {
+  const targetIndex = /testnet/i.test(network) ? 1 : 0;
 
-    const observer = new MutationObserver(() => {
-      const el = document.querySelector<HTMLElement>(selector);
-      if (el) { cleanup(); resolve(el); }
-    });
-
-    const timer = setTimeout(() => {
-      cleanup();
-      reject(new Error(`waitForElement("${selector}") timed out after ${timeoutMs}ms`));
-    }, timeoutMs);
-    const cleanup = () => { observer.disconnect(); clearTimeout(timer); };
-
-    observer.observe(document.body, { childList: true, subtree: true });
-  });
-}
-
-/**
- * Inside the Try-It modal, open the "Pick an example" dropdown
- * (a Select/Select component) and click the item matching `network`.
- * We open first to ensure React's onClick chain fires reliably.
- */
-function syncModalExampleViaOpen(network: string) {
   const selects = document.querySelectorAll<HTMLElement>(
     '[data-component-name="Select/Select"]'
   );
 
   for (const select of selects) {
+    if (select.dataset.testid === 'environment-select') continue;
     if (select.dataset.testid === 'request-body-type-select') continue;
-
-    const items = select.querySelectorAll<HTMLElement>(
-      '[data-component-name="Dropdown/DropdownMenuItem"]'
-    );
-    const target = Array.from(items).find(
-      item => item.textContent?.toLowerCase().includes(network)
-    );
-    if (!target) continue;
 
     // Open the dropdown by clicking the trigger
     const trigger = select.querySelector('[placeholder="Pick an example"]')
-                 || select.querySelector('[data-component-name="Select/SelectInput"]')
-                 || select.children[0];
-    if (trigger) (trigger as HTMLElement).click();
+      || select.querySelector('[data-component-name="Select/SelectInput"]')
+      || select.children[0];
+    if (!trigger) continue;
+    (trigger as HTMLElement).click();
 
-    // After dropdown opens, click the matching item
-    requestAnimationFrame(() => target.click());
+    // Wait for dropdown items to render, then click by index
+    setTimeout(() => {
+      const items = select.querySelectorAll<HTMLElement>(
+        '[data-component-name="Dropdown/DropdownMenuItem"]'
+      );
+      if (items[targetIndex]) {
+        items[targetIndex].click();
+        console.log(`[configure.ts] Modal example set to index ${targetIndex} (${network})`);
+      }
+    }, 80);
     return;
   }
 }
@@ -270,10 +251,7 @@ function setupEnvironmentSync() {
                     : /mainnet/i.test(text) ? 'mainnet'
                     : null;
       if (network) {
-        const selector = '[data-component-name="Select/Select"]:not([data-testid="request-body-type-select"])';
-        waitForElement(selector).then(() => {
-          syncModalExampleViaOpen(network);
-        }).catch(() => {});
+        syncModalExample(network);
       }
     }, 300);
   };

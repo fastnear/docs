@@ -81,6 +81,8 @@
   }
 
   // --- DOM post-processing ---
+  var observer = null;
+  var observerConfig = { childList: true, subtree: true };
   var scheduled = false;
 
   function processCurlSamples() {
@@ -161,23 +163,27 @@
     scheduled = true;
     enqueue(function () {
       scheduled = false;
+      // Disconnect before processing to prevent text mutations from
+      // re-triggering the observer (eliminates self-triggering cascade)
+      observer.disconnect();
       try {
         processCurlSamples();
       } catch (err) {
         debug('Error in processCurlSamples:', err);
+      } finally {
+        observer.observe(document.body, observerConfig);
       }
     });
   }
 
   function startObserver() {
     debug('Starting observer');
-    scheduleProcess();
     // Re-process when DOM changes (server/example switches cause re-renders)
-    new MutationObserver(scheduleProcess).observe(document.body, {
-      childList: true,
-      subtree: true,
-      characterData: true,
-    });
+    // Redocly re-renders via React unmount/remount (childList), not text edits,
+    // so characterData is not needed and would cause self-triggering on our fixes.
+    observer = new MutationObserver(scheduleProcess);
+    observer.observe(document.body, observerConfig);
+    scheduleProcess();
   }
 
   // Process on initial load (document.body may not exist yet in head scripts)
