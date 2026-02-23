@@ -35,11 +35,11 @@
    When switching environments, also switch the example to match. */
 [placeholder="Pick an example"],
 [data-component-name="Replay/HeaderTabs"] + div {
-    border: 2px solid var(--primary-2);
-    border-radius: 6px;
-    padding: 4px 6px;
-    background: color-mix(in srgb, var(--primary-2) 15%, transparent);
-    box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary-2) 20%, transparent);
+    border: 2px solid var(--primary-2) !important;
+    border-radius: 6px !important;
+    padding: 4px 6px !important;
+    background: color-mix(in srgb, var(--primary-2) 15%, transparent) !important;
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary-2) 20%, transparent) !important;
 }
 
 #api-content h2 {
