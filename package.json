@@ -4,9 +4,10 @@
   "description": "A starter project for working with Redoc",
   "main": " ",
   "scripts": {
-    "preview": "node scripts/refresh-examples.js && npx @redocly/cli preview",
+    "preview": "node scripts/refresh-examples.js && ENABLE_SOURCE_MAPS=true npx @redocly/cli preview",
     "preview:headless": "node scripts/toggle-headless.js headless && npm run preview",
     "preview:portal": "node scripts/toggle-headless.js portal && npm run preview",
+    "postinstall": "node scripts/patch-no-minify.js",
     "build": "node scripts/refresh-examples.js && npx @redocly/cli build",
     "lint": "npx @redocly/cli lint",
     "generate-rpc": "node scripts/generate-from-nearcore.js",
