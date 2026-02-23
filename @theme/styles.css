@@ -31,14 +31,15 @@
     display: none;
 }
 
-/* Hide the "Pick an example" dropdown visually but keep it in the DOM
-   so programmatic .click() still works for env → example sync.
-   visibility:hidden preserves layout (element.click() needs dimensions);
-   position:absolute removes it from flow so it takes no space. */
-[data-component-name="Select/Select"]:has([placeholder="Pick an example"]) {
-    visibility: hidden;
-    position: absolute;
-    pointer-events: none;
+/* Highlight the server selector and example picker so users notice them.
+   When switching environments, also switch the example to match. */
+[placeholder="Pick an example"],
+[data-component-name="Replay/HeaderTabs"] + div {
+    border: 2px solid var(--primary-2);
+    border-radius: 6px;
+    padding: 4px 6px;
+    background: color-mix(in srgb, var(--primary-2) 15%, transparent);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary-2) 20%, transparent);
 }
 
 #api-content h2 {
