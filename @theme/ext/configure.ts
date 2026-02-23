@@ -143,10 +143,14 @@ function syncExampleSelector(network: string) {
 }
 
 /**
- * In the Try-It modal, open the hidden example picker (a theme Select/Select
- * component with DropdownMenuItem items) and click the item at the index
- * matching the selected environment. Environments and examples are aligned:
+ * In the Try-It modal, click the example picker item at the index matching
+ * the selected environment. Environments and examples are aligned:
  * index 0 = mainnet, index 1 = testnet.
+ *
+ * The modal uses a theme Select component (not a native <select>) with
+ * DropdownMenuItem <li> elements. We click the item directly — element.click()
+ * dispatches a MouseEvent regardless of CSS display/visibility state, and
+ * React's event delegation catches it.
  */
 function syncModalExample(network: string) {
   const targetIndex = /testnet/i.test(network) ? 1 : 0;
@@ -159,24 +163,14 @@ function syncModalExample(network: string) {
     if (select.dataset.testid === 'environment-select') continue;
     if (select.dataset.testid === 'request-body-type-select') continue;
 
-    // Open the dropdown by clicking the trigger
-    const trigger = select.querySelector('[placeholder="Pick an example"]')
-      || select.querySelector('[data-component-name="Select/SelectInput"]')
-      || select.children[0];
-    if (!trigger) continue;
-    (trigger as HTMLElement).click();
-
-    // Wait for dropdown items to render, then click by index
-    setTimeout(() => {
-      const items = select.querySelectorAll<HTMLElement>(
-        '[data-component-name="Dropdown/DropdownMenuItem"]'
-      );
-      if (items[targetIndex]) {
-        items[targetIndex].click();
-        console.log(`[configure.ts] Modal example set to index ${targetIndex} (${network})`);
-      }
-    }, 80);
-    return;
+    const items = select.querySelectorAll<HTMLElement>(
+      '[data-component-name="Dropdown/DropdownMenuItem"]'
+    );
+    if (items.length > 0 && items[targetIndex]) {
+      items[targetIndex].click();
+      console.log(`[configure.ts] Modal example set to index ${targetIndex} (${network})`);
+      return;
+    }
   }
 }
 
