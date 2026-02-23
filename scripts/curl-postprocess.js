@@ -19,10 +19,32 @@
  * The copy button uses copy-to-clipboard (document.execCommand), so we
  * intercept the 'copy' event to transform curl commands on copy.
  *
+ * Uses queueMicrotask instead of setTimeout to run fixes before the browser
+ * paints, eliminating the visual flicker of `-i` appearing briefly.
+ *
  * Loaded via redocly.yaml scripts.head.
  */
 (function () {
   if (typeof window === 'undefined' || typeof document === 'undefined') return;
+
+  var isLocalhost = window.location.hostname === 'localhost' ||
+    window.location.hostname === '127.0.0.1';
+
+  function debug() {
+    if (isLocalhost && typeof console !== 'undefined') {
+      var args = Array.prototype.slice.call(arguments);
+      args.unshift('[curl-postprocess]');
+      console.log.apply(console, args);
+    }
+  }
+
+  function hasJqPipe(text) {
+    return /\|\s*jq\b/.test(text || '');
+  }
+
+  var enqueue = typeof queueMicrotask === 'function'
+    ? queueMicrotask
+    : function (fn) { Promise.resolve().then(fn); };
 
   // --- Clipboard interception ---
   // Redocly's copy button uses copy-to-clipboard (document.execCommand),
@@ -31,11 +53,18 @@
   // bubbling listener on document never fires. Use capture phase instead:
   // capture runs top-down (document first) before the span's listener.
   document.addEventListener('copy', function (e) {
-    var selection = window.getSelection();
-    var text = selection ? selection.toString() : '';
-    if (text.trimStart().startsWith('curl')) {
-      e.preventDefault();
-      e.clipboardData.setData('text/plain', transformCurlText(text));
+    try {
+      var selection = window.getSelection();
+      var text = selection ? selection.toString() : '';
+      if (text.trimStart().startsWith('curl')) {
+        if (!e.clipboardData || typeof e.clipboardData.setData !== 'function') return;
+        e.preventDefault();
+        var transformed = transformCurlText(text);
+        e.clipboardData.setData('text/plain', transformed);
+        debug('Clipboard intercepted, transformed curl command');
+      }
+    } catch (err) {
+      debug('Error in clipboard handler:', err);
     }
   }, true);
 
@@ -45,7 +74,7 @@
       text = text.replace('curl -i', 'curl -s');
     }
     // Append | jq if not present
-    if (!text.trimEnd().endsWith('| jq')) {
+    if (!hasJqPipe(text)) {
       text = text.trimEnd() + ' | jq';
     }
     return text;
@@ -59,6 +88,7 @@
       'pre[data-component-name="CodeBlock/CodeBlockContainer"]'
     );
 
+    var modified = 0;
     for (var i = 0; i < blocks.length; i++) {
       var block = blocks[i];
       var text = block.textContent || '';
@@ -66,16 +96,26 @@
       // Only process curl commands (first non-whitespace is "curl")
       if (!text.trimStart().startsWith('curl')) continue;
 
+      var blockModified = false;
+
       // Replace -i with -s
       if (text.indexOf('curl -i') !== -1) {
         replaceFlagInTextNodes(block);
+        blockModified = true;
       }
 
       // Append | jq if not already present
       text = block.textContent || '';
-      if (!text.trimEnd().endsWith('| jq')) {
+      if (!hasJqPipe(text)) {
         appendJq(block);
+        blockModified = true;
       }
+
+      if (blockModified) modified++;
+    }
+
+    if (modified > 0) {
+      debug('Processed', blocks.length, 'block(s),', modified, 'modified');
     }
   }
 
@@ -119,18 +159,24 @@
   function scheduleProcess() {
     if (scheduled) return;
     scheduled = true;
-    setTimeout(function () {
+    enqueue(function () {
       scheduled = false;
-      processCurlSamples();
-    }, 50);
+      try {
+        processCurlSamples();
+      } catch (err) {
+        debug('Error in processCurlSamples:', err);
+      }
+    });
   }
 
   function startObserver() {
+    debug('Starting observer');
     scheduleProcess();
     // Re-process when DOM changes (server/example switches cause re-renders)
     new MutationObserver(scheduleProcess).observe(document.body, {
       childList: true,
       subtree: true,
+      characterData: true,
     });
   }
 
