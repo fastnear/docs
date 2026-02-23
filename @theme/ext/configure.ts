@@ -142,6 +142,63 @@ function syncExampleSelector(network: string) {
   }
 }
 
+/**
+ * Resolve when an element matching `selector` appears in the DOM.
+ * Uses MutationObserver; times out to prevent leaked observers.
+ */
+function waitForElement(selector: string, timeoutMs = 3000): Promise<HTMLElement> {
+  return new Promise((resolve, reject) => {
+    const existing = document.querySelector<HTMLElement>(selector);
+    if (existing) { resolve(existing); return; }
+
+    const observer = new MutationObserver(() => {
+      const el = document.querySelector<HTMLElement>(selector);
+      if (el) { cleanup(); resolve(el); }
+    });
+
+    const timer = setTimeout(() => {
+      cleanup();
+      reject(new Error(`waitForElement("${selector}") timed out after ${timeoutMs}ms`));
+    }, timeoutMs);
+    const cleanup = () => { observer.disconnect(); clearTimeout(timer); };
+
+    observer.observe(document.body, { childList: true, subtree: true });
+  });
+}
+
+/**
+ * Inside the Try-It modal, open the "Pick an example" dropdown
+ * (a Select/Select component) and click the item matching `network`.
+ * We open first to ensure React's onClick chain fires reliably.
+ */
+function syncModalExampleViaOpen(network: string) {
+  const selects = document.querySelectorAll<HTMLElement>(
+    '[data-component-name="Select/Select"]'
+  );
+
+  for (const select of selects) {
+    if (select.dataset.testid === 'request-body-type-select') continue;
+
+    const items = select.querySelectorAll<HTMLElement>(
+      '[data-component-name="Dropdown/DropdownMenuItem"]'
+    );
+    const target = Array.from(items).find(
+      item => item.textContent?.toLowerCase().includes(network)
+    );
+    if (!target) continue;
+
+    // Open the dropdown by clicking the trigger
+    const trigger = select.querySelector('[placeholder="Pick an example"]')
+                 || select.querySelector('[data-component-name="Select/SelectInput"]')
+                 || select.children[0];
+    if (trigger) (trigger as HTMLElement).click();
+
+    // After dropdown opens, click the matching item
+    requestAnimationFrame(() => target.click());
+    return;
+  }
+}
+
 function setupEnvironmentSync() {
   // Example → Server: when the user picks a named example, switch the server
   document.addEventListener('change', (e) => {
@@ -182,4 +239,48 @@ function setupEnvironmentSync() {
       });
     }
   }, true);
+
+  // --- Modal environment → example sync ---
+  // The modal's environment selector is a react-select that may unmount/remount
+  // on selection change. We poll rather than observe a specific element ref.
+  let modalPollInterval: ReturnType<typeof setInterval> | null = null;
+  let lastEnvText: string | null = null;
+
+  const stopModalPoll = () => {
+    if (modalPollInterval) {
+      clearInterval(modalPollInterval);
+      modalPollInterval = null;
+      lastEnvText = null;
+    }
+  };
+
+  const startModalPoll = () => {
+    if (modalPollInterval) return;
+    lastEnvText = null;
+
+    modalPollInterval = setInterval(() => {
+      const envEl = document.querySelector('[data-testid="environment-select"]');
+      if (!envEl) { stopModalPoll(); return; } // modal closed
+
+      const text = envEl.textContent?.trim() || '';
+      if (text === lastEnvText) return; // no change
+      lastEnvText = text;
+
+      const network = /testnet/i.test(text) ? 'testnet'
+                    : /mainnet/i.test(text) ? 'mainnet'
+                    : null;
+      if (network) {
+        const selector = '[data-component-name="Select/Select"]:not([data-testid="request-body-type-select"])';
+        waitForElement(selector).then(() => {
+          syncModalExampleViaOpen(network);
+        }).catch(() => {});
+      }
+    }, 300);
+  };
+
+  // Detect modal open via MutationObserver, then start polling
+  new MutationObserver(() => {
+    const envEl = document.querySelector('[data-testid="environment-select"]');
+    if (envEl && !modalPollInterval) startModalPoll();
+  }).observe(document.body, { childList: true, subtree: true });
 }
