@@ -338,7 +338,15 @@ function buildOperationYaml(spec, op, existingYaml) {
         },
       },
     },
+    security: [{ ApiKeyAuth: [] }],
     components: {
+      securitySchemes: {
+        ApiKeyAuth: {
+          type: 'apiKey',
+          in: 'query',
+          name: 'apiKey',
+        },
+      },
       schemas: {
         JsonRpcResponse: buildJsonRpcResponseSchema(responseResult, existingYaml),
       },
