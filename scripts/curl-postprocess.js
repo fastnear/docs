@@ -1,195 +1,196 @@
 /**
  * curl-postprocess.js
  *
- * DOM post-processor that modifies Redocly's auto-generated curl code samples:
- *   1. Replaces `-i` (include headers) with `-s` (silent) so output is pure JSON
- *   2. Appends `| jq` so the output is pretty-printed
+ * Post-processor for Redocly's auto-generated curl code samples.
  *
- * This is needed because Redocly hardcodes `-i` in curl generation with no
- * config option to change it. The samples are dynamic (update when the user
- * switches servers/examples), so we observe the DOM and reprocess on changes.
- *
- * Redocly renders code samples as:
- *   <pre data-component-name="CodeBlock/CodeBlockContainer" data-testid="source-code">
- *     <span class='line'><span class="token ...">curl</span> ...</span>
- *   </pre>
- * Shiki syntax highlighting splits tokens across <span> elements, so "curl"
- * and "-i" are typically in separate text nodes.
- *
- * The copy button uses copy-to-clipboard (document.execCommand), so we
- * intercept the 'copy' event to transform curl commands on copy.
- *
- * Uses queueMicrotask instead of setTimeout to run fixes before the browser
- * paints, eliminating the visual flicker of `-i` appearing briefly.
+ * Three concerns:
+ * 1. DOM transforms: MutationObserver replaces `-i` → `-s` and appends `| jq`
+ *    in displayed curl code blocks.
+ * 2. Clipboard interception: Capture-phase copy listener applies the same
+ *    transforms when copying curl commands.
+ * 3. Example → Server sync: When the example picker changes to a testnet/mainnet
+ *    example, auto-switches the server dropdown to match.
  *
  * Loaded via redocly.yaml scripts.head.
  */
 (function () {
   if (typeof window === 'undefined' || typeof document === 'undefined') return;
 
-  var isLocalhost = window.location.hostname === 'localhost' ||
-    window.location.hostname === '127.0.0.1';
-
-  function debug() {
-    if (isLocalhost && typeof console !== 'undefined') {
-      var args = Array.prototype.slice.call(arguments);
-      args.unshift('[curl-postprocess]');
-      console.log.apply(console, args);
-    }
-  }
-
-  function hasJqPipe(text) {
-    return /\|\s*jq\b/.test(text || '');
-  }
-
-  var enqueue = typeof queueMicrotask === 'function'
-    ? queueMicrotask
-    : function (fn) { Promise.resolve().then(fn); };
-
-  // --- Clipboard interception ---
-  // Redocly's copy button uses copy-to-clipboard (document.execCommand),
-  // not navigator.clipboard.writeText. copy-to-clipboard adds its own
-  // listener on the temporary <span> that calls stopPropagation(), so a
-  // bubbling listener on document never fires. Use capture phase instead:
-  // capture runs top-down (document first) before the span's listener.
-  document.addEventListener('copy', function (e) {
-    try {
-      var selection = window.getSelection();
-      var text = selection ? selection.toString() : '';
-      if (text.trimStart().startsWith('curl')) {
-        if (!e.clipboardData || typeof e.clipboardData.setData !== 'function') return;
-        e.preventDefault();
-        var transformed = transformCurlText(text);
-        e.clipboardData.setData('text/plain', transformed);
-        debug('Clipboard intercepted, transformed curl command');
-      }
-    } catch (err) {
-      debug('Error in clipboard handler:', err);
-    }
-  }, true);
-
   function transformCurlText(text) {
-    // Replace -i with -s
     if (text.indexOf('curl -i') !== -1) {
       text = text.replace('curl -i', 'curl -s');
     }
-    // Append | jq if not present
-    if (!hasJqPipe(text)) {
+    if (!/\|\s*jq\b/.test(text)) {
       text = text.trimEnd() + ' | jq';
     }
     return text;
   }
 
-  // --- DOM post-processing ---
-  var observer = null;
-  var observerConfig = { childList: true, subtree: true };
-  var scheduled = false;
+  // --- A. DOM curl transforms via MutationObserver ---
 
-  function processCurlSamples() {
+  function transformCodeBlock(pre) {
+    var fullText = pre.textContent || '';
+    if (!fullText.trimStart().startsWith('curl')) return;
+
+    var needsFlagFix = fullText.indexOf('curl -i') !== -1;
+    var needsJq = !/\|\s*jq\b/.test(fullText);
+    if (!needsFlagFix && !needsJq) return;
+
+    if (needsFlagFix) {
+      // Walk text nodes to replace -i → -s.
+      // Handles Shiki splitting "curl -i" across spans, e.g.
+      //   <span>curl</span><span> -i</span>  or  <span>curl -i</span>
+      var walker = document.createTreeWalker(pre, NodeFilter.SHOW_TEXT, null, false);
+      var node;
+      var fixed = false;
+      while (!fixed && (node = walker.nextNode())) {
+        if (node.nodeValue.indexOf('curl -i') !== -1) {
+          node.nodeValue = node.nodeValue.replace('curl -i', 'curl -s');
+          fixed = true;
+        } else if (/(?:^|\s)-i(?:\s|$)/.test(node.nodeValue)) {
+          node.nodeValue = node.nodeValue.replace('-i', '-s');
+          fixed = true;
+        }
+      }
+    }
+
+    if (needsJq) {
+      // Append | jq to the last text node in the block.
+      var walker2 = document.createTreeWalker(pre, NodeFilter.SHOW_TEXT, null, false);
+      var lastTextNode = null;
+      var n;
+      while ((n = walker2.nextNode())) {
+        lastTextNode = n;
+      }
+      if (lastTextNode) {
+        lastTextNode.nodeValue = lastTextNode.nodeValue.trimEnd() + ' | jq';
+      }
+    }
+  }
+
+  function processAllCodeBlocks() {
     var blocks = document.querySelectorAll(
       'pre[data-component-name="CodeBlock/CodeBlockContainer"]'
     );
-
-    var modified = 0;
-    for (var i = 0; i < blocks.length; i++) {
-      var block = blocks[i];
-      var text = block.textContent || '';
-
-      // Only process curl commands (first non-whitespace is "curl")
-      if (!text.trimStart().startsWith('curl')) continue;
-
-      var blockModified = false;
-
-      // Replace -i with -s
-      if (text.indexOf('curl -i') !== -1) {
-        replaceFlagInTextNodes(block);
-        blockModified = true;
-      }
-
-      // Append | jq if not already present
-      text = block.textContent || '';
-      if (!hasJqPipe(text)) {
-        appendJq(block);
-        blockModified = true;
-      }
-
-      if (blockModified) modified++;
-    }
-
-    if (modified > 0) {
-      debug('Processed', blocks.length, 'block(s),', modified, 'modified');
-    }
+    blocks.forEach(transformCodeBlock);
   }
 
-  function replaceFlagInTextNodes(el) {
-    var walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null, false);
-    var node;
-    while ((node = walker.nextNode())) {
-      var t = node.textContent;
-      // "curl -i" in same text node (no syntax highlighting or same token)
-      if (t.indexOf('curl -i') !== -1) {
-        node.textContent = t.replace('curl -i', 'curl -s');
-        return;
-      }
-      // "-i" as its own token (Shiki splits flags into separate spans)
-      if (t === '-i') {
-        node.textContent = '-s';
-        return;
-      }
-      // "-i" at start or surrounded by whitespace in a shared text node
-      if (/(?:^|\s)-i(?:\s|$)/.test(t)) {
-        node.textContent = t.replace(/-i(?=\s|$)/, '-s');
-        return;
-      }
-    }
-  }
+  document.addEventListener('DOMContentLoaded', function () {
+    processAllCodeBlocks();
 
-  function appendJq(el) {
-    var walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null, false);
-    var lastNode = null;
-    var node;
-    while ((node = walker.nextNode())) {
-      if (node.textContent.trim()) {
-        lastNode = node;
-      }
-    }
-    if (lastNode) {
-      lastNode.textContent = lastNode.textContent.replace(/\s*$/, '') + ' | jq';
-    }
-  }
-
-  function scheduleProcess() {
-    if (scheduled) return;
-    scheduled = true;
-    enqueue(function () {
-      scheduled = false;
-      // Disconnect before processing to prevent text mutations from
-      // re-triggering the observer (eliminates self-triggering cascade)
-      observer.disconnect();
-      try {
-        processCurlSamples();
-      } catch (err) {
-        debug('Error in processCurlSamples:', err);
-      } finally {
-        observer.observe(document.body, observerConfig);
-      }
+    var observer = new MutationObserver(function () {
+      // Debounce via requestAnimationFrame so we batch rapid re-renders.
+      if (observer._raf) return;
+      observer._raf = requestAnimationFrame(function () {
+        observer._raf = null;
+        processAllCodeBlocks();
+      });
     });
-  }
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+      characterData: true
+    });
 
-  function startObserver() {
-    debug('Starting observer');
-    // Re-process when DOM changes (server/example switches cause re-renders)
-    // Redocly re-renders via React unmount/remount (childList), not text edits,
-    // so characterData is not needed and would cause self-triggering on our fixes.
-    observer = new MutationObserver(scheduleProcess);
-    observer.observe(document.body, observerConfig);
-    scheduleProcess();
-  }
+    // --- B. Example → Server sync ---
+    //
+    // DOM structure (from SSR):
+    //   <select class="dropdown-select">          ← example picker
+    //     <option value="View Mainnet Account">…</option>
+    //     <option value="View Testnet Account">…</option>
+    //   </select>
+    //
+    //   <div data-testid="dropdown" class="… RequestSamples__StyledServerListDropdown-…">
+    //     <button data-component-name="Button/Button">POST / ▾</button>
+    //     <div class="Dropdown__ChildrenWrapper-…">
+    //       <ul data-component-name="Dropdown/DropdownMenu">
+    //         <li data-component-name="Dropdown/DropdownMenuItem">
+    //           <span class="styled__Header-…">Mainnet</span>
+    //           <span class="styled__Title-…">✓ https://rpc.mainnet.fastnear.com</span>
+    //         </li>
+    //         <li …>Testnet …</li>
+    //       </ul>
+    //     </div>
+    //   </div>
 
-  // Process on initial load (document.body may not exist yet in head scripts)
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', startObserver);
-  } else {
-    startObserver();
-  }
+    var syncing = false;
+
+    document.body.addEventListener('change', function (e) {
+      if (syncing) return;
+      var select = e.target;
+      if (!select.matches || !select.matches('select.dropdown-select')) return;
+
+      var selectedOption = select.options[select.selectedIndex];
+      if (!selectedOption) return;
+      var text = (selectedOption.textContent || '').toLowerCase();
+
+      var network = null;
+      if (text.indexOf('testnet') !== -1) network = 'testnet';
+      else if (text.indexOf('mainnet') !== -1) network = 'mainnet';
+      if (!network) return;
+
+      // Find the server dropdown by data-testid.
+      var serverDropdown = document.querySelector('[data-testid="dropdown"]');
+      if (!serverDropdown) return;
+
+      // Check which server is currently selected (has a CheckmarkIcon).
+      var items = serverDropdown.querySelectorAll(
+        '[data-component-name="Dropdown/DropdownMenuItem"]'
+      );
+      var activeItem = null;
+      var targetItem = null;
+      items.forEach(function (item) {
+        if (item.querySelector('[data-component-name="icons/CheckmarkIcon/CheckmarkIcon"]')) {
+          activeItem = item;
+        }
+        var header = item.querySelector('[class*="Header"]');
+        if (header && header.textContent.toLowerCase() === network) {
+          targetItem = item;
+        }
+      });
+
+      // Already on the correct server.
+      if (activeItem && targetItem && activeItem === targetItem) return;
+      if (!targetItem) return;
+
+      syncing = true;
+
+      // Open the server dropdown, then click the target item.
+      var trigger = serverDropdown.querySelector(
+        'button[data-component-name="Button/Button"]'
+      );
+      if (trigger) trigger.click();
+
+      setTimeout(function () {
+        targetItem.click();
+        setTimeout(function () {
+          syncing = false;
+        }, 100);
+      }, 50);
+    });
+  });
+
+  // --- C. Clipboard interception (capture phase) ---
+
+  document.addEventListener(
+    'copy',
+    function (e) {
+      try {
+        var selection = window.getSelection();
+        var text = selection ? selection.toString() : '';
+        if (text.trimStart().startsWith('curl')) {
+          if (
+            !e.clipboardData ||
+            typeof e.clipboardData.setData !== 'function'
+          )
+            return;
+          e.preventDefault();
+          e.clipboardData.setData('text/plain', transformCurlText(text));
+        }
+      } catch (err) {
+        // silently ignore
+      }
+    },
+    true
+  );
 })();
