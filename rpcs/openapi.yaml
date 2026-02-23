@@ -83,19 +83,3 @@ paths:
                       storage_paid_at: 0
                       storage_usage: 17703
                     id: "fastnear"
-      x-codeSamples:
-        - lang: curl
-          label: "cURL"
-          source: |
-            curl -s -X POST "https://rpc.mainnet.fastnear.com" \
-              -H "Content-Type: application/json" \
-              -d '{
-                "jsonrpc": "2.0",
-                "id": "fastnear",
-                "method": "query",
-                "params": {
-                  "request_type": "view_account",
-                  "finality": "final",
-                  "account_id": "mike.near"
-                }
-              }'
