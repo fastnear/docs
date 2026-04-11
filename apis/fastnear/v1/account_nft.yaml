@@ -1,0 +1,68 @@
+openapi: 3.1.0
+info:
+  title: FastNEAR API - V1 Account NFTs
+  version: 1.0.0
+servers:
+  - url: https://api.fastnear.com
+    description: Mainnet
+  - url: https://test.api.fastnear.com
+    description: Testnet
+paths:
+  /v1/account/{account_id}/nft:
+    get:
+      operationId: account_nft_v1
+      summary: Lookup NFT contracts for an account
+      tags:
+        - v1
+      parameters:
+        - name: account_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: NFT contract rows for the requested account
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - account_id
+                  - tokens
+                properties:
+                  account_id:
+                    type: string
+                  tokens:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                        - contract_id
+                        - last_update_block_height
+                      properties:
+                        contract_id:
+                          type: string
+                        last_update_block_height:
+                          type:
+                            - integer
+                            - "null"
+              example:
+                account_id: collector.near
+                tokens:
+                  - contract_id: nft.genadrop.near
+                    last_update_block_height: 115100321
+                  - contract_id: mintbase1.near
+                    last_update_block_height: null
+        "400":
+          description: Invalid account ID
+          content:
+            application/json:
+              schema:
+                type: string
+        "500":
+          description: Redis or upstream failure
+          content:
+            application/json:
+              schema:
+                type: string

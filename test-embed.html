@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Redocly Embedding</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #1e4aba;
+        }
+        .controls {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 8px;
+        }
+        .controls input {
+            padding: 8px;
+            width: 300px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        .controls button {
+            padding: 8px 16px;
+            background: #1e4aba;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .controls button:hover {
+            background: #325ece;
+        }
+        iframe {
+            width: 100%;
+            height: 800px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .url-display {
+            margin: 10px 0;
+            padding: 10px;
+            background: #333;
+            color: #0f0;
+            font-family: monospace;
+            border-radius: 4px;
+            word-break: break-all;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Test Redocly Embedding</h1>
+        
+        <div class="controls">
+            <h3>Auth Configuration</h3>
+            <div>
+                <input type="text" id="apiKey" placeholder="Enter your FastNEAR API key">
+                <button onclick="saveApiKey()">Save API key</button>
+                <button onclick="clearApiKey()">Clear API key</button>
+            </div>
+            <div>
+                <input type="text" id="bearerToken" placeholder="Enter bearer token">
+                <button onclick="saveBearerToken()">Save bearer</button>
+                <button onclick="clearBearerToken()">Clear bearer</button>
+            </div>
+        </div>
+
+        <div class="controls">
+            <h3>Test RPC Endpoints</h3>
+            <button onclick="loadEndpoint('view_account')">View Account</button>
+            <button onclick="loadEndpoint('block_by_height')">Block by Height</button>
+            <button onclick="loadEndpoint('validators_current')">Current Validators</button>
+            <button onclick="loadEndpoint('tx_status')">Transaction Status</button>
+        </div>
+
+        <div class="controls">
+            <h3>Test API Endpoints</h3>
+            <button onclick="loadEndpoint('fastnear_account_full')">FastNEAR Account Full</button>
+            <button onclick="loadEndpoint('transactions')">Transactions</button>
+            <button onclick="loadEndpoint('transfers')">Transfers</button>
+            <button onclick="loadEndpoint('kv_multi')">KV Multi</button>
+            <button onclick="loadEndpoint('neardata_health')">NEAR Data Health</button>
+        </div>
+
+        <div class="controls">
+            <h3>Test Body Param</h3>
+            <button onclick="testBody('block_by_height')">Block by Height (with body)</button>
+            <button onclick="testBody('view_account')">View Account (with body)</button>
+            <label style="display:inline-block;margin-left:16px;cursor:pointer">
+                <input type="checkbox" id="autoLoadBody"> Auto-load with body
+            </label>
+            <p style="margin:8px 0 0;color:#666;font-size:13px">
+                Passes a full JSON-RPC payload via <code>?body=</code>. The Try-It console should show the custom body instead of named examples.
+            </p>
+        </div>
+
+        <div class="controls">
+            <h3>Test URL Formats</h3>
+            <button onclick="testFormat('operation')">Operation Format (/reference/operation/...)</button>
+            <button onclick="testFormat('pretty')">Pretty Format (/rpcs/account/...)</button>
+            <button onclick="testFormat('api')">API Format (/apis/fastnear/...)</button>
+        </div>
+
+        <div class="url-display" id="urlDisplay">
+            No URL loaded yet
+        </div>
+
+        <iframe id="redoclyFrame" title="Redocly Documentation"></iframe>
+    </div>
+
+    <script>
+        const BASE_URL = 'http://localhost:4000';
+        const iframe = document.getElementById('redoclyFrame');
+        const urlDisplay = document.getElementById('urlDisplay');
+        const ENDPOINTS = {
+            view_account: '/rpcs/account/view_account',
+            block_by_height: '/rpcs/block/block_by_height',
+            validators_current: '/rpcs/validators/validators_current',
+            tx_status: '/rpcs/transaction/tx_status',
+            fastnear_account_full: '/apis/fastnear/v1/account_full',
+            transactions: '/apis/transactions/v0/transactions',
+            transfers: '/apis/transfers/v0/transfers',
+            kv_multi: '/apis/kv-fastdata/v0/multi',
+            neardata_health: '/apis/neardata/system/health'
+        };
+
+        // Load API key from localStorage on page load
+        window.onload = function() {
+            const savedKey = localStorage.getItem('fastnear:apiKey');
+            if (savedKey) {
+                document.getElementById('apiKey').value = savedKey;
+            }
+            const savedBearer = localStorage.getItem('fastnear:bearer');
+            if (savedBearer) {
+                document.getElementById('bearerToken').value = savedBearer;
+            }
+        };
+
+        function saveApiKey() {
+            const apiKey = document.getElementById('apiKey').value;
+            if (apiKey) {
+                localStorage.setItem('fastnear:apiKey', apiKey);
+                localStorage.setItem('fastnear_api_key', apiKey); // Legacy support
+                alert('API key saved to localStorage');
+                // Reload current endpoint with new key
+                reloadCurrentUrlParams();
+            }
+        }
+
+        function clearApiKey() {
+            localStorage.removeItem('fastnear:apiKey');
+            localStorage.removeItem('fastnear_api_key');
+            document.getElementById('apiKey').value = '';
+            alert('API key cleared');
+            reloadCurrentUrlParams();
+        }
+
+        function saveBearerToken() {
+            const token = document.getElementById('bearerToken').value;
+            if (token) {
+                localStorage.setItem('fastnear:bearer', token);
+                alert('Bearer token saved to localStorage');
+                reloadCurrentUrlParams();
+            }
+        }
+
+        function clearBearerToken() {
+            localStorage.removeItem('fastnear:bearer');
+            document.getElementById('bearerToken').value = '';
+            alert('Bearer token cleared');
+            reloadCurrentUrlParams();
+        }
+
+        function getAuthParams() {
+            const params = new URLSearchParams();
+            const apiKey = document.getElementById('apiKey').value ||
+                localStorage.getItem('fastnear:apiKey');
+            const token = document.getElementById('bearerToken').value ||
+                localStorage.getItem('fastnear:bearer');
+
+            if (apiKey) params.set('apiKey', apiKey);
+            if (token) params.set('token', token);
+            return params;
+        }
+
+        function reloadCurrentUrlParams() {
+            if (!iframe.src) return;
+
+            const currentUrl = new URL(iframe.src);
+            currentUrl.search = '';
+
+            const authParams = getAuthParams();
+            authParams.forEach((value, key) => currentUrl.searchParams.set(key, value));
+            loadUrl(currentUrl.toString());
+        }
+
+        function loadEndpoint(endpointId) {
+            const path = ENDPOINTS[endpointId];
+            const params = getAuthParams();
+            const query = params.toString();
+            const url = `${BASE_URL}${path}${query ? `?${query}` : ''}`;
+            loadUrl(url);
+        }
+
+        function testFormat(format) {
+            const params = getAuthParams();
+            let url;
+            
+            switch(format) {
+                case 'operation':
+                    url = `${BASE_URL}/reference/operation/view_account`;
+                    break;
+                case 'pretty':
+                    url = `${BASE_URL}/rpcs/account/view_account`;
+                    break;
+                case 'api':
+                    url = `${BASE_URL}/apis/fastnear/v1/account_full`;
+                    break;
+            }
+            
+            const query = params.toString();
+            if (query) {
+                url += `?${query}`;
+            }
+            
+            loadUrl(url);
+        }
+
+        function loadUrl(url) {
+            urlDisplay.textContent = url;
+            iframe.src = url;
+            console.log('Loading:', url);
+        }
+
+        const BODY_EXAMPLES = {
+            block_by_height: {
+                path: '/rpcs/block/block_by_height',
+                body: { jsonrpc: '2.0', id: 'fastnear', method: 'block', params: { block_id: 186464793 } }
+            },
+            view_account: {
+                path: '/rpcs/account/view_account',
+                body: { jsonrpc: '2.0', id: 'fastnear', method: 'query', params: { request_type: 'view_account', finality: 'final', account_id: 'near' } }
+            }
+        };
+
+        function testBody(exampleId) {
+            const example = BODY_EXAMPLES[exampleId];
+            const params = getAuthParams();
+            params.set('body', JSON.stringify(example.body));
+            loadUrl(`${BASE_URL}${example.path}?${params.toString()}`);
+        }
+
+        // Load a default endpoint
+        setTimeout(() => {
+            if (document.getElementById('autoLoadBody').checked) {
+                testBody('view_account');
+            } else {
+                loadEndpoint('fastnear_account_full');
+            }
+        }, 1000);
+    </script>
+</body>
+</html>

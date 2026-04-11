@@ -8,6 +8,8 @@ servers:
     description: "Mainnet"
   - url: "https://rpc.testnet.fastnear.com"
     description: "Testnet"
+security:
+  - ApiKeyAuth: []
 paths:
   /:
     post:
@@ -62,6 +64,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/JsonRpcResponse'
 components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: query
+      name: apiKey
   schemas:
     JsonRpcResponse:
       type: object

@@ -56,7 +56,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/JsonRpcResponse"
+security:
+  - ApiKeyAuth: []
 components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: query
+      name: apiKey
   schemas:
     JsonRpcResponse:
       type: object
@@ -234,13 +241,6 @@ components:
                 witness_config:
                   type: object
                   description: Configuration specific to ChunkStateWitness.
-              required:
-                - storage_amount_per_byte
-                - transaction_costs
-                - wasm_config
-                - account_creation_config
-                - congestion_control_config
-                - witness_config
             shard_layout:
               type: object
               description: One of multiple possible types
@@ -261,40 +261,6 @@ components:
               description: Number of blocks for which a given transaction is valid
               format: uint64
               minimum: 0
-          required:
-            - protocol_version
-            - genesis_time
-            - chain_id
-            - genesis_height
-            - num_block_producer_seats
-            - num_block_producer_seats_per_shard
-            - avg_hidden_validator_seats_per_shard
-            - dynamic_resharding
-            - protocol_upgrade_stake_threshold
-            - epoch_length
-            - gas_limit
-            - min_gas_price
-            - max_gas_price
-            - block_producer_kickout_threshold
-            - chunk_producer_kickout_threshold
-            - chunk_validator_only_kickout_threshold
-            - target_validator_mandates_per_shard
-            - online_min_threshold
-            - online_max_threshold
-            - gas_price_adjustment_rate
-            - runtime_config
-            - transaction_validity_period
-            - protocol_reward_rate
-            - max_inflation_rate
-            - num_blocks_per_year
-            - protocol_treasury_account
-            - fishermen_threshold
-            - minimum_stake_divisor
-            - max_kickout_stake_perc
-            - minimum_stake_ratio
-            - shuffle_shard_assignment_for_chunk_producers
-            - minimum_validators_per_shard
-            - shard_layout
         error:
           type: object
           properties:

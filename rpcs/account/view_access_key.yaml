@@ -78,7 +78,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/JsonRpcResponse"
+security:
+  - ApiKeyAuth: []
 components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: query
+      name: apiKey
   schemas:
     JsonRpcResponse:
       type: object
@@ -100,8 +107,8 @@ components:
               format: uint64
               minimum: 0
             permission:
-              type: [string, "null"]
-              enum: [FullAccess]
+              type: object
+              description: One of multiple possible types
           required: [nonce, permission]
         error:
           type: object

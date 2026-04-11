@@ -1,0 +1,19 @@
+openapi: 3.1.0
+info:
+  title: Transactions API
+  version: 1.0.0
+  description: Transaction, receipt, block, and account-history queries backed by ClickHouse.
+servers:
+  - url: https://tx.main.fastnear.com
+    description: Mainnet
+paths:
+  /v0/transactions:
+    $ref: "./v0/transactions.yaml#/paths/~1v0~1transactions"
+  /v0/account:
+    $ref: "./v0/account.yaml#/paths/~1v0~1account"
+  /v0/block:
+    $ref: "./v0/block.yaml#/paths/~1v0~1block"
+  /v0/blocks:
+    $ref: "./v0/blocks.yaml#/paths/~1v0~1blocks"
+  /v0/receipt:
+    $ref: "./v0/receipt.yaml#/paths/~1v0~1receipt"

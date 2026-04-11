@@ -11,11 +11,13 @@ This repo is the **headless backend** — the consumer-facing site is [builder-d
 ## Common Commands
 
 ```bash
-npm run preview              # Start Redocly preview server (http://127.0.0.1:4000)
+npm run preview              # Sync vendored REST specs, refresh RPC examples, start preview (http://127.0.0.1:4000)
 npm run preview:headless     # Preview in headless mode (hidden chrome, for iframe embedding)
 npm run preview:portal       # Preview in full portal mode (sidebar, navbar visible)
-npm run build                # Build for production
-npm run lint                 # Validate OpenAPI specs
+npm run build                # Build with PLAN_GATES, or local fallback via REDOCLY_LOCAL_PLAN
+npm run lint                 # Sync vendored REST specs, then validate OpenAPI specs
+npm run smoke:operations     # Smoke test representative pretty routes while preview is running
+npm run smoke:operations:prod # Smoke test representative pretty routes on https://fastnear.redocly.app
 npm run generate-rpc         # Regenerate rpcs/*.yaml from nearcore OpenAPI spec
 ```
 
@@ -29,7 +31,13 @@ The aggregate spec `rpcs/openapi.yaml` uses `$ref` to reference all individual o
 
 ### REST API Specs (`apis/`)
 
-REST API definition at `apis/openapi.yaml` (public key lookup endpoints).
+REST API definitions are vendored under `apis/<service>/openapi.yaml`, but owned in sibling service repos. `scripts/sync-external-apis.js` copies them in from:
+
+- `../fn/fastnear-api-server-rs/openapi`
+- `../fn/explorer-api/openapi`
+- `../fn/transfers-api/openapi`
+- `../fn/kv-fastdata-server/openapi`
+- `../fn/neardata-server/openapi`
 
 ### Configure Extension (`@theme/ext/configure.ts`)
 
@@ -141,9 +149,11 @@ node scripts/generate-from-nearcore.js /path/to/openapi.json
 | `sidebars.yaml` | Navigation sidebar structure |
 | `reference.page.yaml` | Single-operation page settings (`pagination: item`) |
 | `rpcs/openapi.yaml` | Aggregate RPC spec (auto-generated, `$ref`s to all operations) |
-| `apis/openapi.yaml` | Aggregate REST API spec |
+| `apis/<service>/openapi.yaml` | Vendored per-service REST API specs |
 | `@theme/ext/configure.ts` | Try-It console config: auth, body, env vars |
 | `scripts/generate-from-nearcore.js` | nearcore → YAML generator |
+| `scripts/sync-external-apis.js` | Sync sibling service specs into `apis/<service>/` |
+| `scripts/run-realm-build.js` | Wrapped Reunite build with local-plan fallback |
 | `scripts/nearcore-operation-map.js` | Declarative operation mapping |
 | `scripts/toggle-headless.js` | Switch headless/portal mode |
 | `scripts/curl-postprocess.js` | Curl sample fix: `-i`→`-s`, `| jq`, clipboard interception |
@@ -151,6 +161,7 @@ node scripts/generate-from-nearcore.js /path/to/openapi.json
 | `scripts/test-operations.js` | Smoke test operation pages |
 | `test-embed.html` | Local testing harness for iframe embedding |
 | `INTEGRATION_GUIDE.md` | Integration reference for embedding in builder-docs |
+| `PORTAL_WORKFLOW.md` | Working agreement for sync, validation, deployment, and limitations |
 
 ## Development Notes
 
@@ -159,6 +170,10 @@ node scripts/generate-from-nearcore.js /path/to/openapi.json
 - Dark mode: append `?darkMode` to any page URL
 - The `redocly.yaml` file is modified in-place by `toggle-headless.js` — check `git diff` after switching modes
 - `custom` type operations in the operation map are not overwritten by the generator
+- `PLAN_GATES` is the production-equivalent entitlement JWT for `realm build`; `REDOCLY_AUTHORIZATION` is a separate API key and does not replace it
+- For local validation, `npm run build` can fall back to `REDOCLY_LOCAL_PLAN=enterprise` or `pro`
+- Pushing to GitHub does not by itself describe the Redocly publish target; if production `/apis/...` routes still 404, the deployed portal likely has not republished this revision yet
+- Do not hand-edit `apis/<service>/`; the sync step overwrites vendored copies
 
 ### `requestValues.body` internals
 

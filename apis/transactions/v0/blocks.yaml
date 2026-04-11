@@ -1,0 +1,88 @@
+openapi: 3.1.0
+info:
+  title: Transactions API - Block Range
+  version: 1.0.0
+servers:
+  - url: https://tx.main.fastnear.com
+    description: Mainnet
+paths:
+  /v0/blocks:
+    post:
+      operationId: get_blocks
+      summary: Fetch a list of blocks
+      description: Returns up to 100 block rows for the requested height window.
+      tags:
+        - blocks
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              properties:
+                from_block_height:
+                  type:
+                    - integer
+                    - "null"
+                  minimum: 0
+                to_block_height:
+                  type:
+                    - integer
+                    - "null"
+                  minimum: 0
+                limit:
+                  type:
+                    - integer
+                    - "null"
+                  minimum: 1
+                  maximum: 100
+                desc:
+                  type:
+                    - boolean
+                    - "null"
+            example:
+              from_block_height: 130000000
+              to_block_height: 130000100
+              limit: 10
+              desc: false
+      responses:
+        "200":
+          description: Block rows
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - blocks
+                properties:
+                  blocks:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/BlockRow"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "500":
+          description: ClickHouse query failure
+          content:
+            application/json:
+              schema:
+                type: string
+components:
+  schemas:
+    BlockRow:
+      $ref: "./block.yaml#/components/schemas/BlockRow"
+    ApiError:
+      type: object
+      required:
+        - error
+        - message
+      properties:
+        error:
+          type: string
+        message:
+          type: string

@@ -1,93 +1,90 @@
 openapi: 3.1.0
-
 info:
-  description: "Queries details for a NEAR account"
+  title: "NEAR Protocol RPC: View account"
+  description: Queries details for a NEAR account
+  version: 1.0.0
 servers:
-  - url: "https://rpc.mainnet.fastnear.com/"
-    description: "Mainnet"
-  - url: "https://rpc.testnet.fastnear.com/"
-    description: "Testnet"
-
+  - url: "https://rpc.mainnet.fastnear.com"
+    description: Mainnet
+  - url: "https://rpc.testnet.fastnear.com"
+    description: Testnet
 paths:
   /:
     post:
       operationId: view_account
-      summary: "View account"
-      description: "Retrieves detailed information about a NEAR account including balance and storage usage"
+      summary: View account
+      description: Retrieves detailed information about a NEAR account including balance and storage usage
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required:
-                - jsonrpc
-                - id
-                - method
-                - params
+              required: [jsonrpc, id, method, params]
               properties:
                 jsonrpc:
                   type: string
                   enum: ["2.0"]
                 id:
                   type: string
-                  example: "fastnear"
+                  example: fastnear
                 method:
                   type: string
-                  enum: ["query"]
+                  enum: [query]
                 params:
                   type: object
-                  required:
-                    - request_type
-                    - finality
-                    - account_id
                   properties:
-                    request_type:
-                      type: string
-                      enum: ["view_account"]
-                    finality:
-                      type: string
-                      enum: ["final", "optimistic"]
-                      description: "Block finality used for the query"
                     account_id:
                       type: string
-                      description: "Account ID format should match the network (*.near for mainnet, *.testnet for testnet)"
+                      description: NEAR account ID
+                    request_type:
+                      type: string
+                      enum: [view_account]
+                    finality:
+                      type: string
+                      enum: [final, optimistic]
+                      description: Block finality
+                  required: [request_type, account_id, finality]
             examples:
               mainnet:
-                summary: "View Mainnet Account"
+                summary: View Mainnet Account
                 value:
                   jsonrpc: "2.0"
-                  id: "fastnear"
-                  method: "query"
+                  id: fastnear
+                  method: query
                   params:
-                    request_type: "view_account"
-                    finality: "final"
-                    account_id: "mike.near"
+                    request_type: view_account
+                    finality: final
+                    account_id: mike.near
               testnet:
-                summary: "View Testnet Account"
+                summary: View Testnet Account
                 value:
                   jsonrpc: "2.0"
-                  id: "fastnear"
-                  method: "query"
+                  id: fastnear
+                  method: query
                   params:
-                    request_type: "view_account"
-                    finality: "final"
-                    account_id: "mike.testnet"
+                    request_type: view_account
+                    finality: final
+                    account_id: mike.testnet
       responses:
-        "200":
-          description: "Successful response"
+        200:
+          description: Successful response
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/JsonRpcResponse"
-
+security:
+  - ApiKeyAuth: []
 components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: query
+      name: apiKey
   schemas:
     JsonRpcResponse:
       type: object
-      required:
-        - jsonrpc
-        - id
+      required: [jsonrpc, id]
       properties:
         jsonrpc:
           type: string
@@ -98,6 +95,34 @@ components:
             - type: number
         result:
           type: object
+          description: A view of the account
+          properties:
+            amount:
+              type: string
+              description: Amount in yoctoNEAR
+            code_hash:
+              type: string
+              description: Base58-encoded hash
+            global_contract_account_id:
+              type: [string, "null"]
+              description: NEAR account ID
+            global_contract_hash:
+              type: [string, "null"]
+              description: Base58-encoded hash
+            locked:
+              type: string
+              description: Amount in yoctoNEAR
+            storage_paid_at:
+              type: integer
+              description: "TODO(2271): deprecated."
+              format: uint64
+              default: 0
+              minimum: 0
+            storage_usage:
+              type: integer
+              format: uint64
+              minimum: 0
+          required: [amount, locked, code_hash, storage_usage]
         error:
           type: object
           properties:

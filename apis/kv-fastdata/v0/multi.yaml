@@ -1,0 +1,46 @@
+openapi: 3.1.0
+info:
+  title: KV FastData API - Multi Lookup
+  version: 1.0.0
+servers:
+  - url: https://kv.main.fastnear.com
+    description: Mainnet
+  - url: https://kv.test.fastnear.com
+    description: Testnet
+paths:
+  /v0/multi:
+    post:
+      operationId: multi
+      summary: Fetch latest rows for multiple fully qualified keys
+      tags:
+        - latest
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "../components.yaml#/components/schemas/MultiRequest"
+            example:
+              keys:
+                - app.near/alice.near/score
+                - app.near/bob.near/level
+              include_metadata: false
+      responses:
+        "200":
+          description: Latest row per input key, preserving input order
+          content:
+            application/json:
+              schema:
+                $ref: "../components.yaml#/components/schemas/MultiResponse"
+        "400":
+          description: Invalid key format or too many keys
+          content:
+            application/json:
+              schema:
+                $ref: "../components.yaml#/components/schemas/ApiError"
+        "500":
+          description: Scylla query failure
+          content:
+            application/json:
+              schema:
+                $ref: "../components.yaml#/components/schemas/ApiError"

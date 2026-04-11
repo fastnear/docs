@@ -1,0 +1,25 @@
+openapi: 3.1.0
+info:
+  title: NEAR Data API - Health
+  version: 1.0.0
+servers:
+  - url: https://mainnet.neardata.xyz
+    description: Mainnet
+  - url: https://testnet.neardata.xyz
+    description: Testnet
+paths:
+  /health:
+    get:
+      operationId: get_health
+      summary: Get service health
+      tags:
+        - system
+      responses:
+        "200":
+          description: Health payload
+          content:
+            application/json:
+              schema:
+                $ref: "../components.yaml#/components/schemas/HealthResponse"
+              example:
+                status: ok

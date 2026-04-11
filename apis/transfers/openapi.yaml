@@ -1,0 +1,11 @@
+openapi: 3.1.0
+info:
+  title: Transfers API
+  version: 1.0.0
+  description: Account-centric transfer queries for native NEAR and fungible tokens.
+servers:
+  - url: https://transfers.main.fastnear.com
+    description: Mainnet
+paths:
+  /v0/transfers:
+    $ref: "./v0/transfers.yaml#/paths/~1v0~1transfers"

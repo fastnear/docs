@@ -46,7 +46,7 @@ paths:
                   id: fastnear
                   method: next_light_client_block
                   params:
-                    last_block_hash: BnHU4MCqsNVgLRCiZteef85VYxCbNzwkWEo1cEG8Z6VX
+                    last_block_hash: 3ut7DttXoW1tFcxqkhScsXg1rE4D4ksYarYZ3EceCWfC
               testnet:
                 summary: Get next light client block (Testnet)
                 value:
@@ -54,7 +54,7 @@ paths:
                   id: fastnear
                   method: next_light_client_block
                   params:
-                    last_block_hash: G92i6jYNUcJ6nZpPPF6TUghBoYbewqBQeUNquF3Qz38i
+                    last_block_hash: HpzRGLFds3FqJP1oBPExdMjupovgUr9HzD5hCBKE6KQ6
       responses:
         200:
           description: Successful response
@@ -62,7 +62,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/JsonRpcResponse"
+security:
+  - ApiKeyAuth: []
 components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: query
+      name: apiKey
   schemas:
     JsonRpcResponse:
       type: object

@@ -1,0 +1,50 @@
+openapi: 3.1.0
+info:
+  title: KV FastData API - All by Predecessor
+  version: 1.0.0
+servers:
+  - url: https://kv.main.fastnear.com
+    description: Mainnet
+  - url: https://kv.test.fastnear.com
+    description: Testnet
+paths:
+  /v0/all/{predecessor_id}:
+    post:
+      operationId: all_by_predecessor
+      summary: Fetch latest keys across all contracts for one predecessor
+      tags:
+        - latest
+      parameters:
+        - name: predecessor_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "../components.yaml#/components/schemas/QueryRequest"
+            example:
+              limit: 50
+              include_metadata: false
+      responses:
+        "200":
+          description: Latest rows grouped by account for one predecessor
+          content:
+            application/json:
+              schema:
+                $ref: "../components.yaml#/components/schemas/ListResponse"
+        "400":
+          description: Invalid page token
+          content:
+            application/json:
+              schema:
+                $ref: "../components.yaml#/components/schemas/ApiError"
+        "500":
+          description: Scylla query failure
+          content:
+            application/json:
+              schema:
+                $ref: "../components.yaml#/components/schemas/ApiError"

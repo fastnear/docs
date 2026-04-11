@@ -143,8 +143,10 @@
         if (item.querySelector('[data-component-name="icons/CheckmarkIcon/CheckmarkIcon"]')) {
           activeItem = item;
         }
-        var header = item.querySelector('[class*="Header"]');
-        if (header && header.textContent.toLowerCase() === network) {
+        // Match by item text containing the network name (e.g. "Mainnet" / "Testnet").
+        // Avoids class-based selectors that break when styled-components minifies names.
+        var text = (item.textContent || '').toLowerCase();
+        if (text.indexOf(network) !== -1 && text.indexOf('archival') === -1) {
           targetItem = item;
         }
       });

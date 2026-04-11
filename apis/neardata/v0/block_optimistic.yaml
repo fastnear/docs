@@ -1,0 +1,38 @@
+openapi: 3.1.0
+info:
+  title: NEAR Data API - Optimistic Block
+  version: 1.0.0
+servers:
+  - url: https://mainnet.neardata.xyz
+    description: Mainnet
+  - url: https://testnet.neardata.xyz
+    description: Testnet
+paths:
+  /v0/block_opt/{block_height}:
+    get:
+      operationId: get_block_optimistic
+      summary: Fetch an optimistic block by height
+      tags:
+        - blocks
+      parameters:
+        - $ref: "../components.yaml#/components/parameters/BlockHeightParam"
+        - $ref: "../components.yaml#/components/parameters/ApiKeyParam"
+      responses:
+        "200":
+          description: Optimistic block document, or `null` when the block is missing
+          content:
+            application/json:
+              schema:
+                $ref: "../components.yaml#/components/schemas/BlockDocument"
+        "302":
+          description: Redirects to the finalized block when the optimistic data is no longer served directly
+          headers:
+            Location:
+              schema:
+                type: string
+        "404":
+          description: Block height is out of range or too far in the future
+          content:
+            application/json:
+              schema:
+                $ref: "../components.yaml#/components/schemas/ApiError"

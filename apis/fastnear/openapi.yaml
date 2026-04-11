@@ -1,0 +1,39 @@
+openapi: 3.1.0
+info:
+  title: FastNEAR API
+  version: 1.0.0
+  description: Low-latency indexed account and token APIs for wallets and explorers.
+servers:
+  - url: https://api.fastnear.com
+    description: Mainnet
+  - url: https://test.api.fastnear.com
+    description: Testnet
+paths:
+  /status:
+    $ref: "./system/status.yaml#/paths/~1status"
+  /health:
+    $ref: "./system/health.yaml#/paths/~1health"
+  /v0/public_key/{public_key}:
+    $ref: "./v0/public_key_lookup.yaml#/paths/~1v0~1public_key~1{public_key}"
+  /v0/public_key/{public_key}/all:
+    $ref: "./v0/public_key_lookup_all.yaml#/paths/~1v0~1public_key~1{public_key}~1all"
+  /v0/account/{account_id}/staking:
+    $ref: "./v0/account_staking.yaml#/paths/~1v0~1account~1{account_id}~1staking"
+  /v0/account/{account_id}/ft:
+    $ref: "./v0/account_ft.yaml#/paths/~1v0~1account~1{account_id}~1ft"
+  /v0/account/{account_id}/nft:
+    $ref: "./v0/account_nft.yaml#/paths/~1v0~1account~1{account_id}~1nft"
+  /v1/public_key/{public_key}:
+    $ref: "./v1/public_key_lookup.yaml#/paths/~1v1~1public_key~1{public_key}"
+  /v1/public_key/{public_key}/all:
+    $ref: "./v1/public_key_lookup_all.yaml#/paths/~1v1~1public_key~1{public_key}~1all"
+  /v1/account/{account_id}/staking:
+    $ref: "./v1/account_staking.yaml#/paths/~1v1~1account~1{account_id}~1staking"
+  /v1/account/{account_id}/ft:
+    $ref: "./v1/account_ft.yaml#/paths/~1v1~1account~1{account_id}~1ft"
+  /v1/account/{account_id}/nft:
+    $ref: "./v1/account_nft.yaml#/paths/~1v1~1account~1{account_id}~1nft"
+  /v1/ft/{token_id}/top:
+    $ref: "./v1/ft_top.yaml#/paths/~1v1~1ft~1{token_id}~1top"
+  /v1/account/{account_id}/full:
+    $ref: "./v1/account_full.yaml#/paths/~1v1~1account~1{account_id}~1full"

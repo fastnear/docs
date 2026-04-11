@@ -1,0 +1,45 @@
+openapi: 3.1.0
+info:
+  title: KV FastData API - GET Latest by Exact Key
+  version: 1.0.0
+servers:
+  - url: https://kv.main.fastnear.com
+    description: Mainnet
+  - url: https://kv.test.fastnear.com
+    description: Testnet
+paths:
+  /v0/latest/{current_account_id}/{predecessor_id}/{key}:
+    get:
+      operationId: get_latest_key
+      summary: Fetch the latest row for one exact key
+      tags:
+        - latest
+      parameters:
+        - name: current_account_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: predecessor_id
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: key
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: The latest matching row
+          content:
+            application/json:
+              schema:
+                $ref: "../components.yaml#/components/schemas/ListResponse"
+        "500":
+          description: Scylla query failure
+          content:
+            application/json:
+              schema:
+                $ref: "../components.yaml#/components/schemas/ApiError"

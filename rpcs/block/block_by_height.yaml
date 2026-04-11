@@ -46,7 +46,7 @@ paths:
                   id: fastnear
                   method: block
                   params:
-                    block_id: 186561182
+                    block_id: 193464403
               testnet:
                 summary: Testnet Block Example
                 value:
@@ -54,7 +54,7 @@ paths:
                   id: fastnear
                   method: block
                   params:
-                    block_id: 237911138
+                    block_id: 245170780
       responses:
         200:
           description: Successful response
@@ -62,7 +62,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/JsonRpcResponse"
+security:
+  - ApiKeyAuth: []
 components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: query
+      name: apiKey
   schemas:
     JsonRpcResponse:
       type: object

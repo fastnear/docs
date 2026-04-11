@@ -12,6 +12,8 @@ servers:
     description: "Mainnet Archival RPC"
   - url: "https://archival-rpc.testnet.fastnear.com"
     description: "Testnet Archival RPC"
+security:
+  - ApiKeyAuth: []
 paths:
   /:
     post:
@@ -73,6 +75,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/JsonRpcResponse'
 components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: query
+      name: apiKey
   schemas:
     JsonRpcResponse:
       type: object

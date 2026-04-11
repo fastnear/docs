@@ -1,0 +1,38 @@
+openapi: 3.1.0
+info:
+  title: NEAR Data API - Final Block
+  version: 1.0.0
+servers:
+  - url: https://mainnet.neardata.xyz
+    description: Mainnet
+  - url: https://testnet.neardata.xyz
+    description: Testnet
+paths:
+  /v0/block/{block_height}:
+    get:
+      operationId: get_block
+      summary: Fetch a finalized block by height
+      tags:
+        - blocks
+      parameters:
+        - $ref: "../components.yaml#/components/parameters/BlockHeightParam"
+        - $ref: "../components.yaml#/components/parameters/ApiKeyParam"
+      responses:
+        "200":
+          description: Full finalized block document, or `null` when the block is missing
+          content:
+            application/json:
+              schema:
+                $ref: "../components.yaml#/components/schemas/BlockDocument"
+              example:
+                block:
+                  header:
+                    height: 98765432
+                    timestamp_nanosec: "1710000000000000000"
+                shards: []
+        "404":
+          description: Block height is out of range or too far in the future
+          content:
+            application/json:
+              schema:
+                $ref: "../components.yaml#/components/schemas/ApiError"

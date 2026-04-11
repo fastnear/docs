@@ -58,7 +58,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/JsonRpcResponse"
+security:
+  - ApiKeyAuth: []
 components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: query
+      name: apiKey
   schemas:
     JsonRpcResponse:
       type: object
@@ -118,7 +125,6 @@ components:
                 uris:
                   type: object
                   description: URIs for the Chunk Distribution Network feature.
-              required: [enabled, uris]
             chunk_request_retry_period:
               type: array
               items:
@@ -137,6 +143,14 @@ components:
                 type: integer
                 format: int32
               description: Multiplier for the wait time for all chunks to be received.
+            chunks_cache_height_horizon:
+              type: integer
+              description: |-
+                  Height horizon for the chunk cache. A chunk is removed from the cache
+                  if its height + chunks_cache_height_horizon < largest_seen_height.
+                  The default value is DEFAULT_CHUNKS_CACHE_HEIGHT_HORIZON.
+              format: uint64
+              minimum: 0
             client_background_migration_threads:
               type: integer
               description: Number of threads to execute background migration work in client.
@@ -159,6 +173,9 @@ components:
                     nanos: 0
                     secs: 1
                   description: Interval at which the system checks for new blocks or chunks to archive.
+            disable_tx_routing:
+              type: boolean
+              description: "If true, the node won't forward transactions to next the chunk producers."
             doomslug_step_period:
               type: array
               items:
@@ -166,11 +183,6 @@ components:
                 format: uint64
                 minimum: 0
               description: Time between running doomslug timer.
-            dynamic_resharding_dry_run:
-              type: boolean
-              description: |-
-                  If true, the runtime will do a dynamic resharding 'dry run' at the last block of each epoch.
-                  This means calculating tentative boundary accounts for splitting the tracked shards.
             enable_early_prepare_transactions:
               type: boolean
               description: |-
@@ -191,38 +203,21 @@ components:
             epoch_sync:
               type: object
               properties:
-                disable_epoch_sync_for_bootstrapping:
-                  type: boolean
-                  description: |-
-                      If true, even if the node started from genesis, it will not perform epoch sync.
-                      There should be no reason to set this flag in production, because on both mainnet
-                      and testnet it would be infeasible to catch up from genesis without epoch sync.
-                  default: false
-                epoch_sync_horizon:
+                epoch_sync_horizon_num_epochs:
                   type: integer
                   description: |-
-                      This serves as two purposes: (1) the node will not epoch sync and instead resort to
-                      header sync, if the genesis block is within this many blocks from the current block;
-                      (2) the node will reject an epoch sync proof if the provided proof is for an epoch
-                      that is more than this many blocks behind the current block.
+                      Number of epochs behind the network head beyond which the node will use
+                      epoch sync instead of header sync. Also the maximum age (in epochs) of
+                      accepted epoch sync proofs. At the consumption site, this is multiplied
+                      by epoch_length to get the horizon in blocks.
                   format: uint64
+                  default: 4
                   minimum: 0
-                ignore_epoch_sync_network_requests:
-                  type: boolean
-                  description: |-
-                      If true, the node will ignore epoch sync requests from the network. It is strongly
-                      recommended not to set this flag, because it will prevent other nodes from
-                      bootstrapping. This flag is only included as a kill-switch and may be removed in a
-                      future release. Please note that epoch sync requests are heavily rate limited and
-                      cached, and therefore should not affect the performance of the node or introduce
-                      any non-negligible increase in network traffic.
-                  default: false
                 timeout_for_epoch_sync:
                   type: object
                   description: |-
                       Timeout for epoch sync requests. The node will continue retrying indefinitely even
                       if this timeout is exceeded.
-              required: [epoch_sync_horizon, timeout_for_epoch_sync]
               description: Options for epoch sync.
             expected_shutdown:
               type: string
@@ -377,6 +372,9 @@ components:
                   Save observed instances of ChunkStateWitness to the database in DBCol::LatestChunkStateWitnesses.
                   Saving the latest witnesses is useful for analysis and debugging.
                   This option can cause extra load on the database and is not recommended for production use.
+            save_state_changes:
+              type: boolean
+              description: Whether to persist state changes on disk or not.
             save_trie_changes:
               type: boolean
               description: |-
@@ -539,68 +537,11 @@ components:
               description: Number of threads for ViewClientActor pool.
               format: uint
               minimum: 0
-          required:
-            - version
-            - chain_id
-            - expected_shutdown
-            - block_production_tracking_delay
-            - min_block_production_delay
-            - max_block_production_delay
-            - max_block_wait_delay
-            - chunk_wait_mult
-            - skip_sync_wait
-            - sync_check_period
-            - sync_step_period
-            - sync_height_threshold
-            - sync_max_block_requests
-            - header_sync_initial_timeout
-            - header_sync_progress_timeout
-            - header_sync_stall_ban_timeout
-            - header_sync_expected_height_per_second
-            - state_sync_external_timeout
-            - state_sync_p2p_timeout
-            - state_sync_retry_backoff
-            - state_sync_external_backoff
-            - min_num_peers
-            - log_summary_period
-            - log_summary_style
-            - produce_empty_blocks
-            - epoch_length
-            - num_block_producer_seats
-            - ttl_account_id_router
-            - block_fetch_horizon
-            - catchup_step_period
-            - chunk_request_retry_period
-            - doomslug_step_period
-            - block_header_fetch_horizon
-            - gc
-            - tracked_shards_config
-            - archive
-            - save_trie_changes
-            - save_tx_outcomes
-            - save_untracked_partial_chunks_parts
-            - view_client_threads
-            - chunk_validation_threads
-            - state_request_throttle_period
-            - state_requests_per_throttle_period
-            - state_request_server_threads
-            - enable_statistics_export
-            - client_background_migration_threads
-            - state_sync_enabled
-            - state_sync
-            - epoch_sync
-            - enable_multiline_logging
-            - resharding_config
-            - tx_routing_height_horizon
-            - produce_chunk_add_transactions_time_limit
-            - orphan_state_witness_pool_size
-            - orphan_state_witness_max_size
-            - save_latest_witnesses
-            - save_invalid_witnesses
-            - transaction_request_handler_threads
-            - protocol_version_check
-            - enable_early_prepare_transactions
-            - dynamic_resharding_dry_run
+            dynamic_resharding_dry_run:
+              type: boolean
+              description: |-
+                  If true, the runtime will do a dynamic resharding 'dry run' at the last block of each epoch.
+                  This means calculating tentative boundary accounts for splitting the tracked shards.
         error:
           type: object
           properties:

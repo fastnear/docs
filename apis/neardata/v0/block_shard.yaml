@@ -1,0 +1,33 @@
+openapi: 3.1.0
+info:
+  title: NEAR Data API - Block Shard
+  version: 1.0.0
+servers:
+  - url: https://mainnet.neardata.xyz
+    description: Mainnet
+  - url: https://testnet.neardata.xyz
+    description: Testnet
+paths:
+  /v0/block/{block_height}/shard/{shard_id}:
+    get:
+      operationId: get_shard
+      summary: Fetch one shard from a finalized block
+      tags:
+        - blocks
+      parameters:
+        - $ref: "../components.yaml#/components/parameters/BlockHeightParam"
+        - $ref: "../components.yaml#/components/parameters/ShardIdParam"
+        - $ref: "../components.yaml#/components/parameters/ApiKeyParam"
+      responses:
+        "200":
+          description: Shard object for the requested shard, or `null` when absent
+          content:
+            application/json:
+              schema:
+                $ref: "../components.yaml#/components/schemas/ShardDocument"
+        "404":
+          description: Block height is out of range or too far in the future
+          content:
+            application/json:
+              schema:
+                $ref: "../components.yaml#/components/schemas/ApiError"

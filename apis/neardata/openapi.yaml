@@ -1,0 +1,29 @@
+openapi: 3.1.0
+info:
+  title: NEAR Data API
+  version: 1.0.0
+  description: Cached and archived NEAR block data with redirect-based latest and first-block helpers.
+servers:
+  - url: https://mainnet.neardata.xyz
+    description: Mainnet
+  - url: https://testnet.neardata.xyz
+    description: Testnet
+paths:
+  /v0/first_block:
+    $ref: "./v0/first_block.yaml#/paths/~1v0~1first_block"
+  /v0/block/{block_height}:
+    $ref: "./v0/block.yaml#/paths/~1v0~1block~1{block_height}"
+  /v0/block/{block_height}/headers:
+    $ref: "./v0/block_headers.yaml#/paths/~1v0~1block~1{block_height}~1headers"
+  /v0/block/{block_height}/chunk/{shard_id}:
+    $ref: "./v0/block_chunk.yaml#/paths/~1v0~1block~1{block_height}~1chunk~1{shard_id}"
+  /v0/block/{block_height}/shard/{shard_id}:
+    $ref: "./v0/block_shard.yaml#/paths/~1v0~1block~1{block_height}~1shard~1{shard_id}"
+  /v0/block_opt/{block_height}:
+    $ref: "./v0/block_optimistic.yaml#/paths/~1v0~1block_opt~1{block_height}"
+  /v0/last_block/final:
+    $ref: "./v0/last_block_final.yaml#/paths/~1v0~1last_block~1final"
+  /v0/last_block/optimistic:
+    $ref: "./v0/last_block_optimistic.yaml#/paths/~1v0~1last_block~1optimistic"
+  /health:
+    $ref: "./system/health.yaml#/paths/~1health"

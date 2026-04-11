@@ -1,0 +1,245 @@
+openapi: 3.1.0
+info:
+  title: Transfers API - Query Transfers
+  version: 1.0.0
+  description: Query NEAR and fungible token transfers for a single account.
+servers:
+  - url: https://transfers.main.fastnear.com
+    description: Mainnet
+paths:
+  /v0/transfers:
+    post:
+      operationId: get_transfers_by_account
+      summary: Query transfers for an account
+      description: Returns transfer rows plus an opaque resume token for pagination.
+      tags:
+        - transfers
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TransfersInput"
+            examples:
+              recent_near_transfers:
+                summary: Recent incoming NEAR transfers
+                value:
+                  account_id: intents.near
+                  asset_id: near
+                  direction: receiver
+                  min_amount: "1000000000000000000000000"
+                  limit: 10
+                  desc: true
+      responses:
+        "200":
+          description: Transfer rows for the requested account
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TransfersResponse"
+              examples:
+                result:
+                  value:
+                    transfers:
+                      - block_height: "176826522"
+                        block_timestamp: "1768265226000"
+                        transaction_id: 9Qz1h7qTjYb6w3VpsL4Qu9Q2qY7Lf8S3Hy4J6WZ7fUPJ
+                        receipt_id: 2T8mJ5vL8PkYc3Rm6bNZBvA7k8mHh3oJmM4t9g8vP3Qc
+                        action_index: 0
+                        log_index: null
+                        transfer_index: 4
+                        signer_id: intents.near
+                        predecessor_id: intents.near
+                        receipt_account_id: wrap.near
+                        account_id: intents.near
+                        other_account_id: ref-finance.near
+                        asset_id: near
+                        asset_type: Near
+                        amount: "-1000000000000000000000000"
+                        method_name: ft_transfer_call
+                        transfer_type: Near
+                        human_amount: 1
+                        usd_amount: 5.24
+                        start_of_block_balance: "4200000000000000000000000"
+                        end_of_block_balance: "3190000000000000000000000"
+                    resume_token: "7594641293647473196415950063"
+        "400":
+          description: Invalid request body
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "500":
+          description: ClickHouse query failure
+          content:
+            application/json:
+              schema:
+                type: string
+components:
+  schemas:
+    TransfersInput:
+      type: object
+      additionalProperties: false
+      required:
+        - account_id
+      properties:
+        account_id:
+          type: string
+          description: NEAR account ID to query.
+        resume_token:
+          type:
+            - string
+            - "null"
+          description: Opaque pagination token from a previous response.
+        from_timestamp_ms:
+          type:
+            - integer
+            - "null"
+          minimum: 0
+        to_timestamp_ms:
+          type:
+            - integer
+            - "null"
+          minimum: 0
+        limit:
+          type:
+            - integer
+            - "null"
+          minimum: 1
+          maximum: 100
+        desc:
+          type:
+            - boolean
+            - "null"
+          description: When true, returns newest transfers first.
+        min_amount:
+          type:
+            - string
+            - "null"
+          description: Minimum absolute amount in token units.
+        min_human_amount:
+          type:
+            - number
+            - "null"
+        min_usd_amount:
+          type:
+            - number
+            - "null"
+        asset_id:
+          type:
+            - string
+            - "null"
+        direction:
+          type:
+            - string
+            - "null"
+          enum:
+            - sender
+            - receiver
+            - null
+        ignore_system:
+          type:
+            - boolean
+            - "null"
+    TransferRow:
+      type: object
+      additionalProperties: false
+      required:
+        - block_height
+        - block_timestamp
+        - receipt_id
+        - transfer_index
+        - signer_id
+        - predecessor_id
+        - receipt_account_id
+        - account_id
+        - asset_id
+        - asset_type
+        - amount
+        - transfer_type
+      properties:
+        block_height:
+          type: string
+        block_timestamp:
+          type: string
+        transaction_id:
+          type:
+            - string
+            - "null"
+        receipt_id:
+          type: string
+        action_index:
+          type:
+            - integer
+            - "null"
+        log_index:
+          type:
+            - integer
+            - "null"
+        transfer_index:
+          type: integer
+        signer_id:
+          type: string
+        predecessor_id:
+          type: string
+        receipt_account_id:
+          type: string
+        account_id:
+          type: string
+        other_account_id:
+          type:
+            - string
+            - "null"
+        asset_id:
+          type: string
+        asset_type:
+          type: string
+        amount:
+          type: string
+        method_name:
+          type:
+            - string
+            - "null"
+        transfer_type:
+          type: string
+        human_amount:
+          type:
+            - number
+            - "null"
+        usd_amount:
+          type:
+            - number
+            - "null"
+        start_of_block_balance:
+          type:
+            - string
+            - "null"
+        end_of_block_balance:
+          type:
+            - string
+            - "null"
+    TransfersResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - transfers
+        - resume_token
+      properties:
+        transfers:
+          type: array
+          items:
+            $ref: "#/components/schemas/TransferRow"
+        resume_token:
+          type:
+            - string
+            - "null"
+    ApiError:
+      type: object
+      required:
+        - error
+        - message
+      properties:
+        error:
+          type: string
+        message:
+          type: string

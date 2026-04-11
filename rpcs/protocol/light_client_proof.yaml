@@ -62,9 +62,9 @@ paths:
                   method: light_client_proof
                   params:
                     type: receipt
-                    transaction_hash: 8a8HR2Gf8NkLLeNcuHet4JeEz9kWa1fhs6qAnBdiewrR
+                    transaction_hash: 8gR9ivViWQnf7xASYiAqE4ftgSYoCfE6kbUNV11Gmb2M
                     sender_id: 0-relay.hot.tg
-                    light_client_head: BnHU4MCqsNVgLRCiZteef85VYxCbNzwkWEo1cEG8Z6VX
+                    light_client_head: 3ut7DttXoW1tFcxqkhScsXg1rE4D4ksYarYZ3EceCWfC
               testnet:
                 summary: Testnet Light Client Proof
                 value:
@@ -73,9 +73,9 @@ paths:
                   method: light_client_proof
                   params:
                     type: receipt
-                    transaction_hash: Ac5D9MWqo5wKmRBZiqQfyuJfz4SMsgc3tDCjMoQBBeRK
-                    sender_id: relay.aurora
-                    light_client_head: G92i6jYNUcJ6nZpPPF6TUghBoYbewqBQeUNquF3Qz38i
+                    transaction_hash: ErQ2ryNgxXa1ZuRqrkg14fWPbDBumrLaetoYgrw127aW
+                    sender_id: zcash-relayer.testnet
+                    light_client_head: HpzRGLFds3FqJP1oBPExdMjupovgUr9HzD5hCBKE6KQ6
       responses:
         200:
           description: Successful response
@@ -83,7 +83,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/JsonRpcResponse"
+security:
+  - ApiKeyAuth: []
 components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: query
+      name: apiKey
   schemas:
     JsonRpcResponse:
       type: object

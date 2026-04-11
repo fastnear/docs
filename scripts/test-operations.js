@@ -1,19 +1,24 @@
 #!/usr/bin/env node
 
 /**
- * Test script to verify operation pages are accessible
- * Run while preview server is active
+ * Test script to verify representative operation pages are accessible.
+ * Run while preview server is active.
  */
 
 const http = require('http');
+const https = require('https');
 
 const OPERATIONS = [
-  '/reference/operation/view_account',
   '/rpcs/account/view_account',
   '/rpcs/account/view_access_key',
   '/rpcs/block/block_by_height',
   '/rpcs/transaction/tx_status',
-  '/apis'
+  '/apis/fastnear/v1/account_full',
+  '/apis/transactions/v0/transactions',
+  '/apis/transfers/v0/transfers',
+  '/apis/kv-fastdata/v0/multi',
+  '/apis/neardata/v0/block',
+  '/apis/neardata/system/health',
 ];
 
 const BODY_TESTS = [
@@ -24,17 +29,24 @@ const BODY_TESTS = [
   {
     path: '/rpcs/account/view_account',
     body: { jsonrpc: '2.0', id: 'fastnear', method: 'query', params: { request_type: 'view_account', finality: 'final', account_id: 'near' } }
+  },
+  {
+    path: '/apis/neardata/v0/first_block?apiKey=test-key',
+    body: null
   }
 ];
 
+const cliBaseUrl = process.argv[2];
+const envBaseUrl = process.env.BASE_URL;
 const PORT = process.env.PORT || 4000;
-const BASE_URL = `http://localhost:${PORT}`;
+const BASE_URL = cliBaseUrl || envBaseUrl || `http://localhost:${PORT}`;
+const TRANSPORT = BASE_URL.startsWith('https://') ? https : http;
 
 function testUrl(path) {
   return new Promise((resolve) => {
     const url = `${BASE_URL}${path}`;
     
-    http.get(url, (res) => {
+    TRANSPORT.get(url, (res) => {
       if (res.statusCode === 200) {
         console.log(`✅ ${path} - OK`);
         resolve(true);
@@ -59,6 +71,7 @@ async function runTests() {
     passed: 0,
     failed: 0
   };
+  const failedPaths = [];
   
   for (const path of OPERATIONS) {
     const success = await testUrl(path);
@@ -66,19 +79,23 @@ async function runTests() {
       results.passed++;
     } else {
       results.failed++;
+      failedPaths.push(path);
     }
   }
 
   console.log('\n--- Body param tests ---\n');
 
   for (const { path, body } of BODY_TESTS) {
-    const bodyParam = encodeURIComponent(JSON.stringify(body));
-    const fullPath = `${path}?body=${bodyParam}`;
+    const separator = path.includes('?') ? '&' : '?';
+    const fullPath = body
+      ? `${path}${separator}body=${encodeURIComponent(JSON.stringify(body))}`
+      : path;
     const success = await testUrl(fullPath);
     if (success) {
       results.passed++;
     } else {
       results.failed++;
+      failedPaths.push(fullPath);
     }
   }
 
@@ -90,15 +107,25 @@ async function runTests() {
     console.log('1. reference.page.yaml with pagination:item');
     console.log('2. Restart of preview server');
     console.log('3. Correct operationId in OpenAPI specs');
+
+    const isLocalTarget = BASE_URL.includes('localhost') || BASE_URL.includes('127.0.0.1');
+    const hasApi404s = failedPaths.some((path) => path.startsWith('/apis/'));
+
+    if (!isLocalTarget && hasApi404s) {
+      console.log('\nProduction hint: if RPC routes pass but new /apis/... routes 404,');
+      console.log('the deployed Redocly project likely has not published this revision yet.');
+    }
   }
 }
 
 // Check if server is running first
-http.get(BASE_URL, (res) => {
+TRANSPORT.get(BASE_URL, (res) => {
   runTests();
 }).on('error', () => {
-  console.error(`❌ Preview server not running at ${BASE_URL}`);
-  console.log('\nStart the preview server first:');
-  console.log('  npm run preview');
+  console.error(`❌ Endpoint not reachable at ${BASE_URL}`);
+  if (!cliBaseUrl && !envBaseUrl) {
+    console.log('\nStart the preview server first:');
+    console.log('  npm run preview');
+  }
   process.exit(1);
 });

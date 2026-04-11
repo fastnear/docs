@@ -46,7 +46,7 @@ paths:
                   id: fastnear
                   method: EXPERIMENTAL_receipt
                   params:
-                    receipt_id: Fdt2JqfAh8s1xNC32wyYjjH2QrPmHJYRrbv4ytyt3ra4
+                    receipt_id: 7kq1LtV8dnjU5GcHBjApmSW2ekQK4Q3rtyTMVcLWfwrN
               testnet:
                 summary: Get receipt by ID (Testnet)
                 value:
@@ -54,7 +54,7 @@ paths:
                   id: fastnear
                   method: EXPERIMENTAL_receipt
                   params:
-                    receipt_id: J4zDz1wsdqYqHHn2QkTNnMq1Pr9LKY7v5rspPi3Xehz9
+                    receipt_id: HYaymC3Du3U64XBYeCdu7fMLDr2TgECyfH7Q2xaXKQzu
       responses:
         200:
           description: Successful response
@@ -62,7 +62,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/JsonRpcResponse"
+security:
+  - ApiKeyAuth: []
 components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: query
+      name: apiKey
   schemas:
     JsonRpcResponse:
       type: object
@@ -83,6 +90,7 @@ components:
               description: NEAR account ID
             priority:
               type: integer
+              description: "Deprecated, retained for backward compatibility."
               format: uint64
               default: 0
               minimum: 0

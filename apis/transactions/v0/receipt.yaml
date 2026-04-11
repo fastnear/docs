@@ -1,0 +1,73 @@
+openapi: 3.1.0
+info:
+  title: Transactions API - Receipt Lookup
+  version: 1.0.0
+servers:
+  - url: https://tx.main.fastnear.com
+    description: Mainnet
+paths:
+  /v0/receipt:
+    post:
+      operationId: get_receipt
+      summary: Fetch a receipt by ID
+      description: Returns a receipt row and, when present, the associated transaction row.
+      tags:
+        - receipts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required:
+                - receipt_id
+              properties:
+                receipt_id:
+                  type: string
+            example:
+              receipt_id: H6Roj3A2SNn7HJXdigLPDHiz2kcob4MHwLg3nnDEH2VZ
+      responses:
+        "200":
+          description: Receipt lookup result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  receipt:
+                    oneOf:
+                      - $ref: "#/components/schemas/ReceiptTxRow"
+                      - type: "null"
+                  transaction:
+                    oneOf:
+                      - $ref: "#/components/schemas/BlockTxRow"
+                      - type: "null"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "500":
+          description: ClickHouse query failure
+          content:
+            application/json:
+              schema:
+                type: string
+components:
+  schemas:
+    ReceiptTxRow:
+      $ref: "./block.yaml#/components/schemas/ReceiptTxRow"
+    BlockTxRow:
+      $ref: "./transactions.yaml#/components/schemas/BlockTxRow"
+    ApiError:
+      type: object
+      required:
+        - error
+        - message
+      properties:
+        error:
+          type: string
+        message:
+          type: string

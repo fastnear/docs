@@ -65,7 +65,7 @@ paths:
                     wait_until: EXECUTED_OPTIMISTIC
                     signed_tx_base64: ExampleBase64EncodedTransaction
                     sender_account_id: 0-relay.hot.tg
-                    tx_hash: 8a8HR2Gf8NkLLeNcuHet4JeEz9kWa1fhs6qAnBdiewrR
+                    tx_hash: 8gR9ivViWQnf7xASYiAqE4ftgSYoCfE6kbUNV11Gmb2M
               testnet:
                 summary: Get detailed transaction status (Testnet)
                 value:
@@ -75,8 +75,8 @@ paths:
                   params:
                     wait_until: EXECUTED_OPTIMISTIC
                     signed_tx_base64: ExampleBase64EncodedTransaction
-                    sender_account_id: relay.aurora
-                    tx_hash: Ac5D9MWqo5wKmRBZiqQfyuJfz4SMsgc3tDCjMoQBBeRK
+                    sender_account_id: zcash-relayer.testnet
+                    tx_hash: ErQ2ryNgxXa1ZuRqrkg14fWPbDBumrLaetoYgrw127aW
       responses:
         200:
           description: Successful response
@@ -84,7 +84,14 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/JsonRpcResponse"
+security:
+  - ApiKeyAuth: []
 components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: query
+      name: apiKey
   schemas:
     JsonRpcResponse:
       type: object

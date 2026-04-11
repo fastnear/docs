@@ -1,0 +1,31 @@
+openapi: 3.1.0
+info:
+  title: NEAR Data API - Last Optimistic Block
+  version: 1.0.0
+servers:
+  - url: https://mainnet.neardata.xyz
+    description: Mainnet
+  - url: https://testnet.neardata.xyz
+    description: Testnet
+paths:
+  /v0/last_block/optimistic:
+    get:
+      operationId: get_last_block_optimistic
+      summary: Redirect to the latest optimistic block
+      tags:
+        - redirects
+      parameters:
+        - $ref: "../components.yaml#/components/parameters/ApiKeyParam"
+      responses:
+        "200":
+          description: Block document returned by clients that automatically follow the redirect
+          content:
+            application/json:
+              schema:
+                $ref: "../components.yaml#/components/schemas/BlockDocument"
+        "302":
+          description: Redirects to the latest optimistic block URL
+          headers:
+            Location:
+              schema:
+                type: string

@@ -1,5 +1,14 @@
 extends:
   - recommended
+ignore:
+  - .claude/**
+  - AGENTS.md
+  - CLAUDE.md
+  - README.md
+  - API_DOCS_ROLLOUT.md
+  - INTEGRATION_GUIDE.md
+  - NETWORK_SYNC.md
+  - PORTAL_WORKFLOW.md
 rules:
   security-defined: 'off'
   operation-4xx-response: 'off'
@@ -37,13 +46,63 @@ scripts:
   head:
     - src: ./scripts/dark-mode.js
     - src: ./scripts/curl-postprocess.js
+scorecard:
+  ignore:
+    - .claude/**
+    - rpcs/*.yaml
+    - apis/openapi.yaml
+    - apis/*/openapi.yaml
 apis:
-  api:
-    root: apis/openapi.yaml
+  fastnear:
+    root: apis/fastnear/openapi.yaml
     openapi:
       hideDownloadButtons: true
       expandDefaultServerVariables: true
       expandResponses: all
+      layout: stacked
+      schemaExpansionLevel: 0
+      showConsole: true
+      hideSidebar: true
+  transactions:
+    root: apis/transactions/openapi.yaml
+    openapi:
+      hideDownloadButtons: true
+      expandDefaultServerVariables: true
+      expandResponses: all
+      layout: stacked
+      schemaExpansionLevel: 0
+      showConsole: true
+      hideSidebar: true
+  transfers:
+    root: apis/transfers/openapi.yaml
+    openapi:
+      hideDownloadButtons: true
+      expandDefaultServerVariables: true
+      expandResponses: all
+      layout: stacked
+      schemaExpansionLevel: 0
+      showConsole: true
+      hideSidebar: true
+  kv-fastdata:
+    root: apis/kv-fastdata/openapi.yaml
+    openapi:
+      hideDownloadButtons: true
+      expandDefaultServerVariables: true
+      expandResponses: all
+      layout: stacked
+      schemaExpansionLevel: 0
+      showConsole: true
+      hideSidebar: true
+  neardata:
+    root: apis/neardata/openapi.yaml
+    openapi:
+      hideDownloadButtons: true
+      expandDefaultServerVariables: true
+      expandResponses: all
+      layout: stacked
+      schemaExpansionLevel: 0
+      showConsole: true
+      hideSidebar: true
   rpc:
     root: rpcs/openapi.yaml
     openapi:

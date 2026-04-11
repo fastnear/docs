@@ -1,0 +1,198 @@
+openapi: 3.1.0
+info:
+  title: Transactions API - Block Lookup
+  version: 1.0.0
+servers:
+  - url: https://tx.main.fastnear.com
+    description: Mainnet
+paths:
+  /v0/block:
+    post:
+      operationId: get_block
+      summary: Fetch a block by height or hash
+      description: Returns a block row and optionally its transactions and receipts.
+      tags:
+        - blocks
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required:
+                - block_id
+              properties:
+                block_id:
+                  oneOf:
+                    - type: integer
+                    - type: string
+                with_transactions:
+                  type:
+                    - boolean
+                    - "null"
+                with_receipts:
+                  type:
+                    - boolean
+                    - "null"
+            example:
+              block_id: 130000000
+              with_transactions: true
+              with_receipts: true
+      responses:
+        "200":
+          description: Block lookup result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  block:
+                    oneOf:
+                      - $ref: "#/components/schemas/BlockRow"
+                      - type: "null"
+                  block_txs:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/BlockTxRow"
+                  block_receipts:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ReceiptTxRow"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "500":
+          description: ClickHouse query failure
+          content:
+            application/json:
+              schema:
+                type: string
+components:
+  schemas:
+    BlockRow:
+      type: object
+      additionalProperties: false
+      required:
+        - block_height
+        - block_hash
+        - prev_block_hash
+        - block_timestamp
+        - epoch_id
+        - next_epoch_id
+        - chunks_included
+        - author_id
+        - protocol_version
+        - gas_price
+        - total_supply
+        - num_transactions
+        - num_receipts
+        - gas_burnt
+        - tokens_burnt
+      properties:
+        block_height:
+          type: integer
+        prev_block_height:
+          type:
+            - integer
+            - "null"
+        block_hash:
+          type: string
+        prev_block_hash:
+          type: string
+        block_timestamp:
+          type: string
+        epoch_id:
+          type: string
+        next_epoch_id:
+          type: string
+        chunks_included:
+          type: integer
+        author_id:
+          type: string
+        protocol_version:
+          type: integer
+        gas_price:
+          type: string
+        block_ordinal:
+          type:
+            - integer
+            - "null"
+        total_supply:
+          type: string
+        num_transactions:
+          type: integer
+        num_receipts:
+          type: integer
+        gas_burnt:
+          type: string
+        tokens_burnt:
+          type: string
+    BlockTxRow:
+      $ref: "./transactions.yaml#/components/schemas/BlockTxRow"
+    ReceiptTxRow:
+      type: object
+      additionalProperties: false
+      required:
+        - receipt_id
+        - block_height
+        - block_timestamp
+        - receipt_index
+        - appear_block_height
+        - appear_receipt_index
+        - transaction_hash
+        - tx_block_height
+        - tx_block_timestamp
+        - tx_index
+        - predecessor_id
+        - receiver_id
+        - receipt_type
+        - priority
+        - shard_id
+        - is_success
+      properties:
+        receipt_id:
+          type: string
+        block_height:
+          type: integer
+        block_timestamp:
+          type: string
+        receipt_index:
+          type: integer
+        appear_block_height:
+          type: integer
+        appear_receipt_index:
+          type: integer
+        transaction_hash:
+          type: string
+        tx_block_height:
+          type: integer
+        tx_block_timestamp:
+          type: string
+        tx_index:
+          type: integer
+        predecessor_id:
+          type: string
+        receiver_id:
+          type: string
+        receipt_type:
+          type: string
+        priority:
+          type: integer
+        shard_id:
+          type: integer
+        is_success:
+          type: boolean
+    ApiError:
+      type: object
+      required:
+        - error
+        - message
+      properties:
+        error:
+          type: string
+        message:
+          type: string

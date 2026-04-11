@@ -4,11 +4,14 @@
   "description": "A starter project for working with Redoc",
   "main": " ",
   "scripts": {
-    "preview": "node scripts/refresh-examples.js && ENABLE_SOURCE_MAPS=true npx @redocly/cli preview",
+    "sync:apis": "node scripts/sync-external-apis.js",
+    "preview": "npm run sync:apis && node scripts/refresh-examples.js && ENABLE_SOURCE_MAPS=true npx @redocly/cli preview",
     "preview:headless": "node scripts/toggle-headless.js headless && npm run preview",
     "preview:portal": "node scripts/toggle-headless.js portal && npm run preview",
-    "build": "node scripts/refresh-examples.js && npx @redocly/cli build",
-    "lint": "npx @redocly/cli lint",
+    "build": "npm run sync:apis && node scripts/run-realm-build.js",
+    "lint": "npm run sync:apis && npx @redocly/cli lint",
+    "smoke:operations": "node scripts/test-operations.js",
+    "smoke:operations:prod": "node scripts/test-operations.js https://fastnear.redocly.app",
     "generate-rpc": "node scripts/generate-from-nearcore.js",
     "refresh-examples": "node scripts/refresh-examples.js",
     "test": "echo \"Error: no test specified\" && exit 1"

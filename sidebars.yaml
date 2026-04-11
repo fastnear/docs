@@ -6,9 +6,28 @@
       label: All endpoints
     - separator: endpoints soon
     - separatorLine: true
-- group: API
-  expanded: true
+- group: FastNEAR API
+  expanded: false
   items:
-    - page: apis/openapi.yaml
-    - separator: all endpoints soon
-    - separatorLine: true
+    - page: apis/fastnear/openapi.yaml
+      label: All endpoints
+- group: Transactions API
+  expanded: false
+  items:
+    - page: apis/transactions/openapi.yaml
+      label: All endpoints
+- group: Transfers API
+  expanded: false
+  items:
+    - page: apis/transfers/openapi.yaml
+      label: All endpoints
+- group: KV FastData API
+  expanded: false
+  items:
+    - page: apis/kv-fastdata/openapi.yaml
+      label: All endpoints
+- group: NEAR Data API
+  expanded: false
+  items:
+    - page: apis/neardata/openapi.yaml
+      label: All endpoints
