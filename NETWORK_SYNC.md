@@ -181,7 +181,7 @@ The modal-level sync does not need this guard because the environment → exampl
 
 2. **Only works for operations with named examples**: If an operation's YAML doesn't have "mainnet"/"testnet" named examples, `syncModalExampleViaOpen()` won't find a matching item — it logs a warning but causes no errors.
 
-3. **No `postMessage` between builder-docs and mike-docs**: Communication is exclusively via the iframe URL. builder-docs constructs the full URL with query params (`?apiKey=`, `?body=`, `?darkMode`) and sets it as the iframe `src`. Any new data flow must be added as a URL parameter read by `configure.ts`.
+3. **Legacy Redocly flow still uses URL-only request shaping**: When validating the old Redocly path, query params like `?apiKey=`, `?body=`, and `?darkMode` still flow through `configure.ts`. Public hosted pages are now direct-rendered in `builder-docs` and can emit `postMessage` resize events when embedded externally.
 
 4. **Sync delays**: The `setTimeout` delays in sync functions (50ms page-level, 150ms + 80ms modal-level) are necessary to let Redocly/react-select finish processing state changes, but can cause brief visual flicker.
 
