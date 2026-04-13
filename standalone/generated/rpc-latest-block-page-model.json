@@ -1,0 +1,278 @@
+{
+  "canonicalPath": "/rpcs/protocol/latest_block",
+  "generatedAt": "2026-04-13T15:41:39.725Z",
+  "info": {
+    "description": "Retrieves the most recent block from the blockchain",
+    "operationId": "latest_block",
+    "summary": "Get latest block",
+    "title": "NEAR Protocol RPC: Latest Block",
+    "version": "1.0.0"
+  },
+  "interaction": {
+    "authTransport": "bearer",
+    "defaultId": "fastnear",
+    "fields": [
+      {
+        "description": "Special identifier for the latest block",
+        "label": "Block ID",
+        "location": "body",
+        "name": "block_id",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "description": "Special identifier for the latest block",
+          "enum": [
+            "latest"
+          ]
+        }
+      }
+    ],
+    "kind": "rpc-latest-block",
+    "networks": [
+      {
+        "defaultFields": {
+          "block_id": "latest"
+        },
+        "key": "mainnet",
+        "label": "Mainnet RPC",
+        "url": "https://rpc.mainnet.fastnear.com"
+      },
+      {
+        "defaultFields": {
+          "block_id": "latest"
+        },
+        "key": "testnet",
+        "label": "Testnet RPC",
+        "url": "https://rpc.testnet.fastnear.com"
+      },
+      {
+        "defaultFields": {
+          "block_id": "latest"
+        },
+        "key": "mainnet",
+        "label": "Mainnet Archival RPC",
+        "url": "https://archival-rpc.mainnet.fastnear.com"
+      },
+      {
+        "defaultFields": {
+          "block_id": "latest"
+        },
+        "key": "testnet",
+        "label": "Testnet Archival RPC",
+        "url": "https://archival-rpc.testnet.fastnear.com"
+      }
+    ],
+    "requestMethod": "block",
+    "supportsFinality": false,
+    "transport": "json-rpc"
+  },
+  "outputModel": "standalone/generated/rpc-latest-block-page-model.json",
+  "pageModelId": "rpc-latest-block",
+  "replaceOperationPage": true,
+  "request": {
+    "bodySchema": {
+      "type": "object",
+      "required": [
+        "jsonrpc",
+        "id",
+        "method",
+        "params"
+      ],
+      "properties": [
+        {
+          "name": "jsonrpc",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "enum": [
+              "2.0"
+            ]
+          }
+        },
+        {
+          "name": "id",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "fastnear"
+          }
+        },
+        {
+          "name": "method",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "enum": [
+              "block"
+            ]
+          }
+        },
+        {
+          "name": "params",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "required": [
+              "block_id"
+            ],
+            "properties": [
+              {
+                "name": "block_id",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "description": "Special identifier for the latest block",
+                  "enum": [
+                    "latest"
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "examples": [
+      {
+        "id": "mainnet",
+        "label": "Mainnet Latest Block",
+        "network": "mainnet",
+        "request": {
+          "body": {
+            "jsonrpc": "2.0",
+            "id": "fastnear",
+            "method": "block",
+            "params": {
+              "block_id": "latest"
+            }
+          },
+          "headers": {},
+          "path": {},
+          "query": {}
+        }
+      },
+      {
+        "id": "testnet",
+        "label": "Testnet Latest Block",
+        "network": "testnet",
+        "request": {
+          "body": {
+            "jsonrpc": "2.0",
+            "id": "fastnear",
+            "method": "block",
+            "params": {
+              "block_id": "latest"
+            }
+          },
+          "headers": {},
+          "path": {},
+          "query": {}
+        }
+      }
+    ],
+    "mediaType": "application/json",
+    "parameters": {
+      "header": [],
+      "path": [],
+      "query": []
+    },
+    "required": true
+  },
+  "responses": [
+    {
+      "description": "Successful response",
+      "mediaType": "application/json",
+      "schema": {
+        "type": "object",
+        "required": [
+          "jsonrpc",
+          "id"
+        ],
+        "properties": [
+          {
+            "name": "jsonrpc",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "2.0"
+              ]
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "number"
+                }
+              ]
+            }
+          },
+          {
+            "name": "result",
+            "required": false,
+            "schema": {
+              "type": "object"
+            }
+          },
+          {
+            "name": "error",
+            "required": false,
+            "schema": {
+              "type": "object",
+              "properties": [
+                {
+                  "name": "code",
+                  "required": false,
+                  "schema": {
+                    "type": "integer"
+                  }
+                },
+                {
+                  "name": "message",
+                  "required": false,
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "name": "data",
+                  "required": false,
+                  "schema": {
+                    "type": "object"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "refName": "JsonRpcResponse"
+      },
+      "status": "200"
+    }
+  ],
+  "route": {
+    "method": "POST",
+    "path": "/",
+    "transport": "json-rpc"
+  },
+  "routeAliases": [
+    "/rpcs/protocol/latest_block/other/latest_block",
+    "/reference/operation/latest_block"
+  ],
+  "securitySchemes": [
+    {
+      "description": "The OpenAPI contract describes the FastNEAR API key as a query parameter named apiKey.",
+      "id": "ApiKeyAuth",
+      "in": "query",
+      "name": "apiKey",
+      "type": "apiKey"
+    }
+  ],
+  "sourceSpec": "rpcs/protocol/latest_block.yaml"
+}

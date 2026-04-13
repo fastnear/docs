@@ -1,0 +1,84 @@
+service: transactions
+pathPrefix: /apis/transactions/
+operations:
+  /apis/transactions/v0/account:
+    customPage:
+      kind: fastnear-rest-body
+      pageModelId: transactions-v0-account
+      replaceOperationPage: true
+      authTransport: bearer
+      sourceSpec: apis/transactions/v0/account.yaml
+      operationRoute: /apis/transactions/openapi/account/get_account
+    defaults:
+      preset: recent-account-history
+    presets:
+      recent-account-history:
+        body:
+          account_id: intents.near
+          desc: true
+          is_real_signer: true
+          is_success: true
+          limit: 50
+  /apis/transactions/v0/block:
+    customPage:
+      kind: fastnear-rest-body
+      pageModelId: transactions-v0-block
+      replaceOperationPage: true
+      authTransport: bearer
+      sourceSpec: apis/transactions/v0/block.yaml
+      operationRoute: /apis/transactions/openapi/blocks/get_block
+    defaults:
+      preset: expanded-block
+    presets:
+      expanded-block:
+        body:
+          block_id: 130000000
+          with_receipts: true
+          with_transactions: true
+  /apis/transactions/v0/blocks:
+    customPage:
+      kind: fastnear-rest-body
+      pageModelId: transactions-v0-blocks
+      replaceOperationPage: true
+      authTransport: bearer
+      sourceSpec: apis/transactions/v0/blocks.yaml
+      operationRoute: /apis/transactions/openapi/blocks/get_blocks
+    defaults:
+      preset: recent-block-range
+    presets:
+      recent-block-range:
+        body:
+          desc: false
+          from_block_height: 130000000
+          limit: 10
+          to_block_height: 130000100
+  /apis/transactions/v0/receipt:
+    customPage:
+      kind: fastnear-rest-body
+      pageModelId: transactions-v0-receipt
+      replaceOperationPage: true
+      authTransport: bearer
+      sourceSpec: apis/transactions/v0/receipt.yaml
+      operationRoute: /apis/transactions/openapi/receipts/get_receipt
+    defaults:
+      preset: receipt-lookup
+    presets:
+      receipt-lookup:
+        body:
+          receipt_id: H6Roj3A2SNn7HJXdigLPDHiz2kcob4MHwLg3nnDEH2VZ
+  /apis/transactions/v0/transactions:
+    customPage:
+      kind: fastnear-rest-body
+      pageModelId: transactions-v0-transactions
+      replaceOperationPage: true
+      authTransport: bearer
+      sourceSpec: apis/transactions/v0/transactions.yaml
+      operationRoute: /apis/transactions/openapi/transactions/get_transactions
+    defaults:
+      preset: transaction-hash-pair
+    presets:
+      transaction-hash-pair:
+        body:
+          tx_hashes:
+            - HV42hanyDVK3MYoW8c17Ufxw83htNEQGk93bzyQRocvS
+            - D2pt9ceGUyiGdJeeZLDd3uBGHF11DmPe4aJFMaoWMmDd

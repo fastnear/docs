@@ -1,0 +1,203 @@
+{
+  "canonicalPath": "/apis/fastnear/v1/account_nft",
+  "generatedAt": "2026-04-13T15:41:39.820Z",
+  "info": {
+    "description": "Returns NFT contract rows for the requested account. `last_update_block_height` is nullable when FastNEAR has not recorded a recent indexed update for that contract relationship.",
+    "operationId": "account_nft_v1",
+    "summary": "Lookup indexed NFT contract rows for an account",
+    "title": "FastNEAR API - V1 Account NFT",
+    "version": "3.0.3"
+  },
+  "interaction": {
+    "authTransport": "bearer",
+    "fields": [
+      {
+        "description": "NEAR account ID to inspect.",
+        "example": "sharddog.near",
+        "label": "Account ID",
+        "location": "path",
+        "name": "account_id",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "kind": "fastnear-rest-read",
+    "networks": [
+      {
+        "defaultFields": {
+          "account_id": "foundation.near"
+        },
+        "key": "mainnet",
+        "label": "Mainnet",
+        "url": "https://api.fastnear.com"
+      },
+      {
+        "defaultFields": {
+          "account_id": "foundation.near"
+        },
+        "key": "testnet",
+        "label": "Testnet",
+        "url": "https://test.api.fastnear.com"
+      }
+    ],
+    "requestMethod": "account_nft_v1",
+    "supportsFinality": false,
+    "transport": "http"
+  },
+  "outputModel": "standalone/generated/fastnear-v1-account-nft-page-model.json",
+  "pageModelId": "fastnear-v1-account-nft",
+  "replaceOperationPage": true,
+  "request": {
+    "bodySchema": null,
+    "examples": [
+      {
+        "id": "mainnet",
+        "label": "Mainnet",
+        "network": "mainnet",
+        "request": {
+          "body": null,
+          "headers": {},
+          "path": {
+            "account_id": "foundation.near"
+          },
+          "query": {}
+        }
+      },
+      {
+        "id": "testnet",
+        "label": "Testnet",
+        "network": "testnet",
+        "request": {
+          "body": null,
+          "headers": {},
+          "path": {
+            "account_id": "foundation.near"
+          },
+          "query": {}
+        }
+      }
+    ],
+    "parameters": {
+      "header": [],
+      "path": [
+        {
+          "description": "NEAR account ID to inspect.",
+          "example": "sharddog.near",
+          "location": "path",
+          "name": "account_id",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "query": [
+        {
+          "description": "Optional API key forwarded by embedded portal clients. The public FastNEAR API does not require it.",
+          "location": "query",
+          "name": "apiKey",
+          "required": false,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "required": true,
+    "supportsBody": false
+  },
+  "responses": [
+    {
+      "description": "Indexed NFT contract rows for the requested account",
+      "mediaType": "application/json",
+      "schema": {
+        "type": "object",
+        "required": [
+          "account_id",
+          "tokens"
+        ],
+        "additionalProperties": false,
+        "properties": [
+          {
+            "name": "account_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tokens",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "contract_id",
+                  "last_update_block_height"
+                ],
+                "additionalProperties": false,
+                "properties": [
+                  {
+                    "name": "contract_id",
+                    "required": true,
+                    "schema": {
+                      "type": "string"
+                    }
+                  },
+                  {
+                    "name": "last_update_block_height",
+                    "required": true,
+                    "schema": {
+                      "type": "integer",
+                      "format": "uint64"
+                    }
+                  }
+                ],
+                "refName": "NftRow"
+              }
+            }
+          }
+        ],
+        "refName": "V1NftResponse"
+      },
+      "status": "200"
+    },
+    {
+      "description": "Bad Request",
+      "mediaType": "application/json",
+      "schema": {
+        "type": "string"
+      },
+      "status": "400"
+    },
+    {
+      "description": "Internal Server Error",
+      "mediaType": "application/json",
+      "schema": {
+        "type": "string"
+      },
+      "status": "500"
+    }
+  ],
+  "route": {
+    "method": "GET",
+    "path": "/v1/account/{account_id}/nft",
+    "transport": "http"
+  },
+  "routeAliases": [
+    "/apis/fastnear/openapi/non-fungible-tokens/account_nft_v1"
+  ],
+  "securitySchemes": [
+    {
+      "description": "Optional API key forwarded by embedded portal clients. The public FastNEAR API does not require it.",
+      "id": "ApiKeyAuth",
+      "in": "query",
+      "name": "apiKey",
+      "type": "apiKey"
+    }
+  ],
+  "sourceSpec": "apis/fastnear/v1/account_nft.yaml"
+}

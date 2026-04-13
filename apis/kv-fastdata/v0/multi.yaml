@@ -1,46 +1,300 @@
-openapi: 3.1.0
+openapi: 3.0.3
 info:
-  title: KV FastData API - Multi Lookup
-  version: 1.0.0
-servers:
-  - url: https://kv.main.fastnear.com
-    description: Mainnet
-  - url: https://kv.test.fastnear.com
-    description: Testnet
+  title: KV FastData API - Multi-Key Lookup
+  version: 3.0.3
+  description: Returns the latest entry for each requested fully qualified key. Missing keys are represented as `null` entries in the response array.
 paths:
   /v0/multi:
     post:
+      description: Returns the latest entry for each requested fully qualified key. Missing keys are represented as `null` entries in the response array.
       operationId: multi
-      summary: Fetch latest rows for multiple fully qualified keys
-      tags:
-        - latest
       requestBody:
-        required: true
         content:
           application/json:
-            schema:
-              $ref: "../components.yaml#/components/schemas/MultiRequest"
             example:
+              include_metadata: true
               keys:
-                - app.near/alice.near/score
-                - app.near/bob.near/level
-              include_metadata: false
+                - app.near/alice.near/settings/theme
+                - app.near/alice.near/settings/missing
+            schema:
+              $ref: "#/components/schemas/MultiRequest"
+        required: true
       responses:
         "200":
-          description: Latest row per input key, preserving input order
           content:
             application/json:
+              example:
+                entries:
+                  - action_index: 0
+                    block_height: 176826522
+                    block_timestamp: 1768265226000
+                    current_account_id: app.near
+                    key: settings/theme
+                    predecessor_id: alice.near
+                    receipt_id: 2T8mJ5vL8PkYc3Rm6bNZBvA7k8mHh3oJmM4t9g8vP3Qc
+                    signer_id: alice.near
+                    tx_hash: null
+                    value:
+                      theme: dark
+                  - null
               schema:
-                $ref: "../components.yaml#/components/schemas/MultiResponse"
+                $ref: "#/components/schemas/MultiResponse"
+          description: Latest rows for the requested keys
         "400":
-          description: Invalid key format or too many keys
           content:
             application/json:
+              example:
+                error: invalid page token
               schema:
-                $ref: "../components.yaml#/components/schemas/ApiError"
+                $ref: "#/components/schemas/ApiError"
+          description: Invalid key filter or page token
         "500":
-          description: Scylla query failure
           content:
             application/json:
+              example:
+                error: internal server error
               schema:
-                $ref: "../components.yaml#/components/schemas/ApiError"
+                $ref: "#/components/schemas/ApiError"
+          description: Scylla query failure
+      summary: Fetch the latest rows for multiple fully qualified keys
+      tags:
+        - latest
+servers:
+  - description: Mainnet
+    url: https://kv.main.fastnear.com
+  - description: Testnet
+    url: https://kv.test.fastnear.com
+components:
+  schemas:
+    AllRequest:
+      additionalProperties: false
+      properties:
+        include_metadata:
+          default: false
+          description: Include receipt and signer metadata in each entry.
+          type: boolean
+        limit:
+          format: int32
+          maximum: 200
+          minimum: 1
+          nullable: true
+          type: integer
+        page_token:
+          description: Opaque pagination cursor from a previous `/v0/all/{predecessor_id}` response.
+          nullable: true
+          type: string
+      type: object
+    ApiError:
+      additionalProperties: false
+      properties:
+        error:
+          type: string
+      required:
+        - error
+      type: object
+    ByKeyRequest:
+      additionalProperties: false
+      properties:
+        asc:
+          default: false
+          description: Sort ascending for history results. Defaults to newest-first.
+          type: boolean
+        include_metadata:
+          default: false
+          description: Include receipt and signer metadata in each entry.
+          type: boolean
+        key:
+          description: Exact key name to match across all accounts and predecessors.
+          type: string
+        limit:
+          format: int32
+          maximum: 200
+          minimum: 1
+          nullable: true
+          type: integer
+        page_token:
+          description: Opaque pagination cursor from a previous response for the same endpoint and filter set.
+          nullable: true
+          type: string
+      required:
+        - key
+      type: object
+    KvEntry:
+      additionalProperties: false
+      properties:
+        action_index:
+          format: uint32
+          minimum: 0
+          nullable: true
+          type: integer
+        block_height:
+          format: uint64
+          minimum: 0
+          type: integer
+        block_timestamp:
+          format: uint64
+          minimum: 0
+          type: integer
+        current_account_id:
+          type: string
+        key:
+          type: string
+        predecessor_id:
+          type: string
+        receipt_id:
+          nullable: true
+          type: string
+        signer_id:
+          nullable: true
+          type: string
+        tx_hash:
+          nullable: true
+          type: string
+        value:
+          description: Raw JSON value as stored in FastData.
+      required:
+        - predecessor_id
+        - current_account_id
+        - block_height
+        - block_timestamp
+        - key
+        - value
+      type: object
+    LatestRequest:
+      additionalProperties: false
+      properties:
+        include_metadata:
+          default: false
+          description: Include receipt and signer metadata in each entry.
+          type: boolean
+        key:
+          description: Exact key filter. Mutually exclusive with `key_prefix`.
+          nullable: true
+          type: string
+        key_prefix:
+          description: Prefix filter for matching key namespaces.
+          nullable: true
+          type: string
+        limit:
+          format: int32
+          maximum: 200
+          minimum: 1
+          nullable: true
+          type: integer
+        page_token:
+          description: Opaque pagination cursor from a previous response for the same endpoint and filter set.
+          nullable: true
+          type: string
+      type: object
+    ListResponse:
+      additionalProperties: false
+      properties:
+        entries:
+          items:
+            $ref: "#/components/schemas/KvEntry"
+          type: array
+        page_token:
+          description: Opaque pagination cursor for the next page. Absent when there are no more results.
+          nullable: true
+          type: string
+      required:
+        - entries
+      type: object
+    MultiRequest:
+      additionalProperties: false
+      properties:
+        include_metadata:
+          default: false
+          description: Include receipt and signer metadata in each entry.
+          type: boolean
+        keys:
+          description: Fully qualified keys in current_account_id/predecessor_id/key form.
+          items:
+            type: string
+          maxItems: 100
+          type: array
+      required:
+        - keys
+      type: object
+    MultiResponse:
+      additionalProperties: false
+      properties:
+        entries:
+          items:
+            oneOf:
+              - additionalProperties: false
+                properties:
+                  action_index:
+                    format: uint32
+                    minimum: 0
+                    nullable: true
+                    type: integer
+                  block_height:
+                    format: uint64
+                    minimum: 0
+                    type: integer
+                  block_timestamp:
+                    format: uint64
+                    minimum: 0
+                    type: integer
+                  current_account_id:
+                    type: string
+                  key:
+                    type: string
+                  predecessor_id:
+                    type: string
+                  receipt_id:
+                    nullable: true
+                    type: string
+                  signer_id:
+                    nullable: true
+                    type: string
+                  tx_hash:
+                    nullable: true
+                    type: string
+                  value:
+                    description: Raw JSON value as stored in FastData.
+                required:
+                  - predecessor_id
+                  - current_account_id
+                  - block_height
+                  - block_timestamp
+                  - key
+                  - value
+                type: object
+              - enum:
+                  - null
+          type: array
+      required:
+        - entries
+      type: object
+    QueryRequest:
+      additionalProperties: false
+      properties:
+        asc:
+          default: false
+          description: Sort ascending for history endpoints. Defaults to newest-first.
+          type: boolean
+        include_metadata:
+          default: false
+          description: Include receipt and signer metadata in each entry.
+          type: boolean
+        key:
+          description: Exact key filter. Mutually exclusive with `key_prefix`.
+          nullable: true
+          type: string
+        key_prefix:
+          description: Prefix filter for matching key namespaces.
+          nullable: true
+          type: string
+        limit:
+          format: int32
+          maximum: 200
+          minimum: 1
+          nullable: true
+          type: integer
+        page_token:
+          description: Opaque pagination cursor from a previous response for the same endpoint and filter set.
+          nullable: true
+          type: string
+      type: object

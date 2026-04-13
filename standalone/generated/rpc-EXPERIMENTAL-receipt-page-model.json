@@ -1,0 +1,306 @@
+{
+  "canonicalPath": "/rpcs/transaction/EXPERIMENTAL_receipt",
+  "generatedAt": "2026-04-13T15:41:39.735Z",
+  "info": {
+    "description": "Fetches a receipt by its ID (as is, without a status or execution outcome)",
+    "operationId": "EXPERIMENTAL_receipt",
+    "summary": "Get receipt by ID",
+    "title": "NEAR Protocol RPC: Get receipt by ID",
+    "version": "1.0.0"
+  },
+  "interaction": {
+    "authTransport": "bearer",
+    "defaultId": "fastnear",
+    "fields": [
+      {
+        "description": "Base58-encoded hash",
+        "label": "Receipt Id",
+        "location": "body",
+        "name": "receipt_id",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "description": "Base58-encoded hash"
+        }
+      }
+    ],
+    "kind": "rpc-EXPERIMENTAL-receipt",
+    "networks": [
+      {
+        "defaultFields": {
+          "receipt_id": "HuwE9YUBuxA87eZrwbHxEN47FgujwyDhn2nena1ypdH3"
+        },
+        "key": "mainnet",
+        "label": "Mainnet",
+        "url": "https://rpc.mainnet.fastnear.com"
+      },
+      {
+        "defaultFields": {
+          "receipt_id": "5cJM47ytx5JH4JUqxTPFihnnb9hWpoDU4ZqgR8fAXdJQ"
+        },
+        "key": "testnet",
+        "label": "Testnet",
+        "url": "https://rpc.testnet.fastnear.com"
+      }
+    ],
+    "requestMethod": "EXPERIMENTAL_receipt",
+    "supportsFinality": false,
+    "transport": "json-rpc"
+  },
+  "outputModel": "standalone/generated/rpc-EXPERIMENTAL-receipt-page-model.json",
+  "pageModelId": "rpc-EXPERIMENTAL-receipt",
+  "replaceOperationPage": true,
+  "request": {
+    "bodySchema": {
+      "type": "object",
+      "required": [
+        "jsonrpc",
+        "id",
+        "method",
+        "params"
+      ],
+      "properties": [
+        {
+          "name": "jsonrpc",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "enum": [
+              "2.0"
+            ]
+          }
+        },
+        {
+          "name": "id",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "fastnear"
+          }
+        },
+        {
+          "name": "method",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "enum": [
+              "EXPERIMENTAL_receipt"
+            ]
+          }
+        },
+        {
+          "name": "params",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "required": [
+              "receipt_id"
+            ],
+            "properties": [
+              {
+                "name": "receipt_id",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "description": "Base58-encoded hash"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "examples": [
+      {
+        "id": "mainnet",
+        "label": "Get receipt by ID (Mainnet)",
+        "network": "mainnet",
+        "request": {
+          "body": {
+            "jsonrpc": "2.0",
+            "id": "fastnear",
+            "method": "EXPERIMENTAL_receipt",
+            "params": {
+              "receipt_id": "HuwE9YUBuxA87eZrwbHxEN47FgujwyDhn2nena1ypdH3"
+            }
+          },
+          "headers": {},
+          "path": {},
+          "query": {}
+        }
+      },
+      {
+        "id": "testnet",
+        "label": "Get receipt by ID (Testnet)",
+        "network": "testnet",
+        "request": {
+          "body": {
+            "jsonrpc": "2.0",
+            "id": "fastnear",
+            "method": "EXPERIMENTAL_receipt",
+            "params": {
+              "receipt_id": "5cJM47ytx5JH4JUqxTPFihnnb9hWpoDU4ZqgR8fAXdJQ"
+            }
+          },
+          "headers": {},
+          "path": {},
+          "query": {}
+        }
+      }
+    ],
+    "mediaType": "application/json",
+    "parameters": {
+      "header": [],
+      "path": [],
+      "query": []
+    },
+    "required": true
+  },
+  "responses": [
+    {
+      "description": "Successful response",
+      "mediaType": "application/json",
+      "schema": {
+        "type": "object",
+        "required": [
+          "jsonrpc",
+          "id"
+        ],
+        "properties": [
+          {
+            "name": "jsonrpc",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "2.0"
+              ]
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "number"
+                }
+              ]
+            }
+          },
+          {
+            "name": "result",
+            "required": false,
+            "schema": {
+              "type": "object",
+              "required": [
+                "predecessor_id",
+                "receiver_id",
+                "receipt_id",
+                "receipt"
+              ],
+              "properties": [
+                {
+                  "name": "predecessor_id",
+                  "required": true,
+                  "schema": {
+                    "type": "string",
+                    "description": "NEAR account ID"
+                  }
+                },
+                {
+                  "name": "priority",
+                  "required": false,
+                  "schema": {
+                    "type": "integer",
+                    "description": "Deprecated, retained for backward compatibility.",
+                    "format": "uint64",
+                    "default": 0
+                  }
+                },
+                {
+                  "name": "receipt",
+                  "required": true,
+                  "schema": {
+                    "type": "object",
+                    "description": "One of multiple possible types"
+                  }
+                },
+                {
+                  "name": "receipt_id",
+                  "required": true,
+                  "schema": {
+                    "type": "string",
+                    "description": "Base58-encoded hash"
+                  }
+                },
+                {
+                  "name": "receiver_id",
+                  "required": true,
+                  "schema": {
+                    "type": "string",
+                    "description": "NEAR account ID"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "error",
+            "required": false,
+            "schema": {
+              "type": "object",
+              "properties": [
+                {
+                  "name": "code",
+                  "required": false,
+                  "schema": {
+                    "type": "integer"
+                  }
+                },
+                {
+                  "name": "message",
+                  "required": false,
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "name": "data",
+                  "required": false,
+                  "schema": {
+                    "type": "object"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "refName": "JsonRpcResponse"
+      },
+      "status": "200"
+    }
+  ],
+  "route": {
+    "method": "POST",
+    "path": "/",
+    "transport": "json-rpc"
+  },
+  "routeAliases": [
+    "/rpcs/transaction/EXPERIMENTAL_receipt/other/EXPERIMENTAL_receipt",
+    "/reference/operation/EXPERIMENTAL_receipt"
+  ],
+  "securitySchemes": [
+    {
+      "description": "The OpenAPI contract describes the FastNEAR API key as a query parameter named apiKey.",
+      "id": "ApiKeyAuth",
+      "in": "query",
+      "name": "apiKey",
+      "type": "apiKey"
+    }
+  ],
+  "sourceSpec": "rpcs/transaction/EXPERIMENTAL_receipt.yaml"
+}

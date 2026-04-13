@@ -1,0 +1,312 @@
+{
+  "canonicalPath": "/rpcs/protocol/EXPERIMENTAL_congestion_level",
+  "generatedAt": "2026-04-13T15:41:39.696Z",
+  "info": {
+    "description": "Queries the congestion level of a shard",
+    "operationId": "EXPERIMENTAL_congestion_level",
+    "summary": "Get congestion level",
+    "title": "NEAR Protocol RPC: Get congestion level",
+    "version": "1.0.0"
+  },
+  "interaction": {
+    "authTransport": "bearer",
+    "defaultId": "fastnear",
+    "fields": [
+      {
+        "description": "Block height (integer) or block hash (string)",
+        "label": "Block ID",
+        "location": "body",
+        "name": "block_id",
+        "required": true,
+        "schema": {
+          "description": "Block height (integer) or block hash (string)",
+          "oneOf": [
+            {
+              "type": "integer",
+              "description": "Block height"
+            },
+            {
+              "type": "string",
+              "description": "Base58-encoded block hash"
+            }
+          ]
+        }
+      },
+      {
+        "description": "Shard identifier",
+        "label": "Shard Id",
+        "location": "body",
+        "name": "shard_id",
+        "required": true,
+        "schema": {
+          "type": "integer",
+          "description": "Shard identifier"
+        }
+      }
+    ],
+    "kind": "rpc-EXPERIMENTAL-congestion-level",
+    "networks": [
+      {
+        "defaultFields": {
+          "block_id": 12345,
+          "shard_id": 0
+        },
+        "key": "mainnet",
+        "label": "Mainnet",
+        "url": "https://rpc.mainnet.fastnear.com"
+      },
+      {
+        "defaultFields": {
+          "block_id": 12345,
+          "shard_id": 0
+        },
+        "key": "testnet",
+        "label": "Testnet",
+        "url": "https://rpc.testnet.fastnear.com"
+      }
+    ],
+    "requestMethod": "EXPERIMENTAL_congestion_level",
+    "supportsFinality": false,
+    "transport": "json-rpc"
+  },
+  "outputModel": "standalone/generated/rpc-EXPERIMENTAL-congestion-level-page-model.json",
+  "pageModelId": "rpc-EXPERIMENTAL-congestion-level",
+  "replaceOperationPage": true,
+  "request": {
+    "bodySchema": {
+      "type": "object",
+      "required": [
+        "jsonrpc",
+        "id",
+        "method",
+        "params"
+      ],
+      "properties": [
+        {
+          "name": "jsonrpc",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "enum": [
+              "2.0"
+            ]
+          }
+        },
+        {
+          "name": "id",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "fastnear"
+          }
+        },
+        {
+          "name": "method",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "enum": [
+              "EXPERIMENTAL_congestion_level"
+            ]
+          }
+        },
+        {
+          "name": "params",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "nullable": true,
+            "required": [
+              "block_id",
+              "shard_id"
+            ],
+            "properties": [
+              {
+                "name": "block_id",
+                "required": true,
+                "schema": {
+                  "description": "Block height (integer) or block hash (string)",
+                  "oneOf": [
+                    {
+                      "type": "integer",
+                      "description": "Block height"
+                    },
+                    {
+                      "type": "string",
+                      "description": "Base58-encoded block hash"
+                    }
+                  ]
+                }
+              },
+              {
+                "name": "shard_id",
+                "required": true,
+                "schema": {
+                  "type": "integer",
+                  "description": "Shard identifier"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "examples": [
+      {
+        "id": "mainnet",
+        "label": "Get congestion level (Mainnet)",
+        "network": "mainnet",
+        "request": {
+          "body": {
+            "jsonrpc": "2.0",
+            "id": "fastnear",
+            "method": "EXPERIMENTAL_congestion_level",
+            "params": {
+              "block_id": 12345,
+              "shard_id": 0
+            }
+          },
+          "headers": {},
+          "path": {},
+          "query": {}
+        }
+      },
+      {
+        "id": "testnet",
+        "label": "Get congestion level (Testnet)",
+        "network": "testnet",
+        "request": {
+          "body": {
+            "jsonrpc": "2.0",
+            "id": "fastnear",
+            "method": "EXPERIMENTAL_congestion_level",
+            "params": {
+              "block_id": 12345,
+              "shard_id": 0
+            }
+          },
+          "headers": {},
+          "path": {},
+          "query": {}
+        }
+      }
+    ],
+    "mediaType": "application/json",
+    "parameters": {
+      "header": [],
+      "path": [],
+      "query": []
+    },
+    "required": true
+  },
+  "responses": [
+    {
+      "description": "Successful response",
+      "mediaType": "application/json",
+      "schema": {
+        "type": "object",
+        "required": [
+          "jsonrpc",
+          "id"
+        ],
+        "properties": [
+          {
+            "name": "jsonrpc",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "2.0"
+              ]
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "number"
+                }
+              ]
+            }
+          },
+          {
+            "name": "result",
+            "required": false,
+            "schema": {
+              "type": "object",
+              "required": [
+                "congestion_level"
+              ],
+              "properties": [
+                {
+                  "name": "congestion_level",
+                  "required": true,
+                  "schema": {
+                    "type": "number",
+                    "format": "double"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "error",
+            "required": false,
+            "schema": {
+              "type": "object",
+              "properties": [
+                {
+                  "name": "code",
+                  "required": false,
+                  "schema": {
+                    "type": "integer"
+                  }
+                },
+                {
+                  "name": "message",
+                  "required": false,
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "name": "data",
+                  "required": false,
+                  "schema": {
+                    "type": "object"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "refName": "JsonRpcResponse"
+      },
+      "status": "200"
+    }
+  ],
+  "route": {
+    "method": "POST",
+    "path": "/",
+    "transport": "json-rpc"
+  },
+  "routeAliases": [
+    "/rpcs/protocol/EXPERIMENTAL_congestion_level/other/EXPERIMENTAL_congestion_level",
+    "/reference/operation/EXPERIMENTAL_congestion_level"
+  ],
+  "securitySchemes": [
+    {
+      "description": "The OpenAPI contract describes the FastNEAR API key as a query parameter named apiKey.",
+      "id": "ApiKeyAuth",
+      "in": "query",
+      "name": "apiKey",
+      "type": "apiKey"
+    }
+  ],
+  "sourceSpec": "rpcs/protocol/EXPERIMENTAL_congestion_level.yaml"
+}

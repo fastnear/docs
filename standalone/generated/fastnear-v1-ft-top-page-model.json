@@ -1,0 +1,202 @@
+{
+  "canonicalPath": "/apis/fastnear/v1/ft_top",
+  "generatedAt": "2026-04-13T15:41:39.828Z",
+  "info": {
+    "description": "Returns the top indexed accounts by balance for the requested fungible token.",
+    "operationId": "ft_top_v1",
+    "summary": "Lookup top indexed holders for a fungible token",
+    "title": "FastNEAR API - V1 FT Top Holders",
+    "version": "3.0.3"
+  },
+  "interaction": {
+    "authTransport": "bearer",
+    "fields": [
+      {
+        "description": "Fungible token contract account ID.",
+        "example": "wrap.near",
+        "label": "Token Id",
+        "location": "path",
+        "name": "token_id",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "kind": "fastnear-rest-read",
+    "networks": [
+      {
+        "defaultFields": {
+          "token_id": "wrap.near"
+        },
+        "key": "mainnet",
+        "label": "Mainnet",
+        "url": "https://api.fastnear.com"
+      },
+      {
+        "defaultFields": {
+          "token_id": "wrap.near"
+        },
+        "key": "testnet",
+        "label": "Testnet",
+        "url": "https://test.api.fastnear.com"
+      }
+    ],
+    "requestMethod": "ft_top_v1",
+    "supportsFinality": false,
+    "transport": "http"
+  },
+  "outputModel": "standalone/generated/fastnear-v1-ft-top-page-model.json",
+  "pageModelId": "fastnear-v1-ft-top",
+  "replaceOperationPage": true,
+  "request": {
+    "bodySchema": null,
+    "examples": [
+      {
+        "id": "mainnet",
+        "label": "Mainnet",
+        "network": "mainnet",
+        "request": {
+          "body": null,
+          "headers": {},
+          "path": {
+            "token_id": "wrap.near"
+          },
+          "query": {}
+        }
+      },
+      {
+        "id": "testnet",
+        "label": "Testnet",
+        "network": "testnet",
+        "request": {
+          "body": null,
+          "headers": {},
+          "path": {
+            "token_id": "wrap.near"
+          },
+          "query": {}
+        }
+      }
+    ],
+    "parameters": {
+      "header": [],
+      "path": [
+        {
+          "description": "Fungible token contract account ID.",
+          "example": "wrap.near",
+          "location": "path",
+          "name": "token_id",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "query": [
+        {
+          "description": "Optional API key forwarded by embedded portal clients. The public FastNEAR API does not require it.",
+          "location": "query",
+          "name": "apiKey",
+          "required": false,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "required": true,
+    "supportsBody": false
+  },
+  "responses": [
+    {
+      "description": "Indexed top holders for the requested fungible token",
+      "mediaType": "application/json",
+      "schema": {
+        "type": "object",
+        "required": [
+          "token_id",
+          "accounts"
+        ],
+        "additionalProperties": false,
+        "properties": [
+          {
+            "name": "accounts",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "account_id",
+                  "balance"
+                ],
+                "additionalProperties": false,
+                "properties": [
+                  {
+                    "name": "account_id",
+                    "required": true,
+                    "schema": {
+                      "type": "string"
+                    }
+                  },
+                  {
+                    "name": "balance",
+                    "required": true,
+                    "schema": {
+                      "type": "string"
+                    }
+                  }
+                ],
+                "refName": "AccountBalanceRow"
+              }
+            }
+          },
+          {
+            "name": "token_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "refName": "TokenAccountsResponse"
+      },
+      "status": "200"
+    },
+    {
+      "description": "Bad Request",
+      "mediaType": "application/json",
+      "schema": {
+        "type": "string"
+      },
+      "status": "400"
+    },
+    {
+      "description": "Internal Server Error",
+      "mediaType": "application/json",
+      "schema": {
+        "type": "string"
+      },
+      "status": "500"
+    }
+  ],
+  "route": {
+    "method": "GET",
+    "path": "/v1/ft/{token_id}/top",
+    "transport": "http"
+  },
+  "routeAliases": [
+    "/apis/fastnear/openapi/fungible-tokens/ft_top_v1"
+  ],
+  "securitySchemes": [
+    {
+      "description": "Optional API key forwarded by embedded portal clients. The public FastNEAR API does not require it.",
+      "id": "ApiKeyAuth",
+      "in": "query",
+      "name": "apiKey",
+      "type": "apiKey"
+    }
+  ],
+  "sourceSpec": "apis/fastnear/v1/ft_top.yaml"
+}

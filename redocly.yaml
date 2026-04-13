@@ -9,6 +9,47 @@ ignore:
   - INTEGRATION_GUIDE.md
   - NETWORK_SYNC.md
   - PORTAL_WORKFLOW.md
+  - SERVICE_ONBOARDING_CHECKLIST.md
+redirects:
+  /apis/fastnear/v1/public_key_lookup:
+    to: /apis/fastnear/openapi/public-key/lookup_by_public_key_v1
+    type: 302
+  /apis/neardata/v0/block:
+    to: /apis/neardata/openapi/blocks/get_block
+    type: 302
+  /apis/neardata/v0/block_headers:
+    to: /apis/neardata/openapi/blocks/get_block_headers
+    type: 302
+  /apis/neardata/v0/block_chunk:
+    to: /apis/neardata/openapi/blocks/get_chunk
+    type: 302
+  /apis/neardata/v0/block_shard:
+    to: /apis/neardata/openapi/blocks/get_shard
+    type: 302
+  /apis/neardata/v0/block_optimistic:
+    to: /apis/neardata/openapi/blocks/get_block_optimistic
+    type: 302
+  /apis/neardata/v0/first_block:
+    to: /apis/neardata/openapi/blocks/get_first_block
+    type: 302
+  /apis/neardata/v0/last_block_final:
+    to: /apis/neardata/openapi/blocks/get_last_block_final
+    type: 302
+  /apis/neardata/v0/last_block_optimistic:
+    to: /apis/neardata/openapi/blocks/get_last_block_optimistic
+    type: 302
+  /reference/operation/view_account:
+    to: /rpcs/account/view_account/other/view_account
+    type: 302
+  /reference/operation/block_by_height:
+    to: /rpcs/block/block_by_height/other/block_by_height
+    type: 302
+  /reference/operation/block_by_id:
+    to: /rpcs/block/block_by_id/other/block_by_id
+    type: 302
+  /reference/operation/block_effects:
+    to: /rpcs/block/block_effects/other/block_effects
+    type: 302
 rules:
   security-defined: 'off'
   operation-4xx-response: 'off'
@@ -45,6 +86,8 @@ colorMode:
 scripts:
   head:
     - src: ./scripts/dark-mode.js
+    - src: ./scripts/generated-operation-routes.js
+    - src: ./scripts/api-operation-redirect.js
     - src: ./scripts/curl-postprocess.js
 scorecard:
   ignore:

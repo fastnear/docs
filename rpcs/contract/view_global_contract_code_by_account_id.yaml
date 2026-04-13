@@ -42,7 +42,7 @@ paths:
                       enum: [view_global_contract_code_by_account_id]
                     finality:
                       type: string
-                      enum: [final, optimistic]
+                      enum: [final, near-final, optimistic]
                       description: Block finality
                   required: [request_type, account_id, finality]
             examples:

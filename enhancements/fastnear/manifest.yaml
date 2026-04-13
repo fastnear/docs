@@ -1,0 +1,171 @@
+service: fastnear
+pathPrefix: /apis/fastnear/
+operations:
+  /apis/fastnear/system/health:
+    customPage:
+      kind: fastnear-rest-read
+      pageModelId: fastnear-system-health
+      replaceOperationPage: true
+      authTransport: bearer
+      sourceSpec: apis/fastnear/system/health.yaml
+      operationRoute: /apis/fastnear/openapi/system/get_health
+  /apis/fastnear/system/status:
+    customPage:
+      kind: fastnear-rest-read
+      pageModelId: fastnear-system-status
+      replaceOperationPage: true
+      authTransport: bearer
+      sourceSpec: apis/fastnear/system/status.yaml
+      operationRoute: /apis/fastnear/openapi/system/get_status
+  /apis/fastnear/v0/account_staking:
+    customPage:
+      kind: fastnear-rest-read
+      pageModelId: fastnear-v0-account-staking
+      replaceOperationPage: true
+      authTransport: bearer
+      sourceSpec: apis/fastnear/v0/account_staking.yaml
+      operationRoute: /apis/fastnear/openapi/staking/account_staking_v0
+    defaults:
+      preset: ecosystem-account
+    presets:
+      ecosystem-account:
+        path:
+          account_id:
+            default: foundation.near
+  /apis/fastnear/v0/account_ft:
+    customPage:
+      kind: fastnear-rest-read
+      pageModelId: fastnear-v0-account-ft
+      replaceOperationPage: true
+      authTransport: bearer
+      sourceSpec: apis/fastnear/v0/account_ft.yaml
+      operationRoute: /apis/fastnear/openapi/fungible-tokens/account_ft_v0
+    defaults:
+      preset: ecosystem-account
+    presets:
+      ecosystem-account:
+        path:
+          account_id:
+            default: foundation.near
+  /apis/fastnear/v0/account_nft:
+    customPage:
+      kind: fastnear-rest-read
+      pageModelId: fastnear-v0-account-nft
+      replaceOperationPage: true
+      authTransport: bearer
+      sourceSpec: apis/fastnear/v0/account_nft.yaml
+      operationRoute: /apis/fastnear/openapi/non-fungible-tokens/account_nft_v0
+    defaults:
+      preset: ecosystem-account
+    presets:
+      ecosystem-account:
+        path:
+          account_id:
+            default: foundation.near
+  /apis/fastnear/v0/public_key_lookup:
+    customPage:
+      kind: fastnear-rest-read
+      pageModelId: fastnear-v0-public-key-lookup
+      replaceOperationPage: true
+      authTransport: bearer
+      sourceSpec: apis/fastnear/v0/public_key_lookup.yaml
+      operationRoute: /apis/fastnear/openapi/public-key/lookup_by_public_key_v0
+  /apis/fastnear/v0/public_key_lookup_all:
+    customPage:
+      kind: fastnear-rest-read
+      pageModelId: fastnear-v0-public-key-lookup-all
+      replaceOperationPage: true
+      authTransport: bearer
+      sourceSpec: apis/fastnear/v0/public_key_lookup_all.yaml
+      operationRoute: /apis/fastnear/openapi/public-key/lookup_by_public_key_all_v0
+  /apis/fastnear/v1/account_staking:
+    customPage:
+      kind: fastnear-rest-read
+      pageModelId: fastnear-v1-account-staking
+      replaceOperationPage: true
+      authTransport: bearer
+      sourceSpec: apis/fastnear/v1/account_staking.yaml
+      operationRoute: /apis/fastnear/openapi/staking/account_staking_v1
+    defaults:
+      preset: ecosystem-account
+    presets:
+      ecosystem-account:
+        path:
+          account_id:
+            default: foundation.near
+  /apis/fastnear/v1/account_ft:
+    customPage:
+      kind: fastnear-rest-read
+      pageModelId: fastnear-v1-account-ft
+      replaceOperationPage: true
+      authTransport: bearer
+      sourceSpec: apis/fastnear/v1/account_ft.yaml
+      operationRoute: /apis/fastnear/openapi/fungible-tokens/account_ft_v1
+    defaults:
+      preset: ecosystem-account
+    presets:
+      ecosystem-account:
+        path:
+          account_id:
+            default: foundation.near
+  /apis/fastnear/v1/account_nft:
+    customPage:
+      kind: fastnear-rest-read
+      pageModelId: fastnear-v1-account-nft
+      replaceOperationPage: true
+      authTransport: bearer
+      sourceSpec: apis/fastnear/v1/account_nft.yaml
+      operationRoute: /apis/fastnear/openapi/non-fungible-tokens/account_nft_v1
+    defaults:
+      preset: ecosystem-account
+    presets:
+      ecosystem-account:
+        path:
+          account_id:
+            default: foundation.near
+  /apis/fastnear/v1/account_full:
+    customPage:
+      kind: fastnear-rest-read
+      pageModelId: fastnear-v1-account-full
+      replaceOperationPage: true
+      authTransport: bearer
+      sourceSpec: apis/fastnear/v1/account_full.yaml
+      operationRoute: /apis/fastnear/openapi/accounts/account_full_v1
+    defaults:
+      preset: ecosystem-account
+    presets:
+      ecosystem-account:
+        path:
+          account_id:
+            default: foundation.near
+  /apis/fastnear/v1/public_key_lookup:
+    customPage:
+      kind: fastnear-rest-read
+      pageModelId: fastnear-v1-public-key-lookup
+      replaceOperationPage: true
+      authTransport: bearer
+      sourceSpec: apis/fastnear/v1/public_key_lookup.yaml
+      operationRoute: /apis/fastnear/openapi/public-key/lookup_by_public_key_v1
+  /apis/fastnear/v1/ft_top:
+    customPage:
+      kind: fastnear-rest-read
+      pageModelId: fastnear-v1-ft-top
+      replaceOperationPage: true
+      authTransport: bearer
+      sourceSpec: apis/fastnear/v1/ft_top.yaml
+      operationRoute: /apis/fastnear/openapi/fungible-tokens/ft_top_v1
+    defaults:
+      preset: wrapped-near
+    presets:
+      wrapped-near:
+        path:
+          token_id:
+            default: wrap.near
+  /apis/fastnear/v1/public_key_lookup_all:
+    customPage:
+      kind: fastnear-rest-read
+      pageModelId: fastnear-v1-public-key-lookup-all
+      replaceOperationPage: true
+      authTransport: bearer
+      sourceSpec: apis/fastnear/v1/public_key_lookup_all.yaml
+      operationRoute: /apis/fastnear/openapi/public-key/lookup_by_public_key_all_v1

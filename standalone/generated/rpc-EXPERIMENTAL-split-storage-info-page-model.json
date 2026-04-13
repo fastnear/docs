@@ -1,0 +1,263 @@
+{
+  "canonicalPath": "/rpcs/protocol/EXPERIMENTAL_split_storage_info",
+  "generatedAt": "2026-04-13T15:41:39.707Z",
+  "info": {
+    "description": "Contains the split storage information for archival nodes",
+    "operationId": "EXPERIMENTAL_split_storage_info",
+    "summary": "Get split storage info",
+    "title": "NEAR Protocol RPC: Get split storage info",
+    "version": "1.0.0"
+  },
+  "interaction": {
+    "authTransport": "bearer",
+    "defaultId": "fastnear",
+    "fields": [],
+    "kind": "rpc-EXPERIMENTAL-split-storage-info",
+    "networks": [
+      {
+        "defaultFields": {},
+        "key": "mainnet",
+        "label": "Mainnet",
+        "url": "https://rpc.mainnet.fastnear.com"
+      },
+      {
+        "defaultFields": {},
+        "key": "testnet",
+        "label": "Testnet",
+        "url": "https://rpc.testnet.fastnear.com"
+      }
+    ],
+    "requestMethod": "EXPERIMENTAL_split_storage_info",
+    "supportsFinality": false,
+    "transport": "json-rpc"
+  },
+  "outputModel": "standalone/generated/rpc-EXPERIMENTAL-split-storage-info-page-model.json",
+  "pageModelId": "rpc-EXPERIMENTAL-split-storage-info",
+  "replaceOperationPage": true,
+  "request": {
+    "bodySchema": {
+      "type": "object",
+      "required": [
+        "jsonrpc",
+        "id",
+        "method",
+        "params"
+      ],
+      "properties": [
+        {
+          "name": "jsonrpc",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "enum": [
+              "2.0"
+            ]
+          }
+        },
+        {
+          "name": "id",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "fastnear"
+          }
+        },
+        {
+          "name": "method",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "enum": [
+              "EXPERIMENTAL_split_storage_info"
+            ]
+          }
+        },
+        {
+          "name": "params",
+          "required": true,
+          "schema": {
+            "type": "array",
+            "description": "Empty array as this method takes no parameters",
+            "example": []
+          }
+        }
+      ]
+    },
+    "examples": [
+      {
+        "id": "mainnet",
+        "label": "Get split storage info (Mainnet)",
+        "network": "mainnet",
+        "request": {
+          "body": {
+            "jsonrpc": "2.0",
+            "id": "fastnear",
+            "method": "EXPERIMENTAL_split_storage_info",
+            "params": []
+          },
+          "headers": {},
+          "path": {},
+          "query": {}
+        }
+      },
+      {
+        "id": "testnet",
+        "label": "Get split storage info (Testnet)",
+        "network": "testnet",
+        "request": {
+          "body": {
+            "jsonrpc": "2.0",
+            "id": "fastnear",
+            "method": "EXPERIMENTAL_split_storage_info",
+            "params": []
+          },
+          "headers": {},
+          "path": {},
+          "query": {}
+        }
+      }
+    ],
+    "mediaType": "application/json",
+    "parameters": {
+      "header": [],
+      "path": [],
+      "query": []
+    },
+    "required": true
+  },
+  "responses": [
+    {
+      "description": "Successful response",
+      "mediaType": "application/json",
+      "schema": {
+        "type": "object",
+        "required": [
+          "jsonrpc",
+          "id"
+        ],
+        "properties": [
+          {
+            "name": "jsonrpc",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "2.0"
+              ]
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "number"
+                }
+              ]
+            }
+          },
+          {
+            "name": "result",
+            "required": false,
+            "schema": {
+              "type": "object",
+              "description": "Contains the split storage information.",
+              "properties": [
+                {
+                  "name": "cold_head_height",
+                  "required": false,
+                  "schema": {
+                    "type": "integer",
+                    "nullable": true,
+                    "format": "uint64"
+                  }
+                },
+                {
+                  "name": "final_head_height",
+                  "required": false,
+                  "schema": {
+                    "type": "integer",
+                    "nullable": true,
+                    "format": "uint64"
+                  }
+                },
+                {
+                  "name": "head_height",
+                  "required": false,
+                  "schema": {
+                    "type": "integer",
+                    "nullable": true,
+                    "format": "uint64"
+                  }
+                },
+                {
+                  "name": "hot_db_kind",
+                  "required": false,
+                  "schema": {
+                    "type": "string",
+                    "nullable": true
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "error",
+            "required": false,
+            "schema": {
+              "type": "object",
+              "properties": [
+                {
+                  "name": "code",
+                  "required": false,
+                  "schema": {
+                    "type": "integer"
+                  }
+                },
+                {
+                  "name": "message",
+                  "required": false,
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "name": "data",
+                  "required": false,
+                  "schema": {
+                    "type": "object"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "refName": "JsonRpcResponse"
+      },
+      "status": "200"
+    }
+  ],
+  "route": {
+    "method": "POST",
+    "path": "/",
+    "transport": "json-rpc"
+  },
+  "routeAliases": [
+    "/rpcs/protocol/EXPERIMENTAL_split_storage_info/other/EXPERIMENTAL_split_storage_info",
+    "/reference/operation/EXPERIMENTAL_split_storage_info"
+  ],
+  "securitySchemes": [
+    {
+      "description": "The OpenAPI contract describes the FastNEAR API key as a query parameter named apiKey.",
+      "id": "ApiKeyAuth",
+      "in": "query",
+      "name": "apiKey",
+      "type": "apiKey"
+    }
+  ],
+  "sourceSpec": "rpcs/protocol/EXPERIMENTAL_split_storage_info.yaml"
+}

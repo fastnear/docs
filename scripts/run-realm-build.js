@@ -16,6 +16,9 @@ const SERVER_CACHE_DIR = path.join(
   "server"
 );
 const VALID_LOCAL_PLANS = new Set(["pro", "enterprise"]);
+const SHOULD_REFRESH_EXAMPLES =
+  process.argv.includes("--refresh-examples") ||
+  process.env.REFRESH_RPC_EXAMPLES === "true";
 
 function parseEnvFile(filePath) {
   const env = {};
@@ -289,7 +292,9 @@ async function main() {
   const planGatesStatus = getPlanGatesStatus(process.env.PLAN_GATES);
   const localPlan = process.env.REDOCLY_LOCAL_PLAN;
 
-  run("node", ["scripts/refresh-examples.js"]);
+  if (SHOULD_REFRESH_EXAMPLES) {
+    run("node", ["scripts/refresh-examples.js"]);
+  }
 
   if (planGatesStatus.valid) {
     await runInternalRealmBuild();

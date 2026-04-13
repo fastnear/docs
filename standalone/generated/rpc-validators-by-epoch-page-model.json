@@ -1,0 +1,357 @@
+{
+  "canonicalPath": "/rpcs/validators/validators_by_epoch",
+  "generatedAt": "2026-04-13T15:41:39.753Z",
+  "info": {
+    "description": "Retrieves the list of validators and their details for a specific epoch",
+    "operationId": "validators_by_epoch",
+    "summary": "Get validators by epoch",
+    "title": "NEAR Protocol RPC: Validators By Epoch",
+    "version": "1.0.0"
+  },
+  "interaction": {
+    "authTransport": "bearer",
+    "defaultId": "fastnear",
+    "fields": [
+      {
+        "description": "Base58-encoded epoch identifier hash",
+        "label": "Epoch Id",
+        "location": "body",
+        "name": "epoch_id",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "description": "Base58-encoded epoch identifier hash"
+        }
+      }
+    ],
+    "kind": "rpc-validators-by-epoch",
+    "networks": [
+      {
+        "defaultFields": {
+          "epoch_id": "GZP8ApSTYZGrn8WnKTuYvJixMvK2MtQBB7eCGZZHQaS6"
+        },
+        "key": "mainnet",
+        "label": "Mainnet",
+        "url": "https://rpc.mainnet.fastnear.com"
+      },
+      {
+        "defaultFields": {
+          "epoch_id": "GZP8ApSTYZGrn8WnKTuYvJixMvK2MtQBB7eCGZZHQaS6"
+        },
+        "key": "testnet",
+        "label": "Testnet",
+        "url": "https://rpc.testnet.fastnear.com"
+      }
+    ],
+    "requestMethod": "validators",
+    "supportsFinality": false,
+    "transport": "json-rpc"
+  },
+  "outputModel": "standalone/generated/rpc-validators-by-epoch-page-model.json",
+  "pageModelId": "rpc-validators-by-epoch",
+  "replaceOperationPage": true,
+  "request": {
+    "bodySchema": {
+      "type": "object",
+      "required": [
+        "jsonrpc",
+        "id",
+        "method",
+        "params"
+      ],
+      "properties": [
+        {
+          "name": "jsonrpc",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "enum": [
+              "2.0"
+            ]
+          }
+        },
+        {
+          "name": "id",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "fastnear"
+          }
+        },
+        {
+          "name": "method",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "enum": [
+              "validators"
+            ]
+          }
+        },
+        {
+          "name": "params",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "required": [
+              "epoch_id"
+            ],
+            "properties": [
+              {
+                "name": "epoch_id",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "description": "Base58-encoded epoch identifier hash"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "examples": [
+      {
+        "id": "mainnet",
+        "label": "Get validators by epoch (Mainnet)",
+        "network": "mainnet",
+        "request": {
+          "body": {
+            "jsonrpc": "2.0",
+            "id": "fastnear",
+            "method": "validators",
+            "params": {
+              "epoch_id": "GZP8ApSTYZGrn8WnKTuYvJixMvK2MtQBB7eCGZZHQaS6"
+            }
+          },
+          "headers": {},
+          "path": {},
+          "query": {}
+        }
+      },
+      {
+        "id": "testnet",
+        "label": "Get validators by epoch (Testnet)",
+        "network": "testnet",
+        "request": {
+          "body": {
+            "jsonrpc": "2.0",
+            "id": "fastnear",
+            "method": "validators",
+            "params": {
+              "epoch_id": "GZP8ApSTYZGrn8WnKTuYvJixMvK2MtQBB7eCGZZHQaS6"
+            }
+          },
+          "headers": {},
+          "path": {},
+          "query": {}
+        }
+      }
+    ],
+    "mediaType": "application/json",
+    "parameters": {
+      "header": [],
+      "path": [],
+      "query": []
+    },
+    "required": true
+  },
+  "responses": [
+    {
+      "description": "Successful response",
+      "mediaType": "application/json",
+      "schema": {
+        "type": "object",
+        "required": [
+          "jsonrpc",
+          "id"
+        ],
+        "properties": [
+          {
+            "name": "jsonrpc",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "2.0"
+              ]
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "number"
+                }
+              ]
+            }
+          },
+          {
+            "name": "result",
+            "required": false,
+            "schema": {
+              "type": "object",
+              "description": "Information about this epoch validators and next epoch validators",
+              "required": [
+                "current_validators",
+                "next_validators",
+                "current_fishermen",
+                "next_fishermen",
+                "current_proposals",
+                "prev_epoch_kickout",
+                "epoch_start_height",
+                "epoch_height"
+              ],
+              "properties": [
+                {
+                  "name": "current_fishermen",
+                  "required": true,
+                  "schema": {
+                    "type": "array",
+                    "description": "Fishermen for the current epoch",
+                    "items": {
+                      "type": "object",
+                      "description": "One of multiple possible types"
+                    }
+                  }
+                },
+                {
+                  "name": "current_proposals",
+                  "required": true,
+                  "schema": {
+                    "type": "array",
+                    "description": "Proposals in the current epoch",
+                    "items": {
+                      "type": "object",
+                      "description": "One of multiple possible types"
+                    }
+                  }
+                },
+                {
+                  "name": "current_validators",
+                  "required": true,
+                  "schema": {
+                    "type": "array",
+                    "description": "Validators for the current epoch",
+                    "items": {
+                      "type": "object",
+                      "description": "Describes information about the current epoch validator"
+                    }
+                  }
+                },
+                {
+                  "name": "epoch_height",
+                  "required": true,
+                  "schema": {
+                    "type": "integer",
+                    "description": "Epoch height",
+                    "format": "uint64"
+                  }
+                },
+                {
+                  "name": "epoch_start_height",
+                  "required": true,
+                  "schema": {
+                    "type": "integer",
+                    "description": "Epoch start block height",
+                    "format": "uint64"
+                  }
+                },
+                {
+                  "name": "next_fishermen",
+                  "required": true,
+                  "schema": {
+                    "type": "array",
+                    "description": "Fishermen for the next epoch",
+                    "items": {
+                      "type": "object",
+                      "description": "One of multiple possible types"
+                    }
+                  }
+                },
+                {
+                  "name": "next_validators",
+                  "required": true,
+                  "schema": {
+                    "type": "array",
+                    "description": "Validators for the next epoch",
+                    "items": {
+                      "type": "object"
+                    }
+                  }
+                },
+                {
+                  "name": "prev_epoch_kickout",
+                  "required": true,
+                  "schema": {
+                    "type": "array",
+                    "description": "Kickout in the previous epoch",
+                    "items": {
+                      "type": "object"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "error",
+            "required": false,
+            "schema": {
+              "type": "object",
+              "properties": [
+                {
+                  "name": "code",
+                  "required": false,
+                  "schema": {
+                    "type": "integer"
+                  }
+                },
+                {
+                  "name": "message",
+                  "required": false,
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "name": "data",
+                  "required": false,
+                  "schema": {
+                    "type": "object"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "refName": "JsonRpcResponse"
+      },
+      "status": "200"
+    }
+  ],
+  "route": {
+    "method": "POST",
+    "path": "/",
+    "transport": "json-rpc"
+  },
+  "routeAliases": [
+    "/rpcs/validators/validators_by_epoch/other/validators_by_epoch",
+    "/reference/operation/validators_by_epoch"
+  ],
+  "securitySchemes": [
+    {
+      "description": "The OpenAPI contract describes the FastNEAR API key as a query parameter named apiKey.",
+      "id": "ApiKeyAuth",
+      "in": "query",
+      "name": "apiKey",
+      "type": "apiKey"
+    }
+  ],
+  "sourceSpec": "rpcs/validators/validators_by_epoch.yaml"
+}

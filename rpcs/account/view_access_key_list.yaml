@@ -14,6 +14,9 @@ paths:
       operationId: view_access_key_list
       summary: View all account access keys
       description: Retrieves a list of all access keys for a NEAR account
+      x-fastnear-interaction:
+        kind: rpc-view-access-key-list
+      x-hideReplay: true
       requestBody:
         required: true
         content:
@@ -42,30 +45,30 @@ paths:
                       enum: [view_access_key_list]
                     finality:
                       type: string
-                      enum: [final, optimistic]
+                      enum: [final, near-final, optimistic]
                       description: Block finality
                   required: [request_type, account_id, finality]
             examples:
               mainnet:
-                summary: View Mainnet Account Access Keys
+                summary: View access key list (Mainnet)
                 value:
                   jsonrpc: "2.0"
                   id: fastnear
                   method: query
                   params:
+                    account_id: root.near
                     request_type: view_access_key_list
                     finality: final
-                    account_id: mike.near
               testnet:
-                summary: View Testnet Account Access Keys
+                summary: View access key list (Testnet)
                 value:
                   jsonrpc: "2.0"
                   id: fastnear
                   method: query
                   params:
+                    account_id: root.testnet
                     request_type: view_access_key_list
                     finality: final
-                    account_id: mike.testnet
       responses:
         200:
           description: Successful response

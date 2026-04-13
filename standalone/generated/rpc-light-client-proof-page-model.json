@@ -1,0 +1,480 @@
+{
+  "canonicalPath": "/rpcs/protocol/light_client_proof",
+  "generatedAt": "2026-04-13T15:41:39.726Z",
+  "info": {
+    "description": "Retrieves verification proof data for light clients",
+    "operationId": "light_client_proof",
+    "summary": "Get light client proof",
+    "title": "NEAR Protocol RPC: Light Client Proof",
+    "version": "1.0.0"
+  },
+  "interaction": {
+    "authTransport": "bearer",
+    "defaultId": "fastnear",
+    "fields": [
+      {
+        "description": "Base58-encoded hash",
+        "label": "Light Client Head",
+        "location": "body",
+        "name": "light_client_head",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "description": "Base58-encoded hash"
+        }
+      },
+      {
+        "description": "NEAR account ID",
+        "label": "Sender Id",
+        "location": "body",
+        "name": "sender_id",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "description": "NEAR account ID"
+        }
+      },
+      {
+        "description": "Base58-encoded hash",
+        "label": "Transaction Hash",
+        "location": "body",
+        "name": "transaction_hash",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "description": "Base58-encoded hash"
+        }
+      },
+      {
+        "label": "Type",
+        "location": "body",
+        "name": "type",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "enum": [
+            "receipt"
+          ]
+        }
+      },
+      {
+        "description": "Base58-encoded hash",
+        "label": "Receipt Id",
+        "location": "body",
+        "name": "receipt_id",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "description": "Base58-encoded hash"
+        }
+      },
+      {
+        "description": "NEAR account ID",
+        "label": "Receiver Id",
+        "location": "body",
+        "name": "receiver_id",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "description": "NEAR account ID"
+        }
+      }
+    ],
+    "kind": "rpc-light-client-proof",
+    "networks": [
+      {
+        "defaultFields": {
+          "light_client_head": "CU1KcVSuYAZUiehn7TnCxSdpb3RGoHxK1hABC5AKKo2Q",
+          "sender_id": "5764995617.tg",
+          "transaction_hash": "HrRxPdtUGRGqubmHzmuyhhh2RCQ8hytFGwbXfmqdXBAj",
+          "type": "receipt"
+        },
+        "key": "mainnet",
+        "label": "Mainnet",
+        "url": "https://rpc.mainnet.fastnear.com"
+      },
+      {
+        "defaultFields": {
+          "light_client_head": "CoPszhGFqcx9L1HQYM62g3UjxMpuZD8RiZL6QdpBZXA4",
+          "sender_id": "zerochltest.testnet",
+          "transaction_hash": "d68i4vS3cwSyqk2oVYkWwDbnhSYYbLBfCzSkciJ2X3Y",
+          "type": "receipt"
+        },
+        "key": "testnet",
+        "label": "Testnet",
+        "url": "https://rpc.testnet.fastnear.com"
+      }
+    ],
+    "requestMethod": "light_client_proof",
+    "supportsFinality": false,
+    "transport": "json-rpc"
+  },
+  "outputModel": "standalone/generated/rpc-light-client-proof-page-model.json",
+  "pageModelId": "rpc-light-client-proof",
+  "replaceOperationPage": true,
+  "request": {
+    "bodySchema": {
+      "type": "object",
+      "required": [
+        "jsonrpc",
+        "id",
+        "method",
+        "params"
+      ],
+      "properties": [
+        {
+          "name": "jsonrpc",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "enum": [
+              "2.0"
+            ]
+          }
+        },
+        {
+          "name": "id",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "fastnear"
+          }
+        },
+        {
+          "name": "method",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "enum": [
+              "light_client_proof"
+            ]
+          }
+        },
+        {
+          "name": "params",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "required": [
+              "light_client_head"
+            ],
+            "properties": [
+              {
+                "name": "light_client_head",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "description": "Base58-encoded hash"
+                }
+              },
+              {
+                "name": "sender_id",
+                "required": false,
+                "schema": {
+                  "type": "string",
+                  "description": "NEAR account ID"
+                }
+              },
+              {
+                "name": "transaction_hash",
+                "required": false,
+                "schema": {
+                  "type": "string",
+                  "description": "Base58-encoded hash"
+                }
+              },
+              {
+                "name": "type",
+                "required": false,
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "receipt"
+                  ]
+                }
+              },
+              {
+                "name": "receipt_id",
+                "required": false,
+                "schema": {
+                  "type": "string",
+                  "description": "Base58-encoded hash"
+                }
+              },
+              {
+                "name": "receiver_id",
+                "required": false,
+                "schema": {
+                  "type": "string",
+                  "description": "NEAR account ID"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "examples": [
+      {
+        "id": "mainnet",
+        "label": "Mainnet Light Client Proof",
+        "network": "mainnet",
+        "request": {
+          "body": {
+            "jsonrpc": "2.0",
+            "id": "fastnear",
+            "method": "light_client_proof",
+            "params": {
+              "type": "receipt",
+              "transaction_hash": "HrRxPdtUGRGqubmHzmuyhhh2RCQ8hytFGwbXfmqdXBAj",
+              "sender_id": "5764995617.tg",
+              "light_client_head": "CU1KcVSuYAZUiehn7TnCxSdpb3RGoHxK1hABC5AKKo2Q"
+            }
+          },
+          "headers": {},
+          "path": {},
+          "query": {}
+        }
+      },
+      {
+        "id": "testnet",
+        "label": "Testnet Light Client Proof",
+        "network": "testnet",
+        "request": {
+          "body": {
+            "jsonrpc": "2.0",
+            "id": "fastnear",
+            "method": "light_client_proof",
+            "params": {
+              "type": "receipt",
+              "transaction_hash": "d68i4vS3cwSyqk2oVYkWwDbnhSYYbLBfCzSkciJ2X3Y",
+              "sender_id": "zerochltest.testnet",
+              "light_client_head": "CoPszhGFqcx9L1HQYM62g3UjxMpuZD8RiZL6QdpBZXA4"
+            }
+          },
+          "headers": {},
+          "path": {},
+          "query": {}
+        }
+      }
+    ],
+    "mediaType": "application/json",
+    "parameters": {
+      "header": [],
+      "path": [],
+      "query": []
+    },
+    "required": true
+  },
+  "responses": [
+    {
+      "description": "Successful response",
+      "mediaType": "application/json",
+      "schema": {
+        "type": "object",
+        "required": [
+          "jsonrpc",
+          "id"
+        ],
+        "properties": [
+          {
+            "name": "jsonrpc",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "2.0"
+              ]
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "number"
+                }
+              ]
+            }
+          },
+          {
+            "name": "result",
+            "required": false,
+            "schema": {
+              "type": "object",
+              "required": [
+                "outcome_proof",
+                "outcome_root_proof",
+                "block_header_lite",
+                "block_proof"
+              ],
+              "properties": [
+                {
+                  "name": "block_header_lite",
+                  "required": true,
+                  "schema": {
+                    "type": "object",
+                    "required": [
+                      "prev_block_hash",
+                      "inner_rest_hash",
+                      "inner_lite"
+                    ],
+                    "properties": [
+                      {
+                        "name": "inner_lite",
+                        "required": true,
+                        "schema": {
+                          "type": "object",
+                          "description": "A part of a state for the current head of a light client. More info [here](https://nomicon.io/ChainSpec/LightClient)."
+                        }
+                      },
+                      {
+                        "name": "inner_rest_hash",
+                        "required": true,
+                        "schema": {
+                          "type": "string",
+                          "description": "Base58-encoded hash"
+                        }
+                      },
+                      {
+                        "name": "prev_block_hash",
+                        "required": true,
+                        "schema": {
+                          "type": "string",
+                          "description": "Base58-encoded hash"
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "name": "block_proof",
+                  "required": true,
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    }
+                  }
+                },
+                {
+                  "name": "outcome_proof",
+                  "required": true,
+                  "schema": {
+                    "type": "object",
+                    "required": [
+                      "proof",
+                      "block_hash",
+                      "id",
+                      "outcome"
+                    ],
+                    "properties": [
+                      {
+                        "name": "block_hash",
+                        "required": true,
+                        "schema": {
+                          "type": "string",
+                          "description": "Base58-encoded hash"
+                        }
+                      },
+                      {
+                        "name": "id",
+                        "required": true,
+                        "schema": {
+                          "type": "string",
+                          "description": "Base58-encoded hash"
+                        }
+                      },
+                      {
+                        "name": "outcome",
+                        "required": true,
+                        "schema": {
+                          "type": "object"
+                        }
+                      },
+                      {
+                        "name": "proof",
+                        "required": true,
+                        "schema": {
+                          "type": "array",
+                          "items": {
+                            "type": "object"
+                          }
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "name": "outcome_root_proof",
+                  "required": true,
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "error",
+            "required": false,
+            "schema": {
+              "type": "object",
+              "properties": [
+                {
+                  "name": "code",
+                  "required": false,
+                  "schema": {
+                    "type": "integer"
+                  }
+                },
+                {
+                  "name": "message",
+                  "required": false,
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "name": "data",
+                  "required": false,
+                  "schema": {
+                    "type": "object"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "refName": "JsonRpcResponse"
+      },
+      "status": "200"
+    }
+  ],
+  "route": {
+    "method": "POST",
+    "path": "/",
+    "transport": "json-rpc"
+  },
+  "routeAliases": [
+    "/rpcs/protocol/light_client_proof/other/light_client_proof",
+    "/reference/operation/light_client_proof"
+  ],
+  "securitySchemes": [
+    {
+      "description": "The OpenAPI contract describes the FastNEAR API key as a query parameter named apiKey.",
+      "id": "ApiKeyAuth",
+      "in": "query",
+      "name": "apiKey",
+      "type": "apiKey"
+    }
+  ],
+  "sourceSpec": "rpcs/protocol/light_client_proof.yaml"
+}

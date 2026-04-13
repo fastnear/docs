@@ -61,12 +61,12 @@ paths:
                   id: fastnear
                   method: EXPERIMENTAL_light_client_proof
                   params:
-                    light_client_head: 3ut7DttXoW1tFcxqkhScsXg1rE4D4ksYarYZ3EceCWfC
-                    sender_id: 0-relay.hot.tg
-                    transaction_hash: 8gR9ivViWQnf7xASYiAqE4ftgSYoCfE6kbUNV11Gmb2M
+                    light_client_head: CU1KcVSuYAZUiehn7TnCxSdpb3RGoHxK1hABC5AKKo2Q
+                    sender_id: 5764995617.tg
+                    transaction_hash: HrRxPdtUGRGqubmHzmuyhhh2RCQ8hytFGwbXfmqdXBAj
                     type: receipt
-                    receipt_id: 7kq1LtV8dnjU5GcHBjApmSW2ekQK4Q3rtyTMVcLWfwrN
-                    receiver_id: 0-relay.hot.tg
+                    receipt_id: HuwE9YUBuxA87eZrwbHxEN47FgujwyDhn2nena1ypdH3
+                    receiver_id: 5764995617.tg
               testnet:
                 summary: Get light client execution proof (Testnet)
                 value:
@@ -74,12 +74,12 @@ paths:
                   id: fastnear
                   method: EXPERIMENTAL_light_client_proof
                   params:
-                    light_client_head: HpzRGLFds3FqJP1oBPExdMjupovgUr9HzD5hCBKE6KQ6
-                    sender_id: zcash-relayer.testnet
-                    transaction_hash: ErQ2ryNgxXa1ZuRqrkg14fWPbDBumrLaetoYgrw127aW
+                    light_client_head: CoPszhGFqcx9L1HQYM62g3UjxMpuZD8RiZL6QdpBZXA4
+                    sender_id: zerochltest.testnet
+                    transaction_hash: d68i4vS3cwSyqk2oVYkWwDbnhSYYbLBfCzSkciJ2X3Y
                     type: receipt
-                    receipt_id: HYaymC3Du3U64XBYeCdu7fMLDr2TgECyfH7Q2xaXKQzu
-                    receiver_id: zcash-relayer.testnet
+                    receipt_id: 5cJM47ytx5JH4JUqxTPFihnnb9hWpoDU4ZqgR8fAXdJQ
+                    receiver_id: zerochltest.testnet
       responses:
         200:
           description: Successful response

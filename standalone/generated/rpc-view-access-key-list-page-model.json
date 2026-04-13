@@ -1,0 +1,303 @@
+{
+  "canonicalPath": "/rpcs/account/view_access_key_list",
+  "generatedAt": "2026-04-13T15:41:39.682Z",
+  "info": {
+    "description": "Retrieves a list of all access keys for a NEAR account",
+    "operationId": "view_access_key_list",
+    "summary": "View all account access keys",
+    "title": "NEAR Protocol RPC: View Access Key List",
+    "version": "1.0.0"
+  },
+  "interaction": {
+    "authTransport": "bearer",
+    "defaultId": "fastnear",
+    "fields": [
+      {
+        "description": "NEAR account ID",
+        "label": "Account ID",
+        "location": "body",
+        "name": "account_id",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "description": "NEAR account ID"
+        }
+      }
+    ],
+    "kind": "rpc-view-access-key-list",
+    "networks": [
+      {
+        "defaultFields": {
+          "account_id": "root.near"
+        },
+        "key": "mainnet",
+        "label": "Mainnet",
+        "url": "https://rpc.mainnet.fastnear.com"
+      },
+      {
+        "defaultFields": {
+          "account_id": "root.testnet"
+        },
+        "key": "testnet",
+        "label": "Testnet",
+        "url": "https://rpc.testnet.fastnear.com"
+      }
+    ],
+    "requestMethod": "query",
+    "requestType": "view_access_key_list",
+    "supportsFinality": true,
+    "transport": "json-rpc"
+  },
+  "outputModel": "standalone/generated/rpc-view-access-key-list-page-model.json",
+  "pageModelId": "rpc-view-access-key-list",
+  "replaceOperationPage": true,
+  "request": {
+    "bodySchema": {
+      "type": "object",
+      "required": [
+        "jsonrpc",
+        "id",
+        "method",
+        "params"
+      ],
+      "properties": [
+        {
+          "name": "jsonrpc",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "enum": [
+              "2.0"
+            ]
+          }
+        },
+        {
+          "name": "id",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "fastnear"
+          }
+        },
+        {
+          "name": "method",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "enum": [
+              "query"
+            ]
+          }
+        },
+        {
+          "name": "params",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "required": [
+              "request_type",
+              "account_id",
+              "finality"
+            ],
+            "properties": [
+              {
+                "name": "account_id",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "description": "NEAR account ID"
+                }
+              },
+              {
+                "name": "request_type",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "view_access_key_list"
+                  ]
+                }
+              },
+              {
+                "name": "finality",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "description": "Block finality",
+                  "enum": [
+                    "final",
+                    "near-final",
+                    "optimistic"
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "examples": [
+      {
+        "id": "mainnet",
+        "label": "View access key list (Mainnet)",
+        "network": "mainnet",
+        "request": {
+          "body": {
+            "jsonrpc": "2.0",
+            "id": "fastnear",
+            "method": "query",
+            "params": {
+              "account_id": "root.near",
+              "request_type": "view_access_key_list",
+              "finality": "final"
+            }
+          },
+          "headers": {},
+          "path": {},
+          "query": {}
+        }
+      },
+      {
+        "id": "testnet",
+        "label": "View access key list (Testnet)",
+        "network": "testnet",
+        "request": {
+          "body": {
+            "jsonrpc": "2.0",
+            "id": "fastnear",
+            "method": "query",
+            "params": {
+              "account_id": "root.testnet",
+              "request_type": "view_access_key_list",
+              "finality": "final"
+            }
+          },
+          "headers": {},
+          "path": {},
+          "query": {}
+        }
+      }
+    ],
+    "mediaType": "application/json",
+    "parameters": {
+      "header": [],
+      "path": [],
+      "query": []
+    },
+    "required": true
+  },
+  "responses": [
+    {
+      "description": "Successful response",
+      "mediaType": "application/json",
+      "schema": {
+        "type": "object",
+        "required": [
+          "jsonrpc",
+          "id"
+        ],
+        "properties": [
+          {
+            "name": "jsonrpc",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "2.0"
+              ]
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "number"
+                }
+              ]
+            }
+          },
+          {
+            "name": "result",
+            "required": false,
+            "schema": {
+              "type": "object",
+              "description": "Lists access keys",
+              "required": [
+                "keys"
+              ],
+              "properties": [
+                {
+                  "name": "keys",
+                  "required": true,
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "description": "Describes information about an access key including the public key."
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "error",
+            "required": false,
+            "schema": {
+              "type": "object",
+              "properties": [
+                {
+                  "name": "code",
+                  "required": false,
+                  "schema": {
+                    "type": "integer"
+                  }
+                },
+                {
+                  "name": "message",
+                  "required": false,
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "name": "data",
+                  "required": false,
+                  "schema": {
+                    "type": "object"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "refName": "JsonRpcResponse"
+      },
+      "status": "200"
+    }
+  ],
+  "route": {
+    "method": "POST",
+    "path": "/",
+    "transport": "json-rpc"
+  },
+  "routeAliases": [
+    "/rpcs/account/view_access_key_list/other/view_access_key_list",
+    "/reference/operation/view_access_key_list"
+  ],
+  "securitySchemes": [
+    {
+      "description": "The OpenAPI contract describes the FastNEAR API key as a query parameter named apiKey.",
+      "id": "ApiKeyAuth",
+      "in": "query",
+      "name": "apiKey",
+      "type": "apiKey"
+    }
+  ],
+  "sourceSpec": "rpcs/account/view_access_key_list.yaml"
+}

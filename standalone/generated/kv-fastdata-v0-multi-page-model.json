@@ -1,0 +1,326 @@
+{
+  "canonicalPath": "/apis/kv-fastdata/v0/multi",
+  "generatedAt": "2026-04-13T15:41:39.861Z",
+  "info": {
+    "description": "Returns the latest entry for each requested fully qualified key. Missing keys are represented as `null` entries in the response array.",
+    "operationId": "multi",
+    "summary": "Fetch the latest rows for multiple fully qualified keys",
+    "title": "KV FastData API - Multi-Key Lookup",
+    "version": "3.0.3"
+  },
+  "interaction": {
+    "authTransport": "bearer",
+    "fields": [
+      {
+        "default": false,
+        "description": "Include receipt and signer metadata in each entry.",
+        "label": "Include Metadata",
+        "location": "body",
+        "name": "include_metadata",
+        "required": false,
+        "schema": {
+          "type": "boolean",
+          "description": "Include receipt and signer metadata in each entry.",
+          "default": false
+        }
+      },
+      {
+        "description": "Fully qualified keys in current_account_id/predecessor_id/key form.",
+        "label": "Keys",
+        "location": "body",
+        "name": "keys",
+        "required": true,
+        "schema": {
+          "type": "array",
+          "description": "Fully qualified keys in current_account_id/predecessor_id/key form.",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    ],
+    "kind": "fastnear-rest-body",
+    "networks": [
+      {
+        "defaultFields": {
+          "include_metadata": true,
+          "keys": [
+            "app.near/alice.near/settings/theme",
+            "app.near/alice.near/settings/missing"
+          ]
+        },
+        "key": "mainnet",
+        "label": "Mainnet",
+        "url": "https://kv.main.fastnear.com"
+      },
+      {
+        "defaultFields": {
+          "include_metadata": true,
+          "keys": [
+            "guest-book.testnet/alice.testnet/settings/theme",
+            "guest-book.testnet/alice.testnet/settings/missing"
+          ]
+        },
+        "key": "testnet",
+        "label": "Testnet",
+        "url": "https://kv.test.fastnear.com"
+      }
+    ],
+    "requestMethod": "multi",
+    "supportsFinality": false,
+    "transport": "http"
+  },
+  "outputModel": "standalone/generated/kv-fastdata-v0-multi-page-model.json",
+  "pageModelId": "kv-fastdata-v0-multi",
+  "replaceOperationPage": true,
+  "request": {
+    "bodySchema": {
+      "type": "object",
+      "required": [
+        "keys"
+      ],
+      "additionalProperties": false,
+      "properties": [
+        {
+          "name": "include_metadata",
+          "required": false,
+          "schema": {
+            "type": "boolean",
+            "description": "Include receipt and signer metadata in each entry.",
+            "default": false
+          }
+        },
+        {
+          "name": "keys",
+          "required": true,
+          "schema": {
+            "type": "array",
+            "description": "Fully qualified keys in current_account_id/predecessor_id/key form.",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      ],
+      "refName": "MultiRequest"
+    },
+    "examples": [
+      {
+        "id": "mainnet",
+        "label": "Mainnet",
+        "network": "mainnet",
+        "request": {
+          "body": {
+            "include_metadata": true,
+            "keys": [
+              "app.near/alice.near/settings/theme",
+              "app.near/alice.near/settings/missing"
+            ]
+          },
+          "headers": {},
+          "path": {},
+          "query": {}
+        }
+      },
+      {
+        "id": "testnet",
+        "label": "Testnet",
+        "network": "testnet",
+        "request": {
+          "body": {
+            "include_metadata": true,
+            "keys": [
+              "guest-book.testnet/alice.testnet/settings/theme",
+              "guest-book.testnet/alice.testnet/settings/missing"
+            ]
+          },
+          "headers": {},
+          "path": {},
+          "query": {}
+        }
+      }
+    ],
+    "mediaType": "application/json",
+    "parameters": {
+      "header": [],
+      "path": [],
+      "query": []
+    },
+    "required": true,
+    "supportsBody": true
+  },
+  "responses": [
+    {
+      "description": "Latest rows for the requested keys",
+      "mediaType": "application/json",
+      "schema": {
+        "type": "object",
+        "required": [
+          "entries"
+        ],
+        "additionalProperties": false,
+        "properties": [
+          {
+            "name": "entries",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "required": [
+                      "predecessor_id",
+                      "current_account_id",
+                      "block_height",
+                      "block_timestamp",
+                      "key",
+                      "value"
+                    ],
+                    "additionalProperties": false,
+                    "properties": [
+                      {
+                        "name": "action_index",
+                        "required": false,
+                        "schema": {
+                          "type": "integer",
+                          "format": "uint32"
+                        }
+                      },
+                      {
+                        "name": "block_height",
+                        "required": true,
+                        "schema": {
+                          "type": "integer",
+                          "format": "uint64"
+                        }
+                      },
+                      {
+                        "name": "block_timestamp",
+                        "required": true,
+                        "schema": {
+                          "type": "integer",
+                          "format": "uint64"
+                        }
+                      },
+                      {
+                        "name": "current_account_id",
+                        "required": true,
+                        "schema": {
+                          "type": "string"
+                        }
+                      },
+                      {
+                        "name": "key",
+                        "required": true,
+                        "schema": {
+                          "type": "string"
+                        }
+                      },
+                      {
+                        "name": "predecessor_id",
+                        "required": true,
+                        "schema": {
+                          "type": "string"
+                        }
+                      },
+                      {
+                        "name": "receipt_id",
+                        "required": false,
+                        "schema": {
+                          "type": "string"
+                        }
+                      },
+                      {
+                        "name": "signer_id",
+                        "required": false,
+                        "schema": {
+                          "type": "string"
+                        }
+                      },
+                      {
+                        "name": "tx_hash",
+                        "required": false,
+                        "schema": {
+                          "type": "string"
+                        }
+                      },
+                      {
+                        "name": "value",
+                        "required": true,
+                        "schema": {
+                          "description": "Raw JSON value as stored in FastData."
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "enum": [
+                      null
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "refName": "MultiResponse"
+      },
+      "status": "200"
+    },
+    {
+      "description": "Invalid key filter or page token",
+      "mediaType": "application/json",
+      "schema": {
+        "type": "object",
+        "required": [
+          "error"
+        ],
+        "additionalProperties": false,
+        "properties": [
+          {
+            "name": "error",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "refName": "ApiError"
+      },
+      "status": "400"
+    },
+    {
+      "description": "Scylla query failure",
+      "mediaType": "application/json",
+      "schema": {
+        "type": "object",
+        "required": [
+          "error"
+        ],
+        "additionalProperties": false,
+        "properties": [
+          {
+            "name": "error",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "refName": "ApiError"
+      },
+      "status": "500"
+    }
+  ],
+  "route": {
+    "method": "POST",
+    "path": "/v0/multi",
+    "transport": "http"
+  },
+  "routeAliases": [
+    "/apis/kv-fastdata/openapi/latest/multi"
+  ],
+  "securitySchemes": [],
+  "sourceSpec": "apis/kv-fastdata/v0/multi.yaml"
+}

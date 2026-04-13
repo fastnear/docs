@@ -1,0 +1,22 @@
+service: transfers
+pathPrefix: /apis/transfers/
+operations:
+  /apis/transfers/v0/transfers:
+    customPage:
+      kind: fastnear-rest-body
+      pageModelId: transfers-v0-transfers
+      replaceOperationPage: true
+      authTransport: bearer
+      sourceSpec: apis/transfers/v0/transfers.yaml
+      operationRoute: /apis/transfers/openapi/transfers/get_transfers_by_account
+    defaults:
+      preset: recent-near-transfers
+    presets:
+      recent-near-transfers:
+        body:
+          account_id: intents.near
+          asset_id: near
+          desc: true
+          direction: receiver
+          limit: 10
+          min_amount: "1000000000000000000000000"

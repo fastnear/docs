@@ -1,0 +1,355 @@
+{
+  "canonicalPath": "/rpcs/account/view_account",
+  "generatedAt": "2026-04-13T15:41:39.684Z",
+  "info": {
+    "description": "Retrieves detailed information about a NEAR account including balance and storage usage",
+    "operationId": "view_account",
+    "summary": "View account",
+    "title": "NEAR Protocol RPC: View account",
+    "version": "1.0.0"
+  },
+  "interaction": {
+    "authTransport": "bearer",
+    "defaultId": "fastnear",
+    "fields": [
+      {
+        "description": "NEAR account ID",
+        "label": "Account ID",
+        "location": "body",
+        "name": "account_id",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "description": "NEAR account ID"
+        }
+      }
+    ],
+    "kind": "rpc-view-account",
+    "networks": [
+      {
+        "defaultFields": {
+          "account_id": "root.near"
+        },
+        "key": "mainnet",
+        "label": "Mainnet",
+        "url": "https://rpc.mainnet.fastnear.com"
+      },
+      {
+        "defaultFields": {
+          "account_id": "root.testnet"
+        },
+        "key": "testnet",
+        "label": "Testnet",
+        "url": "https://rpc.testnet.fastnear.com"
+      }
+    ],
+    "requestMethod": "query",
+    "requestType": "view_account",
+    "supportsFinality": true,
+    "transport": "json-rpc"
+  },
+  "outputModel": "standalone/generated/rpc-view-account-page-model.json",
+  "pageModelId": "rpc-view-account",
+  "replaceOperationPage": true,
+  "request": {
+    "bodySchema": {
+      "type": "object",
+      "required": [
+        "jsonrpc",
+        "id",
+        "method",
+        "params"
+      ],
+      "properties": [
+        {
+          "name": "jsonrpc",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "enum": [
+              "2.0"
+            ]
+          }
+        },
+        {
+          "name": "id",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "fastnear"
+          }
+        },
+        {
+          "name": "method",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "enum": [
+              "query"
+            ]
+          }
+        },
+        {
+          "name": "params",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "required": [
+              "request_type",
+              "account_id",
+              "finality"
+            ],
+            "properties": [
+              {
+                "name": "account_id",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "description": "NEAR account ID"
+                }
+              },
+              {
+                "name": "request_type",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "enum": [
+                    "view_account"
+                  ]
+                }
+              },
+              {
+                "name": "finality",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "description": "Block finality",
+                  "enum": [
+                    "final",
+                    "near-final",
+                    "optimistic"
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "examples": [
+      {
+        "id": "mainnet",
+        "label": "View account (Mainnet)",
+        "network": "mainnet",
+        "request": {
+          "body": {
+            "jsonrpc": "2.0",
+            "id": "fastnear",
+            "method": "query",
+            "params": {
+              "account_id": "root.near",
+              "request_type": "view_account",
+              "finality": "final"
+            }
+          },
+          "headers": {},
+          "path": {},
+          "query": {}
+        }
+      },
+      {
+        "id": "testnet",
+        "label": "View account (Testnet)",
+        "network": "testnet",
+        "request": {
+          "body": {
+            "jsonrpc": "2.0",
+            "id": "fastnear",
+            "method": "query",
+            "params": {
+              "account_id": "root.testnet",
+              "request_type": "view_account",
+              "finality": "final"
+            }
+          },
+          "headers": {},
+          "path": {},
+          "query": {}
+        }
+      }
+    ],
+    "mediaType": "application/json",
+    "parameters": {
+      "header": [],
+      "path": [],
+      "query": []
+    },
+    "required": true
+  },
+  "responses": [
+    {
+      "description": "Successful response",
+      "mediaType": "application/json",
+      "schema": {
+        "type": "object",
+        "required": [
+          "jsonrpc",
+          "id"
+        ],
+        "properties": [
+          {
+            "name": "jsonrpc",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "2.0"
+              ]
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "number"
+                }
+              ]
+            }
+          },
+          {
+            "name": "result",
+            "required": false,
+            "schema": {
+              "type": "object",
+              "description": "A view of the account",
+              "required": [
+                "amount",
+                "locked",
+                "code_hash",
+                "storage_usage"
+              ],
+              "properties": [
+                {
+                  "name": "amount",
+                  "required": true,
+                  "schema": {
+                    "type": "string",
+                    "description": "Amount in yoctoNEAR"
+                  }
+                },
+                {
+                  "name": "code_hash",
+                  "required": true,
+                  "schema": {
+                    "type": "string",
+                    "description": "Base58-encoded hash"
+                  }
+                },
+                {
+                  "name": "global_contract_account_id",
+                  "required": false,
+                  "schema": {
+                    "type": "string",
+                    "nullable": true,
+                    "description": "NEAR account ID"
+                  }
+                },
+                {
+                  "name": "global_contract_hash",
+                  "required": false,
+                  "schema": {
+                    "type": "string",
+                    "nullable": true,
+                    "description": "Base58-encoded hash"
+                  }
+                },
+                {
+                  "name": "locked",
+                  "required": true,
+                  "schema": {
+                    "type": "string",
+                    "description": "Amount in yoctoNEAR"
+                  }
+                },
+                {
+                  "name": "storage_paid_at",
+                  "required": false,
+                  "schema": {
+                    "type": "integer",
+                    "description": "TODO(2271): deprecated.",
+                    "format": "uint64",
+                    "default": 0
+                  }
+                },
+                {
+                  "name": "storage_usage",
+                  "required": true,
+                  "schema": {
+                    "type": "integer",
+                    "format": "uint64"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "error",
+            "required": false,
+            "schema": {
+              "type": "object",
+              "properties": [
+                {
+                  "name": "code",
+                  "required": false,
+                  "schema": {
+                    "type": "integer"
+                  }
+                },
+                {
+                  "name": "message",
+                  "required": false,
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "name": "data",
+                  "required": false,
+                  "schema": {
+                    "type": "object"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "refName": "JsonRpcResponse"
+      },
+      "status": "200"
+    }
+  ],
+  "route": {
+    "method": "POST",
+    "path": "/",
+    "transport": "json-rpc"
+  },
+  "routeAliases": [
+    "/rpcs/account/view_account/other/view_account",
+    "/reference/operation/view_account"
+  ],
+  "securitySchemes": [
+    {
+      "description": "The OpenAPI contract describes the FastNEAR API key as a query parameter named apiKey.",
+      "id": "ApiKeyAuth",
+      "in": "query",
+      "name": "apiKey",
+      "type": "apiKey"
+    }
+  ],
+  "sourceSpec": "rpcs/account/view_account.yaml"
+}

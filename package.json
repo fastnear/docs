@@ -4,16 +4,22 @@
   "description": "A starter project for working with Redoc",
   "main": " ",
   "scripts": {
+    "check:external-openapi": "node scripts/check-external-openapi.js",
     "sync:apis": "node scripts/sync-external-apis.js",
-    "preview": "npm run sync:apis && node scripts/refresh-examples.js && ENABLE_SOURCE_MAPS=true npx @redocly/cli preview",
+    "preview": "npm run sync:apis && ENABLE_SOURCE_MAPS=true node scripts/redocly-root-guard.js preview",
+    "preview:fresh-examples": "npm run sync:apis && node scripts/refresh-examples.js && ENABLE_SOURCE_MAPS=true node scripts/redocly-root-guard.js preview",
     "preview:headless": "node scripts/toggle-headless.js headless && npm run preview",
     "preview:portal": "node scripts/toggle-headless.js portal && npm run preview",
-    "build": "npm run sync:apis && node scripts/run-realm-build.js",
-    "lint": "npm run sync:apis && npx @redocly/cli lint",
+    "build": "npm run check:external-openapi && npm run sync:apis && node scripts/redocly-root-guard.js build && node scripts/run-realm-build.js",
+    "build:fresh-examples": "npm run check:external-openapi && npm run sync:apis && node scripts/redocly-root-guard.js build && node scripts/run-realm-build.js --refresh-examples",
+    "lint": "npm run check:external-openapi && npm run sync:apis && node scripts/redocly-root-guard.js lint",
     "smoke:operations": "node scripts/test-operations.js",
     "smoke:operations:prod": "node scripts/test-operations.js https://fastnear.redocly.app",
     "generate-rpc": "node scripts/generate-from-nearcore.js",
     "refresh-examples": "node scripts/refresh-examples.js",
+    "standalone:dev": "node scripts/standalone-dev.js",
+    "standalone:build": "node scripts/standalone-build.js",
+    "verify:workspace": "npm run lint && npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -33,6 +39,10 @@
   },
   "homepage": "https://github.com/Redocly/apidocs-starter#readme",
   "dependencies": {
-      "@redocly/realm": "0.119.1"
+    "@redocly/realm": "0.119.1",
+    "esbuild": "^0.17.15",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "yaml": "^2.8.1"
   }
 }

@@ -1,0 +1,407 @@
+{
+  "canonicalPath": "/rpcs/transaction/EXPERIMENTAL_tx_status",
+  "generatedAt": "2026-04-13T15:41:39.737Z",
+  "info": {
+    "description": "Queries status of a transaction by hash, returning the final transaction result and details of all receipts",
+    "operationId": "EXPERIMENTAL_tx_status",
+    "summary": "Get detailed transaction status",
+    "title": "NEAR Protocol RPC: Get detailed transaction status",
+    "version": "1.0.0"
+  },
+  "interaction": {
+    "authTransport": "bearer",
+    "defaultId": "fastnear",
+    "fields": [
+      {
+        "description": "Desired level of execution status guarantee",
+        "label": "Wait Until",
+        "location": "body",
+        "name": "wait_until",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "description": "Desired level of execution status guarantee",
+          "default": "EXECUTED_OPTIMISTIC",
+          "enum": [
+            "NONE",
+            "INCLUDED",
+            "INCLUDED_FINAL",
+            "EXECUTED",
+            "EXECUTED_OPTIMISTIC",
+            "FINAL"
+          ]
+        }
+      },
+      {
+        "description": "Base64-encoded signed transaction",
+        "label": "Signed Tx Base64",
+        "location": "body",
+        "name": "signed_tx_base64",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "description": "Base64-encoded signed transaction"
+        }
+      },
+      {
+        "description": "NEAR account ID",
+        "label": "Sender Account Id",
+        "location": "body",
+        "name": "sender_account_id",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "description": "NEAR account ID"
+        }
+      },
+      {
+        "description": "Base58-encoded hash",
+        "label": "Tx Hash",
+        "location": "body",
+        "name": "tx_hash",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "description": "Base58-encoded hash"
+        }
+      }
+    ],
+    "kind": "rpc-EXPERIMENTAL-tx-status",
+    "networks": [
+      {
+        "defaultFields": {
+          "wait_until": "EXECUTED_OPTIMISTIC",
+          "signed_tx_base64": "ExampleBase64EncodedTransaction",
+          "sender_account_id": "5764995617.tg",
+          "tx_hash": "HrRxPdtUGRGqubmHzmuyhhh2RCQ8hytFGwbXfmqdXBAj"
+        },
+        "key": "mainnet",
+        "label": "Mainnet",
+        "url": "https://rpc.mainnet.fastnear.com"
+      },
+      {
+        "defaultFields": {
+          "wait_until": "EXECUTED_OPTIMISTIC",
+          "signed_tx_base64": "ExampleBase64EncodedTransaction",
+          "sender_account_id": "zerochltest.testnet",
+          "tx_hash": "d68i4vS3cwSyqk2oVYkWwDbnhSYYbLBfCzSkciJ2X3Y"
+        },
+        "key": "testnet",
+        "label": "Testnet",
+        "url": "https://rpc.testnet.fastnear.com"
+      }
+    ],
+    "requestMethod": "EXPERIMENTAL_tx_status",
+    "supportsFinality": false,
+    "transport": "json-rpc"
+  },
+  "outputModel": "standalone/generated/rpc-EXPERIMENTAL-tx-status-page-model.json",
+  "pageModelId": "rpc-EXPERIMENTAL-tx-status",
+  "replaceOperationPage": true,
+  "request": {
+    "bodySchema": {
+      "type": "object",
+      "required": [
+        "jsonrpc",
+        "id",
+        "method",
+        "params"
+      ],
+      "properties": [
+        {
+          "name": "jsonrpc",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "enum": [
+              "2.0"
+            ]
+          }
+        },
+        {
+          "name": "id",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "fastnear"
+          }
+        },
+        {
+          "name": "method",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "enum": [
+              "EXPERIMENTAL_tx_status"
+            ]
+          }
+        },
+        {
+          "name": "params",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "properties": [
+              {
+                "name": "wait_until",
+                "required": false,
+                "schema": {
+                  "type": "string",
+                  "description": "Desired level of execution status guarantee",
+                  "default": "EXECUTED_OPTIMISTIC",
+                  "enum": [
+                    "NONE",
+                    "INCLUDED",
+                    "INCLUDED_FINAL",
+                    "EXECUTED",
+                    "EXECUTED_OPTIMISTIC",
+                    "FINAL"
+                  ]
+                }
+              },
+              {
+                "name": "signed_tx_base64",
+                "required": false,
+                "schema": {
+                  "type": "string",
+                  "description": "Base64-encoded signed transaction"
+                }
+              },
+              {
+                "name": "sender_account_id",
+                "required": false,
+                "schema": {
+                  "type": "string",
+                  "description": "NEAR account ID"
+                }
+              },
+              {
+                "name": "tx_hash",
+                "required": false,
+                "schema": {
+                  "type": "string",
+                  "description": "Base58-encoded hash"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "examples": [
+      {
+        "id": "mainnet",
+        "label": "Get detailed transaction status (Mainnet)",
+        "network": "mainnet",
+        "request": {
+          "body": {
+            "jsonrpc": "2.0",
+            "id": "fastnear",
+            "method": "EXPERIMENTAL_tx_status",
+            "params": {
+              "wait_until": "EXECUTED_OPTIMISTIC",
+              "signed_tx_base64": "ExampleBase64EncodedTransaction",
+              "sender_account_id": "5764995617.tg",
+              "tx_hash": "HrRxPdtUGRGqubmHzmuyhhh2RCQ8hytFGwbXfmqdXBAj"
+            }
+          },
+          "headers": {},
+          "path": {},
+          "query": {}
+        }
+      },
+      {
+        "id": "testnet",
+        "label": "Get detailed transaction status (Testnet)",
+        "network": "testnet",
+        "request": {
+          "body": {
+            "jsonrpc": "2.0",
+            "id": "fastnear",
+            "method": "EXPERIMENTAL_tx_status",
+            "params": {
+              "wait_until": "EXECUTED_OPTIMISTIC",
+              "signed_tx_base64": "ExampleBase64EncodedTransaction",
+              "sender_account_id": "zerochltest.testnet",
+              "tx_hash": "d68i4vS3cwSyqk2oVYkWwDbnhSYYbLBfCzSkciJ2X3Y"
+            }
+          },
+          "headers": {},
+          "path": {},
+          "query": {}
+        }
+      }
+    ],
+    "mediaType": "application/json",
+    "parameters": {
+      "header": [],
+      "path": [],
+      "query": []
+    },
+    "required": true
+  },
+  "responses": [
+    {
+      "description": "Successful response",
+      "mediaType": "application/json",
+      "schema": {
+        "type": "object",
+        "required": [
+          "jsonrpc",
+          "id"
+        ],
+        "properties": [
+          {
+            "name": "jsonrpc",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "2.0"
+              ]
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "number"
+                }
+              ]
+            }
+          },
+          {
+            "name": "result",
+            "required": false,
+            "schema": {
+              "type": "object",
+              "required": [
+                "final_execution_status"
+              ],
+              "properties": [
+                {
+                  "name": "final_execution_status",
+                  "required": true,
+                  "schema": {
+                    "type": "string",
+                    "description": "Desired level of execution status guarantee",
+                    "enum": [
+                      "NONE",
+                      "INCLUDED",
+                      "INCLUDED_FINAL",
+                      "EXECUTED",
+                      "EXECUTED_OPTIMISTIC",
+                      "FINAL"
+                    ]
+                  }
+                },
+                {
+                  "name": "receipts",
+                  "required": false,
+                  "schema": {
+                    "type": "array",
+                    "description": "Receipts generated from the transaction",
+                    "items": {
+                      "type": "object"
+                    }
+                  }
+                },
+                {
+                  "name": "receipts_outcome",
+                  "required": false,
+                  "schema": {
+                    "type": "array",
+                    "description": "The execution outcome of receipts.",
+                    "items": {
+                      "type": "object"
+                    }
+                  }
+                },
+                {
+                  "name": "status",
+                  "required": false,
+                  "schema": {
+                    "type": "object",
+                    "description": "One of multiple possible types"
+                  }
+                },
+                {
+                  "name": "transaction",
+                  "required": false,
+                  "schema": {
+                    "type": "object",
+                    "description": "Signed Transaction"
+                  }
+                },
+                {
+                  "name": "transaction_outcome",
+                  "required": false,
+                  "schema": {
+                    "type": "object",
+                    "description": "The execution outcome of the signed transaction."
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "error",
+            "required": false,
+            "schema": {
+              "type": "object",
+              "properties": [
+                {
+                  "name": "code",
+                  "required": false,
+                  "schema": {
+                    "type": "integer"
+                  }
+                },
+                {
+                  "name": "message",
+                  "required": false,
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "name": "data",
+                  "required": false,
+                  "schema": {
+                    "type": "object"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "refName": "JsonRpcResponse"
+      },
+      "status": "200"
+    }
+  ],
+  "route": {
+    "method": "POST",
+    "path": "/",
+    "transport": "json-rpc"
+  },
+  "routeAliases": [
+    "/rpcs/transaction/EXPERIMENTAL_tx_status/other/EXPERIMENTAL_tx_status",
+    "/reference/operation/EXPERIMENTAL_tx_status"
+  ],
+  "securitySchemes": [
+    {
+      "description": "The OpenAPI contract describes the FastNEAR API key as a query parameter named apiKey.",
+      "id": "ApiKeyAuth",
+      "in": "query",
+      "name": "apiKey",
+      "type": "apiKey"
+    }
+  ],
+  "sourceSpec": "rpcs/transaction/EXPERIMENTAL_tx_status.yaml"
+}

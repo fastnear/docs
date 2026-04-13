@@ -1,0 +1,287 @@
+{
+  "canonicalPath": "/rpcs/protocol/gas_price_by_block",
+  "generatedAt": "2026-04-13T15:41:39.720Z",
+  "info": {
+    "description": "Retrieves gas price information for a specific block",
+    "operationId": "gas_price_by_block",
+    "summary": "Get gas price by block",
+    "title": "NEAR Protocol RPC: Gas Price By Block",
+    "version": "1.0.0"
+  },
+  "interaction": {
+    "authTransport": "bearer",
+    "defaultId": "fastnear",
+    "fields": [
+      {
+        "description": "Block height (integer) or block hash (string)",
+        "label": "Block ID",
+        "location": "body",
+        "name": "block_id",
+        "required": true,
+        "schema": {
+          "description": "Block height (integer) or block hash (string)",
+          "oneOf": [
+            {
+              "type": "integer",
+              "description": "Block height"
+            },
+            {
+              "type": "string",
+              "description": "Base58-encoded block hash"
+            }
+          ]
+        }
+      }
+    ],
+    "kind": "rpc-gas-price-by-block",
+    "networks": [
+      {
+        "defaultFields": {
+          "block_id": "CU1KcVSuYAZUiehn7TnCxSdpb3RGoHxK1hABC5AKKo2Q"
+        },
+        "key": "mainnet",
+        "label": "Mainnet",
+        "url": "https://rpc.mainnet.fastnear.com"
+      },
+      {
+        "defaultFields": {
+          "block_id": "CoPszhGFqcx9L1HQYM62g3UjxMpuZD8RiZL6QdpBZXA4"
+        },
+        "key": "testnet",
+        "label": "Testnet",
+        "url": "https://rpc.testnet.fastnear.com"
+      }
+    ],
+    "requestMethod": "gas_price",
+    "supportsFinality": false,
+    "transport": "json-rpc"
+  },
+  "outputModel": "standalone/generated/rpc-gas-price-by-block-page-model.json",
+  "pageModelId": "rpc-gas-price-by-block",
+  "replaceOperationPage": true,
+  "request": {
+    "bodySchema": {
+      "type": "object",
+      "required": [
+        "jsonrpc",
+        "id",
+        "method",
+        "params"
+      ],
+      "properties": [
+        {
+          "name": "jsonrpc",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "enum": [
+              "2.0"
+            ]
+          }
+        },
+        {
+          "name": "id",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "fastnear"
+          }
+        },
+        {
+          "name": "method",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "enum": [
+              "gas_price"
+            ]
+          }
+        },
+        {
+          "name": "params",
+          "required": true,
+          "schema": {
+            "type": "object",
+            "required": [
+              "block_id"
+            ],
+            "properties": [
+              {
+                "name": "block_id",
+                "required": true,
+                "schema": {
+                  "description": "Block height (integer) or block hash (string)",
+                  "oneOf": [
+                    {
+                      "type": "integer",
+                      "description": "Block height"
+                    },
+                    {
+                      "type": "string",
+                      "description": "Base58-encoded block hash"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "examples": [
+      {
+        "id": "mainnet",
+        "label": "Get gas price by block (Mainnet)",
+        "network": "mainnet",
+        "request": {
+          "body": {
+            "jsonrpc": "2.0",
+            "id": "fastnear",
+            "method": "gas_price",
+            "params": {
+              "block_id": "CU1KcVSuYAZUiehn7TnCxSdpb3RGoHxK1hABC5AKKo2Q"
+            }
+          },
+          "headers": {},
+          "path": {},
+          "query": {}
+        }
+      },
+      {
+        "id": "testnet",
+        "label": "Get gas price by block (Testnet)",
+        "network": "testnet",
+        "request": {
+          "body": {
+            "jsonrpc": "2.0",
+            "id": "fastnear",
+            "method": "gas_price",
+            "params": {
+              "block_id": "CoPszhGFqcx9L1HQYM62g3UjxMpuZD8RiZL6QdpBZXA4"
+            }
+          },
+          "headers": {},
+          "path": {},
+          "query": {}
+        }
+      }
+    ],
+    "mediaType": "application/json",
+    "parameters": {
+      "header": [],
+      "path": [],
+      "query": []
+    },
+    "required": true
+  },
+  "responses": [
+    {
+      "description": "Successful response",
+      "mediaType": "application/json",
+      "schema": {
+        "type": "object",
+        "required": [
+          "jsonrpc",
+          "id"
+        ],
+        "properties": [
+          {
+            "name": "jsonrpc",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "2.0"
+              ]
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "number"
+                }
+              ]
+            }
+          },
+          {
+            "name": "result",
+            "required": false,
+            "schema": {
+              "type": "object",
+              "required": [
+                "gas_price"
+              ],
+              "properties": [
+                {
+                  "name": "gas_price",
+                  "required": true,
+                  "schema": {
+                    "type": "string",
+                    "description": "Amount in yoctoNEAR"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "error",
+            "required": false,
+            "schema": {
+              "type": "object",
+              "properties": [
+                {
+                  "name": "code",
+                  "required": false,
+                  "schema": {
+                    "type": "integer"
+                  }
+                },
+                {
+                  "name": "message",
+                  "required": false,
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "name": "data",
+                  "required": false,
+                  "schema": {
+                    "type": "object"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "refName": "JsonRpcResponse"
+      },
+      "status": "200"
+    }
+  ],
+  "route": {
+    "method": "POST",
+    "path": "/",
+    "transport": "json-rpc"
+  },
+  "routeAliases": [
+    "/rpcs/protocol/gas_price_by_block/other/gas_price_by_block",
+    "/reference/operation/gas_price_by_block"
+  ],
+  "securitySchemes": [
+    {
+      "description": "The OpenAPI contract describes the FastNEAR API key as a query parameter named apiKey.",
+      "id": "ApiKeyAuth",
+      "in": "query",
+      "name": "apiKey",
+      "type": "apiKey"
+    }
+  ],
+  "sourceSpec": "rpcs/protocol/gas_price_by_block.yaml"
+}

@@ -1,0 +1,353 @@
+{
+  "canonicalPath": "/apis/kv-fastdata/v0/all_by_predecessor",
+  "generatedAt": "2026-04-13T15:41:39.834Z",
+  "info": {
+    "description": "Returns the latest row for each `(current_account_id, key)` pair written by the selected predecessor. `page_token` values are opaque and scoped to this endpoint and predecessor.",
+    "operationId": "all_by_predecessor",
+    "summary": "Fetch latest key-value rows for one predecessor across all contracts",
+    "title": "KV FastData API - All Latest Keys by Predecessor",
+    "version": "3.0.3"
+  },
+  "interaction": {
+    "authTransport": "bearer",
+    "fields": [
+      {
+        "description": "Calling account that wrote the FastData keys.",
+        "example": "alice.near",
+        "label": "Predecessor Id",
+        "location": "path",
+        "name": "predecessor_id",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      {
+        "default": false,
+        "description": "Include receipt and signer metadata in each entry.",
+        "label": "Include Metadata",
+        "location": "body",
+        "name": "include_metadata",
+        "required": false,
+        "schema": {
+          "type": "boolean",
+          "description": "Include receipt and signer metadata in each entry.",
+          "default": false
+        }
+      },
+      {
+        "label": "Limit",
+        "location": "body",
+        "name": "limit",
+        "required": false,
+        "schema": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      {
+        "description": "Opaque pagination cursor from a previous `/v0/all/{predecessor_id}` response.",
+        "label": "Page Token",
+        "location": "body",
+        "name": "page_token",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "description": "Opaque pagination cursor from a previous `/v0/all/{predecessor_id}` response."
+        }
+      }
+    ],
+    "kind": "fastnear-rest-body",
+    "networks": [
+      {
+        "defaultFields": {
+          "predecessor_id": "alice.near",
+          "include_metadata": true,
+          "limit": 50,
+          "page_token": ""
+        },
+        "key": "mainnet",
+        "label": "Mainnet",
+        "url": "https://kv.main.fastnear.com"
+      },
+      {
+        "defaultFields": {
+          "predecessor_id": "alice.testnet",
+          "include_metadata": true,
+          "limit": 50,
+          "page_token": ""
+        },
+        "key": "testnet",
+        "label": "Testnet",
+        "url": "https://kv.test.fastnear.com"
+      }
+    ],
+    "requestMethod": "all_by_predecessor",
+    "supportsFinality": false,
+    "transport": "http"
+  },
+  "outputModel": "standalone/generated/kv-fastdata-v0-all-by-predecessor-page-model.json",
+  "pageModelId": "kv-fastdata-v0-all-by-predecessor",
+  "replaceOperationPage": true,
+  "request": {
+    "bodySchema": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": [
+        {
+          "name": "include_metadata",
+          "required": false,
+          "schema": {
+            "type": "boolean",
+            "description": "Include receipt and signer metadata in each entry.",
+            "default": false
+          }
+        },
+        {
+          "name": "limit",
+          "required": false,
+          "schema": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        {
+          "name": "page_token",
+          "required": false,
+          "schema": {
+            "type": "string",
+            "description": "Opaque pagination cursor from a previous `/v0/all/{predecessor_id}` response."
+          }
+        }
+      ],
+      "refName": "AllRequest"
+    },
+    "examples": [
+      {
+        "id": "mainnet",
+        "label": "Mainnet",
+        "network": "mainnet",
+        "request": {
+          "body": {
+            "include_metadata": true,
+            "limit": 50
+          },
+          "headers": {},
+          "path": {
+            "predecessor_id": "alice.near"
+          },
+          "query": {}
+        }
+      },
+      {
+        "id": "testnet",
+        "label": "Testnet",
+        "network": "testnet",
+        "request": {
+          "body": {
+            "include_metadata": true,
+            "limit": 50
+          },
+          "headers": {},
+          "path": {
+            "predecessor_id": "alice.testnet"
+          },
+          "query": {}
+        }
+      }
+    ],
+    "mediaType": "application/json",
+    "parameters": {
+      "header": [],
+      "path": [
+        {
+          "description": "Calling account that wrote the FastData keys.",
+          "example": "alice.near",
+          "location": "path",
+          "name": "predecessor_id",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "query": []
+    },
+    "required": true,
+    "supportsBody": true
+  },
+  "responses": [
+    {
+      "description": "Latest rows for the selected predecessor",
+      "mediaType": "application/json",
+      "schema": {
+        "type": "object",
+        "required": [
+          "entries"
+        ],
+        "additionalProperties": false,
+        "properties": [
+          {
+            "name": "entries",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "predecessor_id",
+                  "current_account_id",
+                  "block_height",
+                  "block_timestamp",
+                  "key",
+                  "value"
+                ],
+                "additionalProperties": false,
+                "properties": [
+                  {
+                    "name": "action_index",
+                    "required": false,
+                    "schema": {
+                      "type": "integer",
+                      "format": "uint32"
+                    }
+                  },
+                  {
+                    "name": "block_height",
+                    "required": true,
+                    "schema": {
+                      "type": "integer",
+                      "format": "uint64"
+                    }
+                  },
+                  {
+                    "name": "block_timestamp",
+                    "required": true,
+                    "schema": {
+                      "type": "integer",
+                      "format": "uint64"
+                    }
+                  },
+                  {
+                    "name": "current_account_id",
+                    "required": true,
+                    "schema": {
+                      "type": "string"
+                    }
+                  },
+                  {
+                    "name": "key",
+                    "required": true,
+                    "schema": {
+                      "type": "string"
+                    }
+                  },
+                  {
+                    "name": "predecessor_id",
+                    "required": true,
+                    "schema": {
+                      "type": "string"
+                    }
+                  },
+                  {
+                    "name": "receipt_id",
+                    "required": false,
+                    "schema": {
+                      "type": "string"
+                    }
+                  },
+                  {
+                    "name": "signer_id",
+                    "required": false,
+                    "schema": {
+                      "type": "string"
+                    }
+                  },
+                  {
+                    "name": "tx_hash",
+                    "required": false,
+                    "schema": {
+                      "type": "string"
+                    }
+                  },
+                  {
+                    "name": "value",
+                    "required": true,
+                    "schema": {
+                      "description": "Raw JSON value as stored in FastData."
+                    }
+                  }
+                ],
+                "refName": "KvEntry"
+              }
+            }
+          },
+          {
+            "name": "page_token",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "Opaque pagination cursor for the next page. Absent when there are no more results."
+            }
+          }
+        ],
+        "refName": "ListResponse"
+      },
+      "status": "200"
+    },
+    {
+      "description": "Invalid key filter or page token",
+      "mediaType": "application/json",
+      "schema": {
+        "type": "object",
+        "required": [
+          "error"
+        ],
+        "additionalProperties": false,
+        "properties": [
+          {
+            "name": "error",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "refName": "ApiError"
+      },
+      "status": "400"
+    },
+    {
+      "description": "Scylla query failure",
+      "mediaType": "application/json",
+      "schema": {
+        "type": "object",
+        "required": [
+          "error"
+        ],
+        "additionalProperties": false,
+        "properties": [
+          {
+            "name": "error",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "refName": "ApiError"
+      },
+      "status": "500"
+    }
+  ],
+  "route": {
+    "method": "POST",
+    "path": "/v0/all/{predecessor_id}",
+    "transport": "http"
+  },
+  "routeAliases": [
+    "/apis/kv-fastdata/openapi/latest/all_by_predecessor"
+  ],
+  "securitySchemes": [],
+  "sourceSpec": "apis/kv-fastdata/v0/all_by_predecessor.yaml"
+}

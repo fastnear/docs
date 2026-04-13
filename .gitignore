@@ -4,3 +4,5 @@ yarn.lock
 public/
 mike-docs-archive.tar.gz
 redoc-static.html
+.standalone-dev/
+standalone-dist/

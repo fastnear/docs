@@ -1,0 +1,198 @@
+{
+  "canonicalPath": "/apis/neardata/v0/block_optimistic",
+  "generatedAt": "2026-04-13T15:41:39.873Z",
+  "info": {
+    "description": "Returns an optimistic block document when the deployment can serve it directly. Older or archive-only heights may redirect to a canonical finalized or archive URL instead.",
+    "operationId": "get_block_optimistic",
+    "summary": "Fetch an optimistic block by height",
+    "title": "NEAR Data API - Optimistic Block",
+    "version": "3.0.3"
+  },
+  "interaction": {
+    "authTransport": "bearer",
+    "fields": [
+      {
+        "description": "NEAR block height to retrieve.",
+        "example": "9820210",
+        "label": "Block Height",
+        "location": "path",
+        "name": "block_height",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "kind": "fastnear-rest-read",
+    "networks": [
+      {
+        "defaultFields": {
+          "block_height": "9820210"
+        },
+        "key": "mainnet",
+        "label": "Mainnet",
+        "url": "https://mainnet.neardata.xyz"
+      },
+      {
+        "defaultFields": {
+          "block_height": "42376888"
+        },
+        "key": "testnet",
+        "label": "Testnet",
+        "url": "https://testnet.neardata.xyz"
+      }
+    ],
+    "requestMethod": "get_block_optimistic",
+    "supportsFinality": false,
+    "transport": "http"
+  },
+  "outputModel": "standalone/generated/neardata-v0-block-optimistic-page-model.json",
+  "pageModelId": "neardata-v0-block-optimistic",
+  "replaceOperationPage": true,
+  "request": {
+    "bodySchema": null,
+    "examples": [
+      {
+        "id": "mainnet",
+        "label": "Mainnet",
+        "network": "mainnet",
+        "request": {
+          "body": null,
+          "headers": {},
+          "path": {
+            "block_height": "9820210"
+          },
+          "query": {}
+        }
+      },
+      {
+        "id": "testnet",
+        "label": "Testnet",
+        "network": "testnet",
+        "request": {
+          "body": null,
+          "headers": {},
+          "path": {
+            "block_height": "42376888"
+          },
+          "query": {}
+        }
+      }
+    ],
+    "parameters": {
+      "header": [],
+      "path": [
+        {
+          "description": "NEAR block height to retrieve.",
+          "example": "9820210",
+          "location": "path",
+          "name": "block_height",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "query": [
+        {
+          "description": "Optional FastNEAR subscription API key. Invalid values may return `401` before redirect handling.",
+          "location": "query",
+          "name": "apiKey",
+          "required": false,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "required": true,
+    "supportsBody": false
+  },
+  "responses": [
+    {
+      "description": "Requested document, or `null` when the selected slice is absent",
+      "mediaType": "application/json",
+      "schema": {
+        "type": "object",
+        "description": "Full block document as served by neardata, including `block` and `shards`.",
+        "additionalProperties": true
+      },
+      "status": "200"
+    },
+    {
+      "description": "Redirect to a canonical archive or finalized block URL",
+      "schema": null,
+      "status": "302"
+    },
+    {
+      "description": "Invalid or unauthorized API key",
+      "mediaType": "text/plain",
+      "schema": {
+        "type": "string"
+      },
+      "status": "401"
+    },
+    {
+      "description": "Structured block-height error",
+      "mediaType": "application/json",
+      "schema": {
+        "type": "object",
+        "required": [
+          "error",
+          "type"
+        ],
+        "additionalProperties": false,
+        "properties": [
+          {
+            "name": "error",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "type",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "BLOCK_HEIGHT_TOO_HIGH",
+                "BLOCK_HEIGHT_TOO_LOW",
+                "BLOCK_DOES_NOT_EXIST"
+              ],
+              "refName": "BlockErrorType"
+            }
+          }
+        ],
+        "refName": "BlockErrorResponse"
+      },
+      "status": "404"
+    },
+    {
+      "description": "Cache or internal data error",
+      "mediaType": "application/json",
+      "schema": {
+        "type": "string"
+      },
+      "status": "500"
+    }
+  ],
+  "route": {
+    "method": "GET",
+    "path": "/v0/block_opt/{block_height}",
+    "transport": "http"
+  },
+  "routeAliases": [
+    "/apis/neardata/openapi/blocks/get_block_optimistic"
+  ],
+  "securitySchemes": [
+    {
+      "description": "Optional FastNEAR subscription API key. Invalid values may return `401` before redirect handling.",
+      "id": "ApiKeyAuth",
+      "in": "query",
+      "name": "apiKey",
+      "type": "apiKey"
+    }
+  ],
+  "sourceSpec": "apis/neardata/v0/block_optimistic.yaml"
+}

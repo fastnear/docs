@@ -1,0 +1,165 @@
+{
+  "canonicalPath": "/apis/fastnear/system/status",
+  "generatedAt": "2026-04-13T15:41:39.775Z",
+  "info": {
+    "description": "Returns the latest indexed sync heights, the indexed block timestamp, the measured sync latency, and the deployed FastNEAR API version.",
+    "operationId": "get_status",
+    "summary": "Get service sync status",
+    "title": "FastNEAR API - Status",
+    "version": "3.0.3"
+  },
+  "interaction": {
+    "authTransport": "bearer",
+    "fields": [],
+    "kind": "fastnear-rest-read",
+    "networks": [
+      {
+        "defaultFields": {},
+        "key": "mainnet",
+        "label": "Mainnet",
+        "url": "https://api.fastnear.com"
+      },
+      {
+        "defaultFields": {},
+        "key": "testnet",
+        "label": "Testnet",
+        "url": "https://test.api.fastnear.com"
+      }
+    ],
+    "requestMethod": "get_status",
+    "supportsFinality": false,
+    "transport": "http"
+  },
+  "outputModel": "standalone/generated/fastnear-system-status-page-model.json",
+  "pageModelId": "fastnear-system-status",
+  "replaceOperationPage": true,
+  "request": {
+    "bodySchema": null,
+    "examples": [
+      {
+        "id": "mainnet",
+        "label": "Mainnet",
+        "network": "mainnet",
+        "request": {
+          "body": null,
+          "headers": {},
+          "path": {},
+          "query": {}
+        }
+      },
+      {
+        "id": "testnet",
+        "label": "Testnet",
+        "network": "testnet",
+        "request": {
+          "body": null,
+          "headers": {},
+          "path": {},
+          "query": {}
+        }
+      }
+    ],
+    "parameters": {
+      "header": [],
+      "path": [],
+      "query": [
+        {
+          "description": "Optional API key forwarded by embedded portal clients. The public FastNEAR API does not require it.",
+          "location": "query",
+          "name": "apiKey",
+          "required": false,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "required": false,
+    "supportsBody": false
+  },
+  "responses": [
+    {
+      "description": "Current FastNEAR API sync status",
+      "mediaType": "application/json",
+      "schema": {
+        "type": "object",
+        "required": [
+          "version",
+          "sync_block_height",
+          "sync_latency_sec",
+          "sync_block_timestamp_nanosec",
+          "sync_balance_block_height"
+        ],
+        "additionalProperties": false,
+        "properties": [
+          {
+            "name": "sync_balance_block_height",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "uint64"
+            }
+          },
+          {
+            "name": "sync_block_height",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "uint64"
+            }
+          },
+          {
+            "name": "sync_block_timestamp_nanosec",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sync_latency_sec",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          {
+            "name": "version",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "refName": "StatusResponse"
+      },
+      "status": "200"
+    },
+    {
+      "description": "Internal Server Error",
+      "mediaType": "application/json",
+      "schema": {
+        "type": "string"
+      },
+      "status": "500"
+    }
+  ],
+  "route": {
+    "method": "GET",
+    "path": "/status",
+    "transport": "http"
+  },
+  "routeAliases": [
+    "/apis/fastnear/openapi/system/get_status"
+  ],
+  "securitySchemes": [
+    {
+      "description": "Optional API key forwarded by embedded portal clients. The public FastNEAR API does not require it.",
+      "id": "ApiKeyAuth",
+      "in": "query",
+      "name": "apiKey",
+      "type": "apiKey"
+    }
+  ],
+  "sourceSpec": "apis/fastnear/system/status.yaml"
+}

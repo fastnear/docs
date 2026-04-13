@@ -1,0 +1,123 @@
+{
+  "canonicalPath": "/apis/neardata/v0/first_block",
+  "generatedAt": "2026-04-13T15:41:39.864Z",
+  "info": {
+    "description": "Returns a redirect to the canonical first block URL for the selected deployment. Clients that automatically follow redirects will receive the full block document instead.",
+    "operationId": "get_first_block",
+    "summary": "Redirect to the first block after genesis",
+    "title": "NEAR Data API - First Block",
+    "version": "3.0.3"
+  },
+  "interaction": {
+    "authTransport": "bearer",
+    "fields": [],
+    "kind": "fastnear-rest-read",
+    "networks": [
+      {
+        "defaultFields": {},
+        "key": "mainnet",
+        "label": "Mainnet",
+        "url": "https://mainnet.neardata.xyz"
+      },
+      {
+        "defaultFields": {},
+        "key": "testnet",
+        "label": "Testnet",
+        "url": "https://testnet.neardata.xyz"
+      }
+    ],
+    "requestMethod": "get_first_block",
+    "supportsFinality": false,
+    "transport": "http"
+  },
+  "outputModel": "standalone/generated/neardata-v0-first-block-page-model.json",
+  "pageModelId": "neardata-v0-first-block",
+  "replaceOperationPage": true,
+  "request": {
+    "bodySchema": null,
+    "examples": [
+      {
+        "id": "mainnet",
+        "label": "Mainnet",
+        "network": "mainnet",
+        "request": {
+          "body": null,
+          "headers": {},
+          "path": {},
+          "query": {}
+        }
+      },
+      {
+        "id": "testnet",
+        "label": "Testnet",
+        "network": "testnet",
+        "request": {
+          "body": null,
+          "headers": {},
+          "path": {},
+          "query": {}
+        }
+      }
+    ],
+    "parameters": {
+      "header": [],
+      "path": [],
+      "query": [
+        {
+          "description": "Optional FastNEAR subscription API key. Invalid values may return `401` before redirect handling.",
+          "location": "query",
+          "name": "apiKey",
+          "required": false,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "required": false,
+    "supportsBody": false
+  },
+  "responses": [
+    {
+      "description": "Full block document returned after automatic redirect following",
+      "mediaType": "application/json",
+      "schema": {
+        "type": "object",
+        "description": "Full block document as served by neardata, including `block` and `shards`.",
+        "additionalProperties": true
+      },
+      "status": "200"
+    },
+    {
+      "description": "Redirect to the canonical first block URL",
+      "schema": null,
+      "status": "302"
+    },
+    {
+      "description": "Invalid or unauthorized API key",
+      "mediaType": "text/plain",
+      "schema": {
+        "type": "string"
+      },
+      "status": "401"
+    }
+  ],
+  "route": {
+    "method": "GET",
+    "path": "/v0/first_block",
+    "transport": "http"
+  },
+  "routeAliases": [
+    "/apis/neardata/openapi/blocks/get_first_block"
+  ],
+  "securitySchemes": [
+    {
+      "description": "Optional FastNEAR subscription API key. Invalid values may return `401` before redirect handling.",
+      "id": "ApiKeyAuth",
+      "in": "query",
+      "name": "apiKey",
+      "type": "apiKey"
+    }
+  ],
+  "sourceSpec": "apis/neardata/v0/first_block.yaml"
+}

@@ -14,6 +14,9 @@ paths:
       operationId: block_effects
       summary: Get block effects
       description: Returns changes in block for given block height or hash over all transactions for all types
+      x-fastnear-interaction:
+        kind: rpc-block-effects
+      x-hideReplay: true
       requestBody:
         required: true
         content:
@@ -33,7 +36,15 @@ paths:
                   enum: [block_effects]
                 params:
                   type: object
-                  description: One of multiple possible types
+                  required: [block_id]
+                  properties:
+                    block_id:
+                      oneOf:
+                        - type: integer
+                          description: Block height
+                        - type: string
+                          description: Base58-encoded block hash
+                      description: Block height (integer) or block hash (string)
             examples:
               mainnet:
                 summary: Get block effects (Mainnet)
@@ -42,7 +53,7 @@ paths:
                   id: fastnear
                   method: block_effects
                   params:
-                    block_id: 193464403
+                    block_id: 193543361
               testnet:
                 summary: Get block effects (Testnet)
                 value:
@@ -50,7 +61,7 @@ paths:
                   id: fastnear
                   method: block_effects
                   params:
-                    block_id: 245170780
+                    block_id: 245254793
       responses:
         200:
           description: Successful response

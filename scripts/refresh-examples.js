@@ -23,11 +23,11 @@ const RPCS_DIR = path.join(__dirname, '..', 'rpcs');
 const NETWORKS = {
   mainnet: {
     url: 'https://rpc.mainnet.fastnear.com',
-    account: 'mike.near',
+    account: 'root.near',
   },
   testnet: {
     url: 'https://rpc.testnet.fastnear.com',
-    account: 'mike.testnet',
+    account: 'root.testnet',
   },
 };
 

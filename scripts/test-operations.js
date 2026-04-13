@@ -14,10 +14,18 @@ const OPERATIONS = [
   '/rpcs/block/block_by_height',
   '/rpcs/transaction/tx_status',
   '/apis/fastnear/v1/account_full',
+  '/apis/fastnear/openapi/accounts/account_full_v1',
+  '/apis/fastnear/v1/account_full?preset=ecosystem-account',
   '/apis/transactions/v0/transactions',
+  '/apis/transactions/openapi/account/get_account',
+  '/apis/transactions/v0/account?preset=recent-account-history',
   '/apis/transfers/v0/transfers',
+  '/apis/transfers/openapi/transfers/get_transfers_by_account',
+  '/apis/transfers/v0/transfers?preset=recent-near-transfers',
   '/apis/kv-fastdata/v0/multi',
   '/apis/neardata/v0/block',
+  '/apis/neardata/v0/block?preset=genesis&network=testnet',
+  '/apis/neardata/v0/first_block',
   '/apis/neardata/system/health',
 ];
 
@@ -31,6 +39,21 @@ const BODY_TESTS = [
     body: { jsonrpc: '2.0', id: 'fastnear', method: 'query', params: { request_type: 'view_account', finality: 'final', account_id: 'near' } }
   },
   {
+    path: '/apis/transactions/v0/account',
+    body: { account_id: 'intents.near', desc: true, is_real_signer: true, is_success: true, limit: 50 }
+  },
+  {
+    path: '/apis/transfers/v0/transfers',
+    body: {
+      account_id: 'intents.near',
+      asset_id: 'near',
+      desc: true,
+      direction: 'receiver',
+      limit: 10,
+      min_amount: '1000000000000000000000000'
+    }
+  },
+  {
     path: '/apis/neardata/v0/first_block?apiKey=test-key',
     body: null
   }
@@ -39,7 +62,7 @@ const BODY_TESTS = [
 const cliBaseUrl = process.argv[2];
 const envBaseUrl = process.env.BASE_URL;
 const PORT = process.env.PORT || 4000;
-const BASE_URL = cliBaseUrl || envBaseUrl || `http://localhost:${PORT}`;
+const BASE_URL = cliBaseUrl || envBaseUrl || `http://127.0.0.1:${PORT}`;
 const TRANSPORT = BASE_URL.startsWith('https://') ? https : http;
 
 function testUrl(path) {

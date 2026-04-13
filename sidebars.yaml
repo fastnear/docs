@@ -1,33 +1,34 @@
-- page: docs/snapshots.md
+- href: /docs/snapshots
+  label: Snapshots
 - group: RPC
   expanded: false
   items:
-    - page: rpcs/openapi.yaml
+    - href: /rpcs/openapi
       label: All endpoints
     - separator: endpoints soon
     - separatorLine: true
 - group: FastNEAR API
   expanded: false
   items:
-    - page: apis/fastnear/openapi.yaml
+    - href: /apis/fastnear/openapi
       label: All endpoints
 - group: Transactions API
   expanded: false
   items:
-    - page: apis/transactions/openapi.yaml
+    - href: /apis/transactions/openapi
       label: All endpoints
 - group: Transfers API
   expanded: false
   items:
-    - page: apis/transfers/openapi.yaml
+    - href: /apis/transfers/openapi
       label: All endpoints
 - group: KV FastData API
   expanded: false
   items:
-    - page: apis/kv-fastdata/openapi.yaml
+    - href: /apis/kv-fastdata/openapi
       label: All endpoints
 - group: NEAR Data API
   expanded: false
   items:
-    - page: apis/neardata/openapi.yaml
+    - href: /apis/neardata/openapi
       label: All endpoints

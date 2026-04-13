@@ -301,6 +301,31 @@ function buildOperationYaml(spec, op, existingYaml) {
   const method = getMethodName(spec, op);
   const paramsSchema = getParamsSchema(spec, op);
   const responseResult = getResponseResult(spec, op);
+  const postExtensions = op.extensions ? clone(op.extensions) : {};
+  const postOperation = {
+    operationId: op.operationId,
+    summary: existingYaml?.paths?.['\/']?.post?.summary || op.summary,
+    description: existingYaml?.paths?.['\/']?.post?.description || op.description,
+    ...postExtensions,
+    requestBody: {
+      required: true,
+      content: {
+        'application/json': {
+          schema: buildRequestSchema(method, paramsSchema),
+        },
+      },
+    },
+    responses: {
+      '200': {
+        description: 'Successful response',
+        content: {
+          'application/json': {
+            schema: { $ref: '#/components/schemas/JsonRpcResponse' },
+          },
+        },
+      },
+    },
+  };
 
   // Start with existing or build fresh
   const doc = {
@@ -313,29 +338,7 @@ function buildOperationYaml(spec, op, existingYaml) {
     servers: DEFAULT_SERVERS,
     paths: {
       '/': {
-        post: {
-          operationId: op.operationId,
-          summary: existingYaml?.paths?.['\/']?.post?.summary || op.summary,
-          description: existingYaml?.paths?.['\/']?.post?.description || op.description,
-          requestBody: {
-            required: true,
-            content: {
-              'application/json': {
-                schema: buildRequestSchema(method, paramsSchema),
-              },
-            },
-          },
-          responses: {
-            '200': {
-              description: 'Successful response',
-              content: {
-                'application/json': {
-                  schema: { $ref: '#/components/schemas/JsonRpcResponse' },
-                },
-              },
-            },
-          },
-        },
+        post: postOperation,
       },
     },
     security: [{ ApiKeyAuth: [] }],
@@ -391,6 +394,10 @@ function getMethodName(spec, op) {
  * Extract the params schema for an operation.
  */
 function getParamsSchema(spec, op) {
+  if (op.paramsSchemaOverride) {
+    return clone(op.paramsSchemaOverride);
+  }
+
   switch (op.type) {
     case 'query': {
       return extractQueryVariant(spec, op.requestType);
@@ -689,7 +696,7 @@ function generatePlaceholderExamples(method, paramsSchema, op) {
         jsonrpc: '2.0',
         id: 'fastnear',
         method: method,
-        params: baseParams,
+        params: op?.exampleParamsByNetwork?.mainnet || baseParams,
       },
     },
     testnet: {
@@ -698,7 +705,7 @@ function generatePlaceholderExamples(method, paramsSchema, op) {
         jsonrpc: '2.0',
         id: 'fastnear',
         method: method,
-        params: baseParams,
+        params: op?.exampleParamsByNetwork?.testnet || baseParams,
       },
     },
   };

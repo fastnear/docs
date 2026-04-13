@@ -1,32 +1,97 @@
-openapi: 3.1.0
+openapi: 3.0.3
 info:
   title: NEAR Data API - Block Headers
-  version: 1.0.0
-servers:
-  - url: https://mainnet.neardata.xyz
-    description: Mainnet
-  - url: https://testnet.neardata.xyz
-    description: Testnet
+  version: 3.0.3
+  description: Returns the `block` object extracted from the full block response, not just the nested `header` sub-object. Depending on deployment topology, the request may redirect to another host that owns the canonical archive range.
 paths:
   /v0/block/{block_height}/headers:
     get:
+      description: Returns the `block` object extracted from the full block response, not just the nested `header` sub-object. Depending on deployment topology, the request may redirect to another host that owns the canonical archive range.
       operationId: get_block_headers
-      summary: Fetch only the block headers for a finalized block
-      tags:
-        - blocks
       parameters:
-        - $ref: "../components.yaml#/components/parameters/BlockHeightParam"
-        - $ref: "../components.yaml#/components/parameters/ApiKeyParam"
+        - description: NEAR block height to retrieve.
+          example: "9820210"
+          in: path
+          name: block_height
+          required: true
+          schema:
+            type: string
+        - description: Optional FastNEAR subscription API key. Invalid values may return `401` before redirect handling.
+          in: query
+          name: apiKey
+          required: false
+          schema:
+            type: string
       responses:
         "200":
-          description: Header object for the selected block, or `null` when the block is missing
           content:
             application/json:
               schema:
-                $ref: "../components.yaml#/components/schemas/HeadersDocument"
+                additionalProperties: true
+                description: Block-level object returned by `/headers`, corresponding to the full response's `block` field.
+                nullable: true
+                type: object
+          description: Requested document, or `null` when the selected slice is absent
+        "302":
+          description: Redirect to a canonical archive or finalized block URL
+          headers:
+            Location:
+              schema:
+                type: string
+        "401":
+          content:
+            text/plain:
+              example: Unauthorized
+              schema:
+                type: string
+          description: Invalid or unauthorized API key
         "404":
-          description: Block height is out of range or too far in the future
+          content:
+            application/json:
+              example:
+                error: The block does not exist in this archive range
+                type: BLOCK_DOES_NOT_EXIST
+              schema:
+                $ref: "#/components/schemas/BlockErrorResponse"
+          description: Structured block-height error
+        "500":
           content:
             application/json:
               schema:
-                $ref: "../components.yaml#/components/schemas/ApiError"
+                type: string
+          description: Cache or internal data error
+      summary: Fetch the block-level object for a finalized block
+      tags:
+        - blocks
+servers:
+  - description: Mainnet
+    url: https://mainnet.neardata.xyz
+  - description: Testnet
+    url: https://testnet.neardata.xyz
+components:
+  schemas:
+    BlockErrorResponse:
+      additionalProperties: false
+      properties:
+        error:
+          type: string
+        type:
+          $ref: "#/components/schemas/BlockErrorType"
+      required:
+        - error
+        - type
+      type: object
+    BlockErrorType:
+      enum:
+        - BLOCK_HEIGHT_TOO_HIGH
+        - BLOCK_HEIGHT_TOO_LOW
+        - BLOCK_DOES_NOT_EXIST
+      type: string
+    HealthResponse:
+      additionalProperties: false
+      properties:
+        status:
+          type: string
+      required:
+        - status
+      type: object

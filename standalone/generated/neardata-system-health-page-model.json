@@ -1,0 +1,138 @@
+{
+  "canonicalPath": "/apis/neardata/system/health",
+  "generatedAt": "2026-04-13T15:41:39.862Z",
+  "info": {
+    "description": "Returns `ok` when the current deployment is healthy and `unhealthy` when the latest indexed block is too stale. Invalid API keys can be rejected upstream before the request reaches the app.",
+    "operationId": "get_health",
+    "summary": "Get service health",
+    "title": "NEAR Data API - Health",
+    "version": "3.0.3"
+  },
+  "interaction": {
+    "authTransport": "bearer",
+    "fields": [],
+    "kind": "fastnear-rest-read",
+    "networks": [
+      {
+        "defaultFields": {},
+        "key": "mainnet",
+        "label": "Mainnet",
+        "url": "https://mainnet.neardata.xyz"
+      },
+      {
+        "defaultFields": {},
+        "key": "testnet",
+        "label": "Testnet",
+        "url": "https://testnet.neardata.xyz"
+      }
+    ],
+    "requestMethod": "get_health",
+    "supportsFinality": false,
+    "transport": "http"
+  },
+  "outputModel": "standalone/generated/neardata-system-health-page-model.json",
+  "pageModelId": "neardata-system-health",
+  "replaceOperationPage": true,
+  "request": {
+    "bodySchema": null,
+    "examples": [
+      {
+        "id": "mainnet",
+        "label": "Mainnet",
+        "network": "mainnet",
+        "request": {
+          "body": null,
+          "headers": {},
+          "path": {},
+          "query": {}
+        }
+      },
+      {
+        "id": "testnet",
+        "label": "Testnet",
+        "network": "testnet",
+        "request": {
+          "body": null,
+          "headers": {},
+          "path": {},
+          "query": {}
+        }
+      }
+    ],
+    "parameters": {
+      "header": [],
+      "path": [],
+      "query": [
+        {
+          "description": "Optional FastNEAR subscription API key. Invalid values may return `401` before redirect handling.",
+          "location": "query",
+          "name": "apiKey",
+          "required": false,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "required": false,
+    "supportsBody": false
+  },
+  "responses": [
+    {
+      "description": "Health payload",
+      "mediaType": "application/json",
+      "schema": {
+        "type": "object",
+        "required": [
+          "status"
+        ],
+        "additionalProperties": false,
+        "properties": [
+          {
+            "name": "status",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "refName": "HealthResponse"
+      },
+      "status": "200"
+    },
+    {
+      "description": "Invalid or unauthorized API key",
+      "mediaType": "text/plain",
+      "schema": {
+        "type": "string"
+      },
+      "status": "401"
+    },
+    {
+      "description": "Cache or internal data error",
+      "mediaType": "application/json",
+      "schema": {
+        "type": "string"
+      },
+      "status": "500"
+    }
+  ],
+  "route": {
+    "method": "GET",
+    "path": "/health",
+    "transport": "http"
+  },
+  "routeAliases": [
+    "/apis/neardata/openapi/system/get_health"
+  ],
+  "securitySchemes": [
+    {
+      "description": "Optional FastNEAR subscription API key. Invalid values may return `401` before redirect handling.",
+      "id": "ApiKeyAuth",
+      "in": "query",
+      "name": "apiKey",
+      "type": "apiKey"
+    }
+  ],
+  "sourceSpec": "apis/neardata/system/health.yaml"
+}

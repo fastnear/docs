@@ -1,0 +1,306 @@
+{
+  "canonicalPath": "/apis/transactions/v0/receipt",
+  "generatedAt": "2026-04-13T15:41:39.919Z",
+  "info": {
+    "description": "Returns a receipt row and, when present, the associated raw transaction payload.",
+    "operationId": "get_receipt",
+    "summary": "Fetch a receipt by ID",
+    "title": "Transactions API - Receipt Lookup",
+    "version": "3.0.3"
+  },
+  "interaction": {
+    "authTransport": "bearer",
+    "fields": [
+      {
+        "label": "Receipt Id",
+        "location": "body",
+        "name": "receipt_id",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      }
+    ],
+    "kind": "fastnear-rest-body",
+    "networks": [
+      {
+        "defaultFields": {
+          "receipt_id": "H6Roj3A2SNn7HJXdigLPDHiz2kcob4MHwLg3nnDEH2VZ"
+        },
+        "key": "mainnet",
+        "label": "Mainnet",
+        "url": "https://tx.main.fastnear.com"
+      }
+    ],
+    "requestMethod": "get_receipt",
+    "supportsFinality": false,
+    "transport": "http"
+  },
+  "outputModel": "standalone/generated/transactions-v0-receipt-page-model.json",
+  "pageModelId": "transactions-v0-receipt",
+  "replaceOperationPage": true,
+  "request": {
+    "bodySchema": {
+      "type": "object",
+      "required": [
+        "receipt_id"
+      ],
+      "additionalProperties": false,
+      "properties": [
+        {
+          "name": "receipt_id",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "refName": "ReceiptInput"
+    },
+    "examples": [
+      {
+        "id": "mainnet",
+        "label": "Mainnet",
+        "network": "mainnet",
+        "request": {
+          "body": {
+            "receipt_id": "H6Roj3A2SNn7HJXdigLPDHiz2kcob4MHwLg3nnDEH2VZ"
+          },
+          "headers": {},
+          "path": {},
+          "query": {}
+        }
+      }
+    ],
+    "mediaType": "application/json",
+    "parameters": {
+      "header": [],
+      "path": [],
+      "query": []
+    },
+    "required": true,
+    "supportsBody": true
+  },
+  "responses": [
+    {
+      "description": "Receipt lookup result",
+      "mediaType": "application/json",
+      "schema": {
+        "type": "object",
+        "required": [
+          "receipt",
+          "transaction"
+        ],
+        "additionalProperties": false,
+        "properties": [
+          {
+            "name": "receipt",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "required": [
+                "receipt_id",
+                "block_height",
+                "block_timestamp",
+                "receipt_index",
+                "appear_block_height",
+                "appear_receipt_index",
+                "transaction_hash",
+                "tx_block_height",
+                "tx_block_timestamp",
+                "tx_index",
+                "predecessor_id",
+                "receiver_id",
+                "receipt_type",
+                "priority",
+                "shard_id",
+                "is_success"
+              ],
+              "additionalProperties": false,
+              "properties": [
+                {
+                  "name": "appear_block_height",
+                  "required": true,
+                  "schema": {
+                    "type": "integer",
+                    "format": "uint64"
+                  }
+                },
+                {
+                  "name": "appear_receipt_index",
+                  "required": true,
+                  "schema": {
+                    "type": "integer",
+                    "format": "uint32"
+                  }
+                },
+                {
+                  "name": "block_height",
+                  "required": true,
+                  "schema": {
+                    "type": "integer",
+                    "format": "uint64"
+                  }
+                },
+                {
+                  "name": "block_timestamp",
+                  "required": true,
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "name": "is_success",
+                  "required": true,
+                  "schema": {
+                    "type": "boolean"
+                  }
+                },
+                {
+                  "name": "predecessor_id",
+                  "required": true,
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "name": "priority",
+                  "required": true,
+                  "schema": {
+                    "type": "integer",
+                    "format": "uint64"
+                  }
+                },
+                {
+                  "name": "receipt_id",
+                  "required": true,
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "name": "receipt_index",
+                  "required": true,
+                  "schema": {
+                    "type": "integer",
+                    "format": "uint32"
+                  }
+                },
+                {
+                  "name": "receipt_type",
+                  "required": true,
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "name": "receiver_id",
+                  "required": true,
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "name": "shard_id",
+                  "required": true,
+                  "schema": {
+                    "type": "integer",
+                    "format": "uint64"
+                  }
+                },
+                {
+                  "name": "transaction_hash",
+                  "required": true,
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "name": "tx_block_height",
+                  "required": true,
+                  "schema": {
+                    "type": "integer",
+                    "format": "uint64"
+                  }
+                },
+                {
+                  "name": "tx_block_timestamp",
+                  "required": true,
+                  "schema": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "name": "tx_index",
+                  "required": true,
+                  "schema": {
+                    "type": "integer",
+                    "format": "uint32"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "transaction",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          }
+        ],
+        "refName": "ReceiptResponse"
+      },
+      "status": "200"
+    },
+    {
+      "description": "Bad request",
+      "mediaType": "application/json",
+      "schema": {
+        "type": "object",
+        "required": [
+          "error",
+          "message"
+        ],
+        "additionalProperties": false,
+        "properties": [
+          {
+            "name": "error",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "message",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "refName": "ApiError"
+      },
+      "status": "400"
+    },
+    {
+      "description": "ClickHouse query failure",
+      "mediaType": "application/json",
+      "schema": {
+        "type": "string"
+      },
+      "status": "500"
+    }
+  ],
+  "route": {
+    "method": "POST",
+    "path": "/v0/receipt",
+    "transport": "http"
+  },
+  "routeAliases": [
+    "/apis/transactions/openapi/receipts/get_receipt"
+  ],
+  "securitySchemes": [],
+  "sourceSpec": "apis/transactions/v0/receipt.yaml"
+}
