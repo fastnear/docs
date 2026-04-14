@@ -50,7 +50,7 @@ paths:
                   id: fastnear
                   method: gas_price
                   params:
-                    block_id: CU1KcVSuYAZUiehn7TnCxSdpb3RGoHxK1hABC5AKKo2Q
+                    block_id: 6sddgq8nkENAz4f8qR72qxRPM25QWNBVMrkYr63DgC2E
               testnet:
                 summary: Get gas price by block (Testnet)
                 value:
@@ -58,7 +58,7 @@ paths:
                   id: fastnear
                   method: gas_price
                   params:
-                    block_id: CoPszhGFqcx9L1HQYM62g3UjxMpuZD8RiZL6QdpBZXA4
+                    block_id: Ayfw9wu3T3zEqCbrvq9CuKmGmuyiJiETvwCApXZHmCho
       responses:
         200:
           description: Successful response

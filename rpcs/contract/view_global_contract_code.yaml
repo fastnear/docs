@@ -63,7 +63,7 @@ paths:
                   id: fastnear
                   method: query
                   params:
-                    code_hash: ExampleCodeHash
+                    code_hash: 3vaopJ7aRoivvzZLngPQRBEd8VJr2zPLTxQfnRCoFgNX
                     request_type: view_global_contract_code
                     finality: final
       responses:

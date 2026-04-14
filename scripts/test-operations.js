@@ -7,6 +7,7 @@
 
 const http = require('http');
 const https = require('https');
+const { URL } = require('url');
 
 const OPERATIONS = [
   '/rpcs/account/view_account',
@@ -65,26 +66,53 @@ const PORT = process.env.PORT || 4000;
 const BASE_URL = cliBaseUrl || envBaseUrl || `http://127.0.0.1:${PORT}`;
 const TRANSPORT = BASE_URL.startsWith('https://') ? https : http;
 
-function testUrl(path) {
+function fetchUrl(url) {
+  const transport = url.startsWith('https://') ? https : http;
+
   return new Promise((resolve) => {
-    const url = `${BASE_URL}${path}`;
-    
-    TRANSPORT.get(url, (res) => {
-      if (res.statusCode === 200) {
-        console.log(`✅ ${path} - OK`);
-        resolve(true);
-      } else if (res.statusCode === 404) {
-        console.log(`❌ ${path} - NOT FOUND`);
-        resolve(false);
-      } else {
-        console.log(`⚠️  ${path} - Status: ${res.statusCode}`);
-        resolve(false);
-      }
-    }).on('error', (err) => {
-      console.log(`❌ ${path} - Error: ${err.message}`);
-      resolve(false);
-    });
+    transport
+      .get(url, (res) => {
+        resolve(res);
+      })
+      .on('error', (err) => {
+        resolve({ error: err });
+      });
   });
+}
+
+async function testUrl(path, redirects = 0) {
+  const url = `${BASE_URL}${path}`;
+  const res = await fetchUrl(url);
+
+  if (res.error) {
+    console.log(`❌ ${path} - Error: ${res.error.message}`);
+    return false;
+  }
+
+  if (
+    res.statusCode &&
+    res.statusCode >= 300 &&
+    res.statusCode < 400 &&
+    res.headers.location &&
+    redirects < 5
+  ) {
+    const redirectUrl = new URL(res.headers.location, url);
+    const redirectedPath = `${redirectUrl.pathname}${redirectUrl.search}`;
+    return testUrl(redirectedPath, redirects + 1);
+  }
+
+  if (res.statusCode === 200) {
+    console.log(`✅ ${path} - OK`);
+    return true;
+  }
+
+  if (res.statusCode === 404) {
+    console.log(`❌ ${path} - NOT FOUND`);
+    return false;
+  }
+
+  console.log(`⚠️  ${path} - Status: ${res.statusCode}`);
+  return false;
 }
 
 async function runTests() {

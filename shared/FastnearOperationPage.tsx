@@ -436,11 +436,187 @@ function getRunResultText(runResult: RunResult | null): string {
   return runResult.kind === "json" ? formatJson(runResult.value) : runResult.value;
 }
 
-const RUNTIME_STATUS_FIELD_DEFAULTS: Record<string, string> = {
-  "rpc-block-by-height": "block_id",
+type RuntimeFieldDefaults = Record<string, unknown>;
+
+type RuntimeFieldDefaultConfig = {
+  targetFieldNames: string[];
+  fetchDefaults: (
+    baseUrl: string,
+    networkKey: string,
+    signal?: AbortSignal
+  ) => Promise<RuntimeFieldDefaults | null>;
 };
 
-async function fetchLatestBlockHeight(baseUrl: string, signal?: AbortSignal): Promise<number | null> {
+const RUNTIME_FIELD_DEFAULTS: Record<string, RuntimeFieldDefaultConfig> = {
+  "rpc-block-by-height": {
+    targetFieldNames: ["block_id"],
+    fetchDefaults: async (baseUrl, _networkKey, signal) => {
+      const latestBlockHeight = await fetchLatestRpcBlockHeight(baseUrl, signal);
+      if (!Number.isFinite(latestBlockHeight)) {
+        return null;
+      }
+
+      return { block_id: String(latestBlockHeight) };
+    },
+  },
+  "neardata-v0-block": {
+    targetFieldNames: ["block_height"],
+    fetchDefaults: async (baseUrl, _networkKey, signal) =>
+      fetchLatestNeardataFieldDefaults(baseUrl, "final", false, signal),
+  },
+  "neardata-v0-block-headers": {
+    targetFieldNames: ["block_height"],
+    fetchDefaults: async (baseUrl, _networkKey, signal) =>
+      fetchLatestNeardataFieldDefaults(baseUrl, "final", false, signal),
+  },
+  "neardata-v0-block-chunk": {
+    targetFieldNames: ["block_height", "shard_id"],
+    fetchDefaults: async (baseUrl, _networkKey, signal) =>
+      fetchLatestNeardataFieldDefaults(baseUrl, "final", true, signal),
+  },
+  "neardata-v0-block-shard": {
+    targetFieldNames: ["block_height", "shard_id"],
+    fetchDefaults: async (baseUrl, _networkKey, signal) =>
+      fetchLatestNeardataFieldDefaults(baseUrl, "final", true, signal),
+  },
+  "neardata-v0-block-optimistic": {
+    targetFieldNames: ["block_height"],
+    fetchDefaults: async (baseUrl, _networkKey, signal) =>
+      fetchLatestNeardataFieldDefaults(baseUrl, "optimistic", false, signal),
+  },
+  "transactions-v0-account": {
+    targetFieldNames: ["account_id"],
+    fetchDefaults: async (baseUrl, networkKey, signal) =>
+      fetchLatestTransactionsFieldDefaults(baseUrl, networkKey, "transactions-v0-account", signal),
+  },
+  "transactions-v0-block": {
+    targetFieldNames: ["block_id"],
+    fetchDefaults: async (baseUrl, networkKey, signal) =>
+      fetchLatestTransactionsFieldDefaults(baseUrl, networkKey, "transactions-v0-block", signal),
+  },
+  "transactions-v0-blocks": {
+    targetFieldNames: ["from_block_height", "to_block_height"],
+    fetchDefaults: async (baseUrl, networkKey, signal) =>
+      fetchLatestTransactionsFieldDefaults(baseUrl, networkKey, "transactions-v0-blocks", signal),
+  },
+  "transactions-v0-receipt": {
+    targetFieldNames: ["receipt_id"],
+    fetchDefaults: async (baseUrl, networkKey, signal) =>
+      fetchLatestTransactionsFieldDefaults(baseUrl, networkKey, "transactions-v0-receipt", signal),
+  },
+  "transactions-v0-transactions": {
+    targetFieldNames: ["tx_hashes"],
+    fetchDefaults: async (baseUrl, networkKey, signal) =>
+      fetchLatestTransactionsFieldDefaults(baseUrl, networkKey, "transactions-v0-transactions", signal),
+  },
+  "fastnear-v0-account-staking": {
+    targetFieldNames: ["account_id"],
+    fetchDefaults: async (baseUrl, networkKey, signal) =>
+      fetchLatestFastnearFieldDefaults(baseUrl, networkKey, "fastnear-v0-account-staking", signal),
+  },
+  "fastnear-v0-account-ft": {
+    targetFieldNames: ["account_id"],
+    fetchDefaults: async (baseUrl, networkKey, signal) =>
+      fetchLatestFastnearFieldDefaults(baseUrl, networkKey, "fastnear-v0-account-ft", signal),
+  },
+  "fastnear-v0-account-nft": {
+    targetFieldNames: ["account_id"],
+    fetchDefaults: async (baseUrl, networkKey, signal) =>
+      fetchLatestFastnearFieldDefaults(baseUrl, networkKey, "fastnear-v0-account-nft", signal),
+  },
+  "fastnear-v0-public-key-lookup": {
+    targetFieldNames: ["public_key"],
+    fetchDefaults: async (baseUrl, networkKey, signal) =>
+      fetchLatestFastnearFieldDefaults(baseUrl, networkKey, "fastnear-v0-public-key-lookup", signal),
+  },
+  "fastnear-v0-public-key-lookup-all": {
+    targetFieldNames: ["public_key"],
+    fetchDefaults: async (baseUrl, networkKey, signal) =>
+      fetchLatestFastnearFieldDefaults(baseUrl, networkKey, "fastnear-v0-public-key-lookup-all", signal),
+  },
+  "fastnear-v1-account-staking": {
+    targetFieldNames: ["account_id"],
+    fetchDefaults: async (baseUrl, networkKey, signal) =>
+      fetchLatestFastnearFieldDefaults(baseUrl, networkKey, "fastnear-v1-account-staking", signal),
+  },
+  "fastnear-v1-account-ft": {
+    targetFieldNames: ["account_id"],
+    fetchDefaults: async (baseUrl, networkKey, signal) =>
+      fetchLatestFastnearFieldDefaults(baseUrl, networkKey, "fastnear-v1-account-ft", signal),
+  },
+  "fastnear-v1-account-nft": {
+    targetFieldNames: ["account_id"],
+    fetchDefaults: async (baseUrl, networkKey, signal) =>
+      fetchLatestFastnearFieldDefaults(baseUrl, networkKey, "fastnear-v1-account-nft", signal),
+  },
+  "fastnear-v1-account-full": {
+    targetFieldNames: ["account_id"],
+    fetchDefaults: async (baseUrl, networkKey, signal) =>
+      fetchLatestFastnearFieldDefaults(baseUrl, networkKey, "fastnear-v1-account-full", signal),
+  },
+  "fastnear-v1-public-key-lookup": {
+    targetFieldNames: ["public_key"],
+    fetchDefaults: async (baseUrl, networkKey, signal) =>
+      fetchLatestFastnearFieldDefaults(baseUrl, networkKey, "fastnear-v1-public-key-lookup", signal),
+  },
+  "fastnear-v1-public-key-lookup-all": {
+    targetFieldNames: ["public_key"],
+    fetchDefaults: async (baseUrl, networkKey, signal) =>
+      fetchLatestFastnearFieldDefaults(baseUrl, networkKey, "fastnear-v1-public-key-lookup-all", signal),
+  },
+  "fastnear-v1-ft-top": {
+    targetFieldNames: ["token_id"],
+    fetchDefaults: async (baseUrl, networkKey, signal) =>
+      fetchLatestFastnearFieldDefaults(baseUrl, networkKey, "fastnear-v1-ft-top", signal),
+  },
+  "kv-fastdata-v0-all-by-predecessor": {
+    targetFieldNames: ["predecessor_id"],
+    fetchDefaults: async (baseUrl, networkKey, signal) =>
+      fetchLatestKvFastdataFieldDefaults(baseUrl, networkKey, "kv-fastdata-v0-all-by-predecessor", signal),
+  },
+  "kv-fastdata-v0-history-by-key": {
+    targetFieldNames: ["include_metadata", "key"],
+    fetchDefaults: async (baseUrl, networkKey, signal) =>
+      fetchLatestKvFastdataFieldDefaults(baseUrl, networkKey, "kv-fastdata-v0-history-by-key", signal),
+  },
+  "kv-fastdata-v0-history-by-account": {
+    targetFieldNames: ["current_account_id", "key_prefix"],
+    fetchDefaults: async (baseUrl, networkKey, signal) =>
+      fetchLatestKvFastdataFieldDefaults(baseUrl, networkKey, "kv-fastdata-v0-history-by-account", signal),
+  },
+  "kv-fastdata-v0-history-by-predecessor": {
+    targetFieldNames: ["current_account_id", "predecessor_id", "key_prefix"],
+    fetchDefaults: async (baseUrl, networkKey, signal) =>
+      fetchLatestKvFastdataFieldDefaults(baseUrl, networkKey, "kv-fastdata-v0-history-by-predecessor", signal),
+  },
+  "kv-fastdata-v0-get-history-key": {
+    targetFieldNames: ["current_account_id", "predecessor_id", "key"],
+    fetchDefaults: async (baseUrl, networkKey, signal) =>
+      fetchLatestKvFastdataFieldDefaults(baseUrl, networkKey, "kv-fastdata-v0-get-history-key", signal),
+  },
+  "kv-fastdata-v0-latest-by-account": {
+    targetFieldNames: ["current_account_id", "key_prefix"],
+    fetchDefaults: async (baseUrl, networkKey, signal) =>
+      fetchLatestKvFastdataFieldDefaults(baseUrl, networkKey, "kv-fastdata-v0-latest-by-account", signal),
+  },
+  "kv-fastdata-v0-latest-by-predecessor": {
+    targetFieldNames: ["current_account_id", "predecessor_id", "key_prefix"],
+    fetchDefaults: async (baseUrl, networkKey, signal) =>
+      fetchLatestKvFastdataFieldDefaults(baseUrl, networkKey, "kv-fastdata-v0-latest-by-predecessor", signal),
+  },
+  "kv-fastdata-v0-get-latest-key": {
+    targetFieldNames: ["current_account_id", "predecessor_id", "key"],
+    fetchDefaults: async (baseUrl, networkKey, signal) =>
+      fetchLatestKvFastdataFieldDefaults(baseUrl, networkKey, "kv-fastdata-v0-get-latest-key", signal),
+  },
+  "kv-fastdata-v0-multi": {
+    targetFieldNames: ["keys"],
+    fetchDefaults: async (baseUrl, networkKey, signal) =>
+      fetchLatestKvFastdataFieldDefaults(baseUrl, networkKey, "kv-fastdata-v0-multi", signal),
+  },
+};
+
+async function fetchLatestRpcBlockHeight(baseUrl: string, signal?: AbortSignal): Promise<number | null> {
   const normalizedUrl = baseUrl.replace(/\/+$/, "");
 
   try {
@@ -484,6 +660,595 @@ async function fetchLatestBlockHeight(baseUrl: string, signal?: AbortSignal): Pr
   } catch {}
 
   return null;
+}
+
+async function fetchLatestNeardataFieldDefaults(
+  baseUrl: string,
+  mode: "final" | "optimistic",
+  includeShardId: boolean,
+  signal?: AbortSignal
+): Promise<RuntimeFieldDefaults | null> {
+  const normalizedUrl = baseUrl.replace(/\/+$/, "");
+  const requestPath =
+    mode === "optimistic" ? "/v0/last_block/optimistic" : "/v0/last_block/final";
+
+  try {
+    const response = await fetch(`${normalizedUrl}${requestPath}`, {
+      headers: { Accept: "application/json" },
+      signal,
+    });
+
+    if (!response.ok) {
+      return null;
+    }
+
+    const payload = await response.json();
+    const blockHeight = Number(payload?.block?.header?.height);
+    if (!Number.isFinite(blockHeight)) {
+      return null;
+    }
+
+    const nextDefaults: RuntimeFieldDefaults = {
+      block_height: String(blockHeight),
+    };
+
+    if (includeShardId) {
+      const shardEntry = Array.isArray(payload?.shards)
+        ? payload.shards.find((shard: any) => Number.isFinite(Number(shard?.shard_id)))
+        : null;
+      const shardId = Number.isFinite(Number(shardEntry?.shard_id))
+        ? Number(shardEntry.shard_id)
+        : 0;
+      nextDefaults.shard_id = String(shardId);
+    }
+
+    return nextDefaults;
+  } catch {}
+
+  return null;
+}
+
+function getTransactionsDiscoveryAccount(baseUrl: string, networkKey: string) {
+  const normalizedUrl = baseUrl.toLowerCase();
+  if (networkKey === "testnet" || normalizedUrl.includes("tx.test.")) {
+    return "root.testnet";
+  }
+
+  return "intents.near";
+}
+
+async function postTransactionsJson(
+  baseUrl: string,
+  path: string,
+  body: Record<string, unknown>,
+  signal?: AbortSignal
+) {
+  const response = await fetch(`${baseUrl.replace(/\/+$/, "")}${path}`, {
+    body: JSON.stringify(body),
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    method: "POST",
+    signal,
+  });
+
+  if (!response.ok) {
+    return null;
+  }
+
+  return await response.json();
+}
+
+function getTransactionsReceiptId(transaction: any) {
+  if (typeof transaction?.execution_outcome?.outcome?.status?.SuccessReceiptId === "string") {
+    return transaction.execution_outcome.outcome.status.SuccessReceiptId;
+  }
+
+  const outcomeReceiptId = transaction?.execution_outcome?.outcome?.receipt_ids?.find(
+    (receiptId: unknown) => typeof receiptId === "string"
+  );
+  if (outcomeReceiptId) {
+    return outcomeReceiptId;
+  }
+
+  const nestedReceiptId = transaction?.receipts?.find(
+    (receiptEntry: any) => typeof receiptEntry?.receipt?.receipt_id === "string"
+  )?.receipt?.receipt_id;
+  if (nestedReceiptId) {
+    return nestedReceiptId;
+  }
+
+  return null;
+}
+
+async function fetchLatestTransactionsContext(
+  baseUrl: string,
+  networkKey: string,
+  signal?: AbortSignal
+) {
+  const sourceAccount = getTransactionsDiscoveryAccount(baseUrl, networkKey);
+  const accountPayload = await postTransactionsJson(
+    baseUrl,
+    "/v0/account",
+    {
+      account_id: sourceAccount,
+      desc: true,
+      is_real_signer: true,
+      is_success: true,
+      limit: 5,
+    },
+    signal
+  );
+
+  const recentRows = Array.isArray(accountPayload?.account_txs)
+    ? accountPayload.account_txs.filter(
+        (row: any) =>
+          typeof row?.transaction_hash === "string" &&
+          Number.isFinite(Number(row?.tx_block_height))
+      )
+    : [];
+
+  if (recentRows.length === 0) {
+    return null;
+  }
+
+  const latestBlockHeight = Math.max(
+    ...recentRows.map((row: any) => Number(row.tx_block_height))
+  );
+  const recentTxHashes = [...new Set(recentRows.map((row: any) => row.transaction_hash))].slice(0, 2);
+  const rangeStart = Math.max(0, latestBlockHeight - 9);
+  let recentReceiptId = null;
+
+  if (recentTxHashes.length > 0) {
+    const transactionPayload = await postTransactionsJson(
+      baseUrl,
+      "/v0/transactions",
+      { tx_hashes: recentTxHashes },
+      signal
+    );
+    const transactions = Array.isArray(transactionPayload?.transactions)
+      ? transactionPayload.transactions
+      : [];
+    recentReceiptId =
+      transactions.map((transaction: any) => getTransactionsReceiptId(transaction)).find(Boolean) || null;
+  }
+
+  return {
+    latestBlockHeight,
+    rangeStart,
+    recentReceiptId,
+    recentTxHashes,
+    sourceAccount,
+  };
+}
+
+async function fetchLatestTransactionsFieldDefaults(
+  baseUrl: string,
+  networkKey: string,
+  pageModelId: string,
+  signal?: AbortSignal
+): Promise<RuntimeFieldDefaults | null> {
+  const context = await fetchLatestTransactionsContext(baseUrl, networkKey, signal);
+  if (!context) {
+    return null;
+  }
+
+  switch (pageModelId) {
+    case "transactions-v0-account":
+      return {
+        account_id: context.sourceAccount,
+      };
+    case "transactions-v0-block":
+      return {
+        block_id: context.latestBlockHeight,
+      };
+    case "transactions-v0-blocks":
+      return {
+        from_block_height: context.rangeStart,
+        to_block_height: context.latestBlockHeight,
+      };
+    case "transactions-v0-receipt":
+      return context.recentReceiptId
+        ? {
+            receipt_id: context.recentReceiptId,
+          }
+        : null;
+    case "transactions-v0-transactions":
+      return context.recentTxHashes.length > 0
+        ? {
+            tx_hashes: context.recentTxHashes,
+          }
+        : null;
+    default:
+      return null;
+  }
+}
+
+function getFastnearDiscoveryAccount(baseUrl: string, networkKey: string) {
+  const normalizedUrl = baseUrl.toLowerCase();
+  if (networkKey === "testnet" || normalizedUrl.includes("test.api.")) {
+    return "root.testnet";
+  }
+
+  return "root.near";
+}
+
+function getFastnearDiscoveryTokenId(baseUrl: string, networkKey: string) {
+  const normalizedUrl = baseUrl.toLowerCase();
+  if (networkKey === "testnet" || normalizedUrl.includes("test.api.")) {
+    return "wrap.testnet";
+  }
+
+  return "wrap.near";
+}
+
+function getFastnearRpcUrl(baseUrl: string, networkKey: string) {
+  const normalizedUrl = baseUrl.toLowerCase();
+  if (networkKey === "testnet" || normalizedUrl.includes("test.api.")) {
+    return "https://rpc.testnet.fastnear.com";
+  }
+
+  return "https://rpc.mainnet.fastnear.com";
+}
+
+async function fetchFastnearJson(url: string, signal?: AbortSignal) {
+  const response = await fetch(url, {
+    headers: { Accept: "application/json" },
+    signal,
+  });
+
+  if (!response.ok) {
+    return null;
+  }
+
+  return await response.json();
+}
+
+async function postFastnearRpc(
+  baseUrl: string,
+  networkKey: string,
+  method: string,
+  params: Record<string, unknown>,
+  signal?: AbortSignal
+) {
+  const response = await fetch(getFastnearRpcUrl(baseUrl, networkKey), {
+    body: JSON.stringify({
+      jsonrpc: "2.0",
+      id: "fastnear-docs",
+      method,
+      params,
+    }),
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    method: "POST",
+    signal,
+  });
+
+  if (!response.ok) {
+    return null;
+  }
+
+  const payload = await response.json();
+  if (payload?.error) {
+    return null;
+  }
+
+  return payload?.result || null;
+}
+
+async function fetchFastnearPublicKey(
+  baseUrl: string,
+  networkKey: string,
+  signal?: AbortSignal
+) {
+  const sourceAccount = getFastnearDiscoveryAccount(baseUrl, networkKey);
+  const accessKeyList = await postFastnearRpc(
+    baseUrl,
+    networkKey,
+    "query",
+    {
+      request_type: "view_access_key_list",
+      finality: "final",
+      account_id: sourceAccount,
+    },
+    signal
+  );
+
+  const publicKeys = Array.isArray(accessKeyList?.keys)
+    ? accessKeyList.keys
+        .map((row: any) => row?.public_key)
+        .filter((publicKey: unknown) => typeof publicKey === "string")
+    : [];
+
+  for (const publicKey of publicKeys.slice(0, 12)) {
+    const lookupPayload = await fetchFastnearJson(
+      `${baseUrl.replace(/\/+$/, "")}/v1/public_key/${encodeURIComponent(publicKey)}/all`,
+      signal
+    );
+    const accountIds = Array.isArray(lookupPayload?.account_ids)
+      ? lookupPayload.account_ids
+      : [];
+
+    if (accountIds.includes(sourceAccount)) {
+      return publicKey;
+    }
+  }
+
+  return publicKeys[0] || null;
+}
+
+async function fetchLatestFastnearFieldDefaults(
+  baseUrl: string,
+  networkKey: string,
+  pageModelId: string,
+  signal?: AbortSignal
+): Promise<RuntimeFieldDefaults | null> {
+  const sourceAccount = getFastnearDiscoveryAccount(baseUrl, networkKey);
+  const tokenId = getFastnearDiscoveryTokenId(baseUrl, networkKey);
+
+  switch (pageModelId) {
+    case "fastnear-v0-account-staking":
+    case "fastnear-v0-account-ft":
+    case "fastnear-v0-account-nft":
+    case "fastnear-v1-account-staking":
+    case "fastnear-v1-account-ft":
+    case "fastnear-v1-account-nft":
+    case "fastnear-v1-account-full":
+      return {
+        account_id: sourceAccount,
+      };
+    case "fastnear-v0-public-key-lookup":
+    case "fastnear-v0-public-key-lookup-all":
+    case "fastnear-v1-public-key-lookup":
+    case "fastnear-v1-public-key-lookup-all": {
+      const publicKey = await fetchFastnearPublicKey(baseUrl, networkKey, signal);
+      return publicKey
+        ? {
+            public_key: publicKey,
+          }
+        : null;
+    }
+    case "fastnear-v1-ft-top":
+      return {
+        token_id: tokenId,
+      };
+    default:
+      return null;
+  }
+}
+
+function getKvFastdataFallbackContext(baseUrl: string, networkKey: string) {
+  const normalizedUrl = baseUrl.toLowerCase();
+  if (networkKey === "testnet" || normalizedUrl.includes("kv.test.")) {
+    return {
+      currentAccountId: "kv.gork-agent.testnet",
+      historyByKeyIncludeMetadata: false,
+      key: "value",
+      keyPrefix: "value",
+      predecessorId: "kv.gork-agent.testnet",
+    };
+  }
+
+  return {
+    currentAccountId: "social.near",
+    historyByKeyIncludeMetadata: false,
+    key: "graph/follow/sleet.near",
+    keyPrefix: "graph/follow/",
+    predecessorId: "james.near",
+  };
+}
+
+function getKvFastdataCandidateAccounts(baseUrl: string, networkKey: string) {
+  const normalizedUrl = baseUrl.toLowerCase();
+  if (networkKey === "testnet" || normalizedUrl.includes("kv.test.")) {
+    return [
+      "kv.gork-agent.testnet",
+      "guest-book.testnet",
+      "root.testnet",
+      "social.testnet",
+      "jsvm.testnet",
+      "v1.signer-prod.testnet",
+    ];
+  }
+
+  return ["social.near", "contextual.near", "app.near"];
+}
+
+function getKvFastdataKeyPrefix(key: string) {
+  const trimmedKey = String(key || "").trim();
+  if (!trimmedKey) {
+    return "";
+  }
+
+  const lastSlashIndex = trimmedKey.lastIndexOf("/");
+  if (lastSlashIndex === -1) {
+    return trimmedKey;
+  }
+
+  return trimmedKey.slice(0, lastSlashIndex + 1);
+}
+
+function buildKvFastdataMissingKey(keyPrefix: string) {
+  const normalizedPrefix = String(keyPrefix || "").trim();
+  if (!normalizedPrefix) {
+    return "missing";
+  }
+
+  return `${normalizedPrefix}missing`;
+}
+
+async function postKvFastdataJson(
+  baseUrl: string,
+  path: string,
+  body: Record<string, unknown>,
+  signal?: AbortSignal
+) {
+  const response = await fetch(`${baseUrl.replace(/\/+$/, "")}${path}`, {
+    body: JSON.stringify(body),
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    method: "POST",
+    signal,
+  });
+
+  if (!response.ok) {
+    return null;
+  }
+
+  return await response.json();
+}
+
+async function getKvFastdataJson(
+  baseUrl: string,
+  path: string,
+  signal?: AbortSignal
+) {
+  const response = await fetch(`${baseUrl.replace(/\/+$/, "")}${path}`, {
+    headers: { Accept: "application/json" },
+    signal,
+  });
+
+  if (!response.ok) {
+    return null;
+  }
+
+  return await response.json();
+}
+
+async function fetchKvFastdataContext(
+  baseUrl: string,
+  networkKey: string,
+  signal?: AbortSignal
+) {
+  const fallbackContext = getKvFastdataFallbackContext(baseUrl, networkKey);
+
+  for (const accountId of getKvFastdataCandidateAccounts(baseUrl, networkKey)) {
+    const latestPayload = await postKvFastdataJson(
+      baseUrl,
+      `/v0/latest/${encodeURIComponent(accountId)}`,
+      { include_metadata: true, limit: 5 },
+      signal
+    );
+    const entries = Array.isArray(latestPayload?.entries)
+      ? latestPayload.entries.filter(
+          (entry: any) =>
+            entry &&
+            typeof entry.current_account_id === "string" &&
+            typeof entry.predecessor_id === "string" &&
+            typeof entry.key === "string"
+        )
+      : [];
+
+    for (const entry of entries) {
+      const currentAccountId = entry.current_account_id;
+      const predecessorId = entry.predecessor_id;
+      const key = entry.key;
+      const keyPrefix = getKvFastdataKeyPrefix(key);
+
+      const historyByAccount = await postKvFastdataJson(
+        baseUrl,
+        `/v0/history/${encodeURIComponent(currentAccountId)}`,
+        {
+          asc: false,
+          include_metadata: true,
+          key_prefix: keyPrefix,
+          limit: 1,
+        },
+        signal
+      );
+      const historyByKey = await postKvFastdataJson(
+        baseUrl,
+        "/v0/history",
+        {
+          asc: false,
+          key,
+          limit: 1,
+        },
+        signal
+      );
+      const latestExactKey = await getKvFastdataJson(
+        baseUrl,
+        `/v0/latest/${encodeURIComponent(currentAccountId)}/${encodeURIComponent(predecessorId)}/${encodeURIComponent(key)}`,
+        signal
+      );
+
+      if (historyByAccount && historyByKey && latestExactKey) {
+        return {
+          currentAccountId,
+          historyByKeyIncludeMetadata: false,
+          key,
+          keyPrefix,
+          predecessorId,
+        };
+      }
+    }
+  }
+
+  return fallbackContext;
+}
+
+async function fetchLatestKvFastdataFieldDefaults(
+  baseUrl: string,
+  networkKey: string,
+  pageModelId: string,
+  signal?: AbortSignal
+): Promise<RuntimeFieldDefaults | null> {
+  const context = await fetchKvFastdataContext(baseUrl, networkKey, signal);
+
+  switch (pageModelId) {
+    case "kv-fastdata-v0-all-by-predecessor":
+      return {
+        predecessor_id: context.predecessorId,
+      };
+    case "kv-fastdata-v0-history-by-key":
+      return {
+        include_metadata: context.historyByKeyIncludeMetadata,
+        key: context.key,
+      };
+    case "kv-fastdata-v0-history-by-account":
+      return {
+        current_account_id: context.currentAccountId,
+        key_prefix: context.keyPrefix,
+      };
+    case "kv-fastdata-v0-history-by-predecessor":
+      return {
+        current_account_id: context.currentAccountId,
+        predecessor_id: context.predecessorId,
+        key_prefix: context.keyPrefix,
+      };
+    case "kv-fastdata-v0-get-history-key":
+    case "kv-fastdata-v0-get-latest-key":
+      return {
+        current_account_id: context.currentAccountId,
+        predecessor_id: context.predecessorId,
+        key: context.key,
+      };
+    case "kv-fastdata-v0-latest-by-account":
+      return {
+        current_account_id: context.currentAccountId,
+        key_prefix: context.keyPrefix,
+      };
+    case "kv-fastdata-v0-latest-by-predecessor":
+      return {
+        current_account_id: context.currentAccountId,
+        predecessor_id: context.predecessorId,
+        key_prefix: context.keyPrefix,
+      };
+    case "kv-fastdata-v0-multi":
+      return {
+        keys: [
+          `${context.currentAccountId}/${context.predecessorId}/${context.key}`,
+          `${context.currentAccountId}/${context.predecessorId}/${buildKvFastdataMissingKey(context.keyPrefix)}`,
+        ],
+      };
+    default:
+      return null;
+  }
 }
 
 function getFieldLocationLabel(field: FastnearInteractionField) {
@@ -923,39 +1688,64 @@ export function FastnearOperationPage({
   }, [pageModel, selectedNetwork]);
 
   useEffect(() => {
-    const targetFieldName = RUNTIME_STATUS_FIELD_DEFAULTS[pageModel.pageModelId];
-    if (!targetFieldName || !selectedNetworkDetails?.url) {
+    const runtimeDefaults = RUNTIME_FIELD_DEFAULTS[pageModel.pageModelId];
+    if (!runtimeDefaults || !selectedNetworkDetails?.url) {
       return;
     }
 
-    const targetField = pageModel.interaction.fields.find((field) => field.name === targetFieldName);
-    if (!targetField) {
+    const targetFields = runtimeDefaults.targetFieldNames
+      .map((fieldName) => pageModel.interaction.fields.find((field) => field.name === fieldName))
+      .filter(Boolean) as FastnearInteractionField[];
+    if (targetFields.length === 0) {
       return;
     }
 
-    const expectedDefaultValue = getDefaultFieldValue(pageModel, targetField, selectedNetwork).trim();
+    const expectedDefaultValues = Object.fromEntries(
+      targetFields.map((field) => [
+        field.name,
+        getDefaultFieldValue(pageModel, field, selectedNetwork).trim(),
+      ])
+    );
     const controller = new AbortController();
 
     void (async () => {
-      const latestBlockHeight = await fetchLatestBlockHeight(
+      const nextDefaultFields = await runtimeDefaults.fetchDefaults(
         selectedNetworkDetails.url,
+        selectedNetwork,
         controller.signal
       );
 
-      if (!Number.isFinite(latestBlockHeight)) {
+      if (!nextDefaultFields) {
         return;
       }
 
       setFieldValues((currentValues) => {
-        const currentValue = (currentValues[targetFieldName] || "").trim();
-        if (currentValue && currentValue !== expectedDefaultValue) {
-          return currentValues;
+        let didChange = false;
+        const updatedValues = { ...currentValues };
+
+        for (const field of targetFields) {
+          const currentValue = (currentValues[field.name] || "").trim();
+          const expectedDefaultValue = expectedDefaultValues[field.name] || "";
+          const nextValue = serializeFieldDraftValue(
+            pageModel,
+            field,
+            nextDefaultFields[field.name]
+          ).trim();
+          if (!nextValue) {
+            continue;
+          }
+
+          if (currentValue && currentValue !== expectedDefaultValue) {
+            continue;
+          }
+
+          if (currentValue !== nextValue) {
+            updatedValues[field.name] = nextValue;
+            didChange = true;
+          }
         }
 
-        return {
-          ...currentValues,
-          [targetFieldName]: String(latestBlockHeight),
-        };
+        return didChange ? updatedValues : currentValues;
       });
     })();
 

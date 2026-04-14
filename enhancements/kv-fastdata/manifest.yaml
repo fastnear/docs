@@ -16,8 +16,8 @@ operations:
       predecessor-latest:
         path:
           predecessor_id:
-            mainnet: alice.near
-            testnet: alice.testnet
+            mainnet: james.near
+            testnet: kv.gork-agent.testnet
         body:
           include_metadata: true
           limit: 50
@@ -34,11 +34,17 @@ operations:
       preset: global-key-history
     presets:
       global-key-history:
-        body:
-          asc: false
-          include_metadata: true
-          key: settings/theme
-          limit: 50
+        bodyByNetwork:
+          mainnet:
+            asc: false
+            include_metadata: false
+            key: graph/follow/sleet.near
+            limit: 50
+          testnet:
+            asc: false
+            include_metadata: false
+            key: value
+            limit: 50
   /apis/kv-fastdata/v0/history_by_account:
     customPage:
       kind: fastnear-rest-body
@@ -54,13 +60,19 @@ operations:
       account-history:
         path:
           current_account_id:
-            mainnet: app.near
-            testnet: guest-book.testnet
-        body:
-          asc: false
-          include_metadata: true
-          key_prefix: settings/
-          limit: 50
+            mainnet: social.near
+            testnet: kv.gork-agent.testnet
+        bodyByNetwork:
+          mainnet:
+            asc: false
+            include_metadata: true
+            key_prefix: graph/follow/
+            limit: 50
+          testnet:
+            asc: false
+            include_metadata: true
+            key_prefix: value
+            limit: 50
   /apis/kv-fastdata/v0/history_by_predecessor:
     customPage:
       kind: fastnear-rest-body
@@ -76,16 +88,22 @@ operations:
       predecessor-history:
         path:
           current_account_id:
-            mainnet: app.near
-            testnet: guest-book.testnet
+            mainnet: social.near
+            testnet: kv.gork-agent.testnet
           predecessor_id:
-            mainnet: alice.near
-            testnet: alice.testnet
-        body:
-          asc: false
-          include_metadata: true
-          key_prefix: settings/
-          limit: 50
+            mainnet: james.near
+            testnet: kv.gork-agent.testnet
+        bodyByNetwork:
+          mainnet:
+            asc: false
+            include_metadata: true
+            key_prefix: graph/follow/
+            limit: 50
+          testnet:
+            asc: false
+            include_metadata: true
+            key_prefix: value
+            limit: 50
   /apis/kv-fastdata/v0/get_history_key:
     customPage:
       kind: fastnear-rest-read
@@ -101,13 +119,14 @@ operations:
       exact-history-key:
         path:
           current_account_id:
-            mainnet: app.near
-            testnet: guest-book.testnet
+            mainnet: social.near
+            testnet: kv.gork-agent.testnet
           predecessor_id:
-            mainnet: alice.near
-            testnet: alice.testnet
+            mainnet: james.near
+            testnet: kv.gork-agent.testnet
           key:
-            default: settings/theme
+            mainnet: graph/follow/sleet.near
+            testnet: value
   /apis/kv-fastdata/v0/latest_by_account:
     customPage:
       kind: fastnear-rest-body
@@ -123,12 +142,17 @@ operations:
       account-latest:
         path:
           current_account_id:
-            mainnet: app.near
-            testnet: guest-book.testnet
-        body:
-          include_metadata: true
-          key_prefix: settings/
-          limit: 50
+            mainnet: social.near
+            testnet: kv.gork-agent.testnet
+        bodyByNetwork:
+          mainnet:
+            include_metadata: true
+            key_prefix: graph/follow/
+            limit: 50
+          testnet:
+            include_metadata: true
+            key_prefix: value
+            limit: 50
   /apis/kv-fastdata/v0/latest_by_predecessor:
     customPage:
       kind: fastnear-rest-body
@@ -144,15 +168,20 @@ operations:
       predecessor-latest-contract:
         path:
           current_account_id:
-            mainnet: app.near
-            testnet: guest-book.testnet
+            mainnet: social.near
+            testnet: kv.gork-agent.testnet
           predecessor_id:
-            mainnet: alice.near
-            testnet: alice.testnet
-        body:
-          include_metadata: true
-          key_prefix: settings/
-          limit: 50
+            mainnet: james.near
+            testnet: kv.gork-agent.testnet
+        bodyByNetwork:
+          mainnet:
+            include_metadata: true
+            key_prefix: graph/follow/
+            limit: 50
+          testnet:
+            include_metadata: true
+            key_prefix: value
+            limit: 50
   /apis/kv-fastdata/v0/get_latest_key:
     customPage:
       kind: fastnear-rest-read
@@ -168,13 +197,14 @@ operations:
       exact-latest-key:
         path:
           current_account_id:
-            mainnet: app.near
-            testnet: guest-book.testnet
+            mainnet: social.near
+            testnet: kv.gork-agent.testnet
           predecessor_id:
-            mainnet: alice.near
-            testnet: alice.testnet
+            mainnet: james.near
+            testnet: kv.gork-agent.testnet
           key:
-            default: settings/theme
+            mainnet: graph/follow/sleet.near
+            testnet: value
   /apis/kv-fastdata/v0/multi:
     customPage:
       kind: fastnear-rest-body
@@ -192,10 +222,10 @@ operations:
           mainnet:
             include_metadata: true
             keys:
-              - app.near/alice.near/settings/theme
-              - app.near/alice.near/settings/missing
+              - social.near/james.near/graph/follow/sleet.near
+              - social.near/james.near/graph/follow/missing
           testnet:
             include_metadata: true
             keys:
-              - guest-book.testnet/alice.testnet/settings/theme
-              - guest-book.testnet/alice.testnet/settings/missing
+              - kv.gork-agent.testnet/kv.gork-agent.testnet/value
+              - kv.gork-agent.testnet/kv.gork-agent.testnet/missing

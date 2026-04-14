@@ -62,8 +62,8 @@ paths:
                   id: fastnear
                   method: tx
                   params:
-                    tx_hash: HrRxPdtUGRGqubmHzmuyhhh2RCQ8hytFGwbXfmqdXBAj
-                    sender_account_id: 5764995617.tg
+                    tx_hash: 4EQZ5qoEJUbz8SRNkNwrAPtsn2VFhg9Ci1weaNNpiuR7
+                    sender_account_id: intents.near
               testnet:
                 summary: Testnet Example
                 value:
@@ -71,8 +71,8 @@ paths:
                   id: fastnear
                   method: tx
                   params:
-                    tx_hash: d68i4vS3cwSyqk2oVYkWwDbnhSYYbLBfCzSkciJ2X3Y
-                    sender_account_id: zerochltest.testnet
+                    tx_hash: 2HVQfqHKu78VEW1aRidvR5Auqu1bw1V12TJywoqw1aup
+                    sender_account_id: relay.aurora
       responses:
         200:
           description: Successful response

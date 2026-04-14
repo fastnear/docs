@@ -46,6 +46,7 @@ Supported variables:
 
 - `PLAN_GATES=<jwt>` for a production-equivalent Reunite build.
 - `REDOCLY_LOCAL_PLAN=enterprise` or `REDOCLY_LOCAL_PLAN=pro` for local-only validation builds.
+- `FASTNEAR_API_KEY=<key>` for authenticated `/metrics` checks in the RPC example audit.
 
 `REDOCLY_AUTHORIZATION` is a different credential. It can help with Redocly API/CLI auth, but it does not replace `PLAN_GATES` for the real `realm build` entitlement flow.
 
@@ -67,8 +68,43 @@ Supported variables:
   Syncs REST specs, refreshes tracked RPC examples, then runs the wrapped Reunite build.
 - `npm run verify:workspace`
   Run the stale-spec check, portal lint, and a local static build in one command.
+- `npm run audit:rpc-examples`
+  Run the fast curated subset of live RPC example checks.
+- `npm run audit:rpc-examples:all`
+  Run the full live audit for every non-mutating RPC example.
+- `npm run audit:fastnear-defaults`
+  Run the live FastNEAR API default audit using network-aware account, token, and public-key defaults.
+- `npm run audit:transfers-defaults`
+  Run the live Transfers API default audit for the current mainnet-only surface.
+- `npm run audit:kv-fastdata-defaults`
+  Run the live KV FastData default audit using discovered contract, predecessor, and key examples when available.
+- `npm run audit:neardata-defaults`
+  Run the live Near Data default audit using the effective per-network load defaults.
+- `npm run audit:transactions-defaults`
+  Run the live Transactions API default audit using fresh block, receipt, and transaction IDs derived from recent account activity.
+- `npm run discover:fastnear-context`
+  Print the live FastNEAR API context used for account, token, and public-key defaults.
+- `npm run discover:transfers-context`
+  Print the live Transfers API context currently used for the mainnet defaults.
+- `npm run discover:kv-fastdata-context`
+  Print the live KV FastData context used for contract, predecessor, and key defaults.
+- `npm run discover:rpc-context`
+  Print the live block/chunk/transaction context used to refresh volatile RPC examples.
+- `npm run discover:neardata-context`
+  Print the latest finalized and optimistic Near Data block context for mainnet and testnet.
+- `npm run discover:transactions-context`
+  Print recent Transactions API context such as the latest block height, tx hashes, and receipt ID used for load-time defaults.
 - `npm run smoke:operations`
   Smoke-tests representative local pretty routes.
+
+## Tracked RPC Example Follow-Ups
+
+- `metrics` on mainnet and testnet is modeled as HTTP `GET /metrics`, not JSON-RPC.
+  It requires `FASTNEAR_API_KEY` for live validation, so unauthenticated audit runs will continue to report it as a tracked skip.
+- `view_global_contract_code` and `view_global_contract_code_by_account_id` on mainnet still need a curated account/hash pair.
+  Testnet examples are verified; mainnet remains intentionally tracked until we confirm a real example that succeeds on load.
+- `broadcast_tx_async`, `broadcast_tx_commit`, and `send_tx` are intentionally excluded from the live audit.
+  They require a freshly signed transaction, so the automated audit keeps them out of CI and treats them as manual-only validation.
 
 ## What Will Not Work
 
@@ -90,6 +126,12 @@ Supported variables:
   Preview commands now fail fast when they detect those stale worktree copies so they cannot confuse local QA.
 - `server=` is currently only a docs-enhancement hint, not a forced Redocly server switch.
   The portal can seed preset values and env vars from `preset`/`network`/`server`, but Redocly does not currently expose a clean URL-level API for selecting the server dropdown directly.
+- Near Data block-height defaults are a fallback, not the only source of truth.
+  The manifest still keeps stable genesis presets, but the custom runtime now upgrades Near Data block pages to fresh finalized or optimistic heights on load when the live service responds.
+- Transactions API block, receipt, and hash defaults are also upgraded at runtime.
+  Stable manifest presets remain as fallbacks, but the custom runtime now prefers recent account activity so block lookups, block ranges, receipt lookups, and transaction-hash pages feel current on load.
+- Transfers API is currently mainnet-only.
+  The docs now audit that surface explicitly, but we should not imply testnet support until a real `transfers.test.fastnear.com`-style host exists and resolves.
 - Docs-only or ingestion-only repos without a public HTTP surface are intentionally out of scope for this OpenAPI flow.
 
 ## Production Verification

@@ -14,9 +14,6 @@ operations:
     presets:
       recent-near-transfers:
         body:
-          account_id: intents.near
-          asset_id: near
+          account_id: root.near
           desc: true
-          direction: receiver
           limit: 10
-          min_amount: "1000000000000000000000000"

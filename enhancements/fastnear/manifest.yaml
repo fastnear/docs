@@ -31,7 +31,8 @@ operations:
       ecosystem-account:
         path:
           account_id:
-            default: foundation.near
+            mainnet: root.near
+            testnet: root.testnet
   /apis/fastnear/v0/account_ft:
     customPage:
       kind: fastnear-rest-read
@@ -46,7 +47,8 @@ operations:
       ecosystem-account:
         path:
           account_id:
-            default: foundation.near
+            mainnet: root.near
+            testnet: root.testnet
   /apis/fastnear/v0/account_nft:
     customPage:
       kind: fastnear-rest-read
@@ -61,7 +63,8 @@ operations:
       ecosystem-account:
         path:
           account_id:
-            default: foundation.near
+            mainnet: root.near
+            testnet: root.testnet
   /apis/fastnear/v0/public_key_lookup:
     customPage:
       kind: fastnear-rest-read
@@ -70,6 +73,14 @@ operations:
       authTransport: bearer
       sourceSpec: apis/fastnear/v0/public_key_lookup.yaml
       operationRoute: /apis/fastnear/openapi/public-key/lookup_by_public_key_v0
+    defaults:
+      preset: root-access-key
+    presets:
+      root-access-key:
+        path:
+          public_key:
+            mainnet: ed25519:CCaThr3uokqnUs6Z5vVnaDcJdrfuTpYJHJWcAGubDjT
+            testnet: ed25519:5FiU4tWnA2QmivpLTdHJhLeSfeZ7KuW4KKNaDqoBKue2
   /apis/fastnear/v0/public_key_lookup_all:
     customPage:
       kind: fastnear-rest-read
@@ -78,6 +89,14 @@ operations:
       authTransport: bearer
       sourceSpec: apis/fastnear/v0/public_key_lookup_all.yaml
       operationRoute: /apis/fastnear/openapi/public-key/lookup_by_public_key_all_v0
+    defaults:
+      preset: root-access-key
+    presets:
+      root-access-key:
+        path:
+          public_key:
+            mainnet: ed25519:CCaThr3uokqnUs6Z5vVnaDcJdrfuTpYJHJWcAGubDjT
+            testnet: ed25519:5FiU4tWnA2QmivpLTdHJhLeSfeZ7KuW4KKNaDqoBKue2
   /apis/fastnear/v1/account_staking:
     customPage:
       kind: fastnear-rest-read
@@ -92,7 +111,8 @@ operations:
       ecosystem-account:
         path:
           account_id:
-            default: foundation.near
+            mainnet: root.near
+            testnet: root.testnet
   /apis/fastnear/v1/account_ft:
     customPage:
       kind: fastnear-rest-read
@@ -107,7 +127,8 @@ operations:
       ecosystem-account:
         path:
           account_id:
-            default: foundation.near
+            mainnet: root.near
+            testnet: root.testnet
   /apis/fastnear/v1/account_nft:
     customPage:
       kind: fastnear-rest-read
@@ -122,7 +143,8 @@ operations:
       ecosystem-account:
         path:
           account_id:
-            default: foundation.near
+            mainnet: root.near
+            testnet: root.testnet
   /apis/fastnear/v1/account_full:
     customPage:
       kind: fastnear-rest-read
@@ -137,7 +159,8 @@ operations:
       ecosystem-account:
         path:
           account_id:
-            default: foundation.near
+            mainnet: root.near
+            testnet: root.testnet
   /apis/fastnear/v1/public_key_lookup:
     customPage:
       kind: fastnear-rest-read
@@ -146,6 +169,14 @@ operations:
       authTransport: bearer
       sourceSpec: apis/fastnear/v1/public_key_lookup.yaml
       operationRoute: /apis/fastnear/openapi/public-key/lookup_by_public_key_v1
+    defaults:
+      preset: root-access-key
+    presets:
+      root-access-key:
+        path:
+          public_key:
+            mainnet: ed25519:CCaThr3uokqnUs6Z5vVnaDcJdrfuTpYJHJWcAGubDjT
+            testnet: ed25519:5FiU4tWnA2QmivpLTdHJhLeSfeZ7KuW4KKNaDqoBKue2
   /apis/fastnear/v1/ft_top:
     customPage:
       kind: fastnear-rest-read
@@ -160,7 +191,8 @@ operations:
       wrapped-near:
         path:
           token_id:
-            default: wrap.near
+            mainnet: wrap.near
+            testnet: wrap.testnet
   /apis/fastnear/v1/public_key_lookup_all:
     customPage:
       kind: fastnear-rest-read
@@ -169,3 +201,11 @@ operations:
       authTransport: bearer
       sourceSpec: apis/fastnear/v1/public_key_lookup_all.yaml
       operationRoute: /apis/fastnear/openapi/public-key/lookup_by_public_key_all_v1
+    defaults:
+      preset: root-access-key
+    presets:
+      root-access-key:
+        path:
+          public_key:
+            mainnet: ed25519:CCaThr3uokqnUs6Z5vVnaDcJdrfuTpYJHJWcAGubDjT
+            testnet: ed25519:5FiU4tWnA2QmivpLTdHJhLeSfeZ7KuW4KKNaDqoBKue2

@@ -3,9 +3,8 @@
 /**
  * Refresh example values in RPC YAML files with fresh data from mainnet and testnet.
  *
- * Fetches the latest finalized block, finds a recent transaction + receipt,
- * and retrieves a real access key — then patches all affected YAML files
- * so "Try It" examples work out of the box.
+ * Fetches fresh block, chunk, validator, tx, receipt, and access-key data,
+ * then patches affected YAML files so "Try It" examples work out of the box.
  *
  * Uses structural YAML navigation (eemeli/yaml parseDocument + getIn) to
  * locate each value's byte range, then performs surgical string replacement
@@ -17,152 +16,15 @@
 const fs = require('fs');
 const path = require('path');
 const YAML = require('yaml');
+const {
+  DISCOVERY_NETWORKS,
+  getManualOverride,
+} = require('./rpc-example-config');
+const {
+  discoverRpcContext,
+} = require('./rpc-example-context');
 
 const RPCS_DIR = path.join(__dirname, '..', 'rpcs');
-
-const NETWORKS = {
-  mainnet: {
-    url: 'https://rpc.mainnet.fastnear.com',
-    account: 'root.near',
-  },
-  testnet: {
-    url: 'https://rpc.testnet.fastnear.com',
-    account: 'root.testnet',
-  },
-};
-
-// ---------------------------------------------------------------------------
-// RPC helpers
-// ---------------------------------------------------------------------------
-
-const RPC_TIMEOUT_MS = 10_000;
-
-async function sendRpc(url, method, params) {
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), RPC_TIMEOUT_MS);
-  try {
-    const res = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ jsonrpc: '2.0', id: 'refresh', method, params }),
-      signal: controller.signal,
-    });
-    const json = await res.json();
-    if (json.error) {
-      throw new Error(`RPC ${method}: ${JSON.stringify(json.error)}`);
-    }
-    return json.result;
-  } finally {
-    clearTimeout(timer);
-  }
-}
-
-/** Lightweight fallback: GET /status returns latest_block_hash + latest_block_height */
-async function fetchStatus(networkUrl) {
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), RPC_TIMEOUT_MS);
-  try {
-    const res = await fetch(`${networkUrl}/status`, { signal: controller.signal });
-    if (!res.ok) throw new Error(`/status returned ${res.status}`);
-    return res.json();
-  } finally {
-    clearTimeout(timer);
-  }
-}
-
-async function fetchNetworkData(networkUrl, account) {
-  // 1. Latest finalized block (try RPC first, fall back to /status)
-  let blockHeight, blockHash, chunkHash;
-  try {
-    const block = await sendRpc(networkUrl, 'block', { finality: 'final' });
-    blockHeight = block.header.height;
-    blockHash = block.header.hash;
-    chunkHash = block.chunks[0].chunk_hash;
-  } catch (e) {
-    console.warn(`  RPC block call failed, trying /status fallback: ${e.message}`);
-    const status = await fetchStatus(networkUrl);
-    blockHeight = status.sync_info.latest_block_height;
-    blockHash = status.sync_info.latest_block_hash;
-    chunkHash = null; // /status doesn't provide chunk hashes
-  }
-
-  // Verify block hash is queryable and get full block object for tx walking
-  let fullBlock = null;
-  try {
-    fullBlock = await sendRpc(networkUrl, 'block', { block_id: blockHash });
-    if (!fullBlock.header) throw new Error('missing header');
-    // Backfill chunkHash if we got it from /status fallback
-    if (!chunkHash && fullBlock.chunks && fullBlock.chunks.length > 0) {
-      chunkHash = fullBlock.chunks[0].chunk_hash;
-    }
-  } catch (e) {
-    console.warn(`  Block hash verification failed: ${e.message}`);
-  }
-
-  // 2. Walk recent blocks to find a transaction (and derive a receipt ID)
-  //    Time-budgeted: stop after 15s to avoid blocking the build on slow networks
-  let txHash = null;
-  let txSender = null;
-  let receiptId = null;
-  let currentBlock = fullBlock;
-  const txSearchDeadline = Date.now() + 15_000;
-
-  for (let attempt = 0; currentBlock && attempt < 100 && !txHash; attempt++) {
-    if (Date.now() > txSearchDeadline) {
-      console.warn(`  Tx search timed out after ${attempt} blocks`);
-      break;
-    }
-    const chunkResults = await Promise.allSettled(
-      currentBlock.chunks.map(ch =>
-        sendRpc(networkUrl, 'chunk', { chunk_id: ch.chunk_hash })
-      )
-    );
-    for (const r of chunkResults) {
-      if (r.status === 'fulfilled' && r.value.transactions?.length > 0) {
-        txHash = r.value.transactions[0].hash;
-        txSender = r.value.transactions[0].signer_id;
-        break;
-      }
-    }
-    if (txHash) break;
-    try {
-      currentBlock = await sendRpc(networkUrl, 'block', { block_id: currentBlock.header.prev_hash });
-    } catch { break; }
-  }
-
-  // Get a receipt ID from the transaction status
-  if (txHash) {
-    try {
-      const txResult = await sendRpc(networkUrl, 'tx', {
-        tx_hash: txHash,
-        sender_account_id: txSender,
-        wait_until: 'FINAL',
-      });
-      if (txResult.receipts_outcome && txResult.receipts_outcome.length > 0) {
-        receiptId = txResult.receipts_outcome[0].id;
-      }
-    } catch (e) {
-      console.warn(`  Warning: could not get receipt for tx ${txHash}: ${e.message}`);
-    }
-  }
-
-  // 3. Real access key for the account
-  let publicKey = null;
-  try {
-    const keys = await sendRpc(networkUrl, 'query', {
-      request_type: 'view_access_key_list',
-      finality: 'final',
-      account_id: account,
-    });
-    if (keys.keys && keys.keys.length > 0) {
-      publicKey = keys.keys[0].public_key;
-    }
-  } catch (e) {
-    console.warn(`  Warning: could not get access keys for ${account}: ${e.message}`);
-  }
-
-  return { blockHeight, blockHash, chunkHash, txHash, txSender, receiptId, publicKey, account };
-}
 
 // ---------------------------------------------------------------------------
 // Structural YAML patching
@@ -170,7 +32,6 @@ async function fetchNetworkData(networkUrl, account) {
 
 /**
  * Path to an example param field inside an OpenAPI per-operation YAML.
- * All 13 files share this uniform structure.
  */
 function paramPath(network, field) {
   return ['paths', '/', 'post', 'requestBody', 'content', 'application/json', 'examples', network, 'value', 'params', field];
@@ -204,6 +65,33 @@ const UPDATES = [
     },
   },
   {
+    file: 'contract/view_code.yaml',
+    params: {
+      account_id: {
+        mainnet: (_d, network) => getManualOverride('view_code', network)?.account_id,
+        testnet: (_d, network) => getManualOverride('view_code', network)?.account_id,
+      },
+    },
+  },
+  {
+    file: 'contract/view_global_contract_code.yaml',
+    params: {
+      code_hash: {
+        mainnet: (_d, network) => getManualOverride('view_global_contract_code', network)?.code_hash,
+        testnet: (_d, network) => getManualOverride('view_global_contract_code', network)?.code_hash,
+      },
+    },
+  },
+  {
+    file: 'contract/view_global_contract_code_by_account_id.yaml',
+    params: {
+      account_id: {
+        mainnet: (_d, network) => getManualOverride('view_global_contract_code_by_account_id', network)?.account_id,
+        testnet: (_d, network) => getManualOverride('view_global_contract_code_by_account_id', network)?.account_id,
+      },
+    },
+  },
+  {
     file: 'block/block_by_height.yaml',
     params: {
       block_id: { mainnet: d => d.blockHeight, testnet: d => d.blockHeight },
@@ -231,6 +119,7 @@ const UPDATES = [
     file: 'protocol/chunk_by_block_shard.yaml',
     params: {
       block_id: { mainnet: d => d.blockHash, testnet: d => d.blockHash },
+      shard_id: { mainnet: d => d.shardId, testnet: d => d.shardId },
     },
   },
   {
@@ -249,38 +138,64 @@ const UPDATES = [
     file: 'protocol/light_client_proof.yaml',
     params: {
       light_client_head:  { mainnet: d => d.blockHash, testnet: d => d.blockHash },
+      sender_id:          { mainnet: d => d.senderId,  testnet: d => d.senderId },
       transaction_hash:   { mainnet: d => d.txHash,    testnet: d => d.txHash },
-      sender_id:          { mainnet: d => d.txSender,  testnet: d => d.txSender },
+      type:               { mainnet: () => 'transaction', testnet: () => 'transaction' },
     },
   },
   {
     file: 'protocol/EXPERIMENTAL_light_client_proof.yaml',
     params: {
-      light_client_head:  { mainnet: d => d.blockHash,  testnet: d => d.blockHash },
-      transaction_hash:   { mainnet: d => d.txHash,     testnet: d => d.txHash },
-      receipt_id:         { mainnet: d => d.receiptId,   testnet: d => d.receiptId },
-      sender_id:          { mainnet: d => d.txSender,    testnet: d => d.txSender },
-      receiver_id:        { mainnet: d => d.txSender,    testnet: d => d.txSender },
+      light_client_head:  { mainnet: d => d.blockHash, testnet: d => d.blockHash },
+      sender_id:          { mainnet: d => d.senderId,  testnet: d => d.senderId },
+      transaction_hash:   { mainnet: d => d.txHash,    testnet: d => d.txHash },
+      type:               { mainnet: () => 'transaction', testnet: () => 'transaction' },
+    },
+  },
+  {
+    file: 'protocol/EXPERIMENTAL_light_client_block_proof.yaml',
+    params: {
+      block_hash:         { mainnet: d => d.previousBlockHash || d.blockHash, testnet: d => d.previousBlockHash || d.blockHash },
+      light_client_head:  { mainnet: d => d.blockHash, testnet: d => d.blockHash },
+    },
+  },
+  {
+    file: 'protocol/EXPERIMENTAL_congestion_level.yaml',
+    params: {
+      block_id: { mainnet: d => d.blockHash, testnet: d => d.blockHash },
+      shard_id: { mainnet: d => d.shardId, testnet: d => d.shardId },
     },
   },
   {
     file: 'transaction/tx_status.yaml',
     params: {
       tx_hash:            { mainnet: d => d.txHash,    testnet: d => d.txHash },
-      sender_account_id:  { mainnet: d => d.txSender,  testnet: d => d.txSender },
+      sender_account_id:  { mainnet: d => d.senderId,  testnet: d => d.senderId },
     },
   },
   {
     file: 'transaction/EXPERIMENTAL_tx_status.yaml',
     params: {
       tx_hash:            { mainnet: d => d.txHash,    testnet: d => d.txHash },
-      sender_account_id:  { mainnet: d => d.txSender,  testnet: d => d.txSender },
+      sender_account_id:  { mainnet: d => d.senderId,  testnet: d => d.senderId },
     },
   },
   {
     file: 'transaction/EXPERIMENTAL_receipt.yaml',
     params: {
       receipt_id: { mainnet: d => d.receiptId, testnet: d => d.receiptId },
+    },
+  },
+  {
+    file: 'validators/validators_by_epoch.yaml',
+    params: {
+      epoch_id: { mainnet: d => d.epochId, testnet: d => d.epochId },
+    },
+  },
+  {
+    file: 'validators/EXPERIMENTAL_validators_ordered.yaml',
+    params: {
+      block_id: { mainnet: d => d.blockHeight, testnet: d => d.blockHeight },
     },
   },
 ];
@@ -302,7 +217,7 @@ function patchFile(filePath, entry, data) {
   for (const [field, networks] of Object.entries(entry.params)) {
     for (const [network, valueFn] of Object.entries(networks)) {
       if (!data[network]) continue; // network fetch failed entirely
-      const newValue = valueFn(data[network]);
+      const newValue = valueFn(data[network], network);
       if (newValue == null) continue;
 
       const p = paramPath(network, field);
@@ -341,17 +256,23 @@ async function main() {
   console.log('Fetching fresh data from NEAR networks...\n');
 
   const data = {};
-  for (const [network, config] of Object.entries(NETWORKS)) {
+  for (const [network, config] of Object.entries(DISCOVERY_NETWORKS)) {
     console.log(`${network} (${config.url}):`);
     try {
-      data[network] = await fetchNetworkData(config.url, config.account);
+      data[network] = await discoverRpcContext(network, {
+        account: config.discoveryAccounts?.[0],
+        limit: 10,
+        log: message => console.warn(message),
+      });
       const d = data[network];
       console.log(`  block:      ${d.blockHeight} / ${d.blockHash}`);
-      console.log(`  chunk:      ${d.chunkHash || '(none)'}`);
-      console.log(`  tx:         ${d.txHash || '(none)'} from ${d.txSender || 'n/a'}`);
+      console.log(`  chunk:      ${d.chunkHash || '(none)'} / shard ${d.shardId ?? 'n/a'}`);
+      console.log(`  epoch:      ${d.epochId || '(none)'}`);
+      console.log(`  tx:         ${d.txHash || '(none)'} from ${d.senderId || 'n/a'}`);
       console.log(`  receipt:    ${d.receiptId || '(none)'}`);
       console.log(`  public_key: ${d.publicKey || '(none)'}`);
-      const missing = ['blockHash', 'blockHeight', 'chunkHash', 'txHash', 'receiptId', 'publicKey']
+      console.log(`  source:     ${d.sourceKind || 'n/a'} / ${d.sourceAccount || 'n/a'}`);
+      const missing = ['blockHash', 'blockHeight', 'chunkHash', 'shardId', 'epochId', 'txHash', 'receiptId', 'publicKey']
         .filter(k => !d[k]);
       if (missing.length > 0) {
         console.warn(`  Missing data points: ${missing.join(', ')}`);

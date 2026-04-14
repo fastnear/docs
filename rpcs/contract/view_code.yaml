@@ -53,7 +53,7 @@ paths:
                   id: fastnear
                   method: query
                   params:
-                    account_id: example.near
+                    account_id: intents.near
                     request_type: view_code
                     finality: final
               testnet:
@@ -63,7 +63,7 @@ paths:
                   id: fastnear
                   method: query
                   params:
-                    account_id: example.near
+                    account_id: guest-book.testnet
                     request_type: view_code
                     finality: final
       responses:

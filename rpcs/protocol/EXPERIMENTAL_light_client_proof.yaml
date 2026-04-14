@@ -45,13 +45,7 @@ paths:
                       description: Base58-encoded hash
                     type:
                       type: string
-                      enum: [receipt]
-                    receipt_id:
-                      type: string
-                      description: Base58-encoded hash
-                    receiver_id:
-                      type: string
-                      description: NEAR account ID
+                      enum: [transaction]
                   required: [light_client_head]
             examples:
               mainnet:
@@ -61,12 +55,10 @@ paths:
                   id: fastnear
                   method: EXPERIMENTAL_light_client_proof
                   params:
-                    light_client_head: CU1KcVSuYAZUiehn7TnCxSdpb3RGoHxK1hABC5AKKo2Q
-                    sender_id: 5764995617.tg
-                    transaction_hash: HrRxPdtUGRGqubmHzmuyhhh2RCQ8hytFGwbXfmqdXBAj
-                    type: receipt
-                    receipt_id: HuwE9YUBuxA87eZrwbHxEN47FgujwyDhn2nena1ypdH3
-                    receiver_id: 5764995617.tg
+                    light_client_head: 6sddgq8nkENAz4f8qR72qxRPM25QWNBVMrkYr63DgC2E
+                    sender_id: intents.near
+                    transaction_hash: 4EQZ5qoEJUbz8SRNkNwrAPtsn2VFhg9Ci1weaNNpiuR7
+                    type: transaction
               testnet:
                 summary: Get light client execution proof (Testnet)
                 value:
@@ -74,12 +66,10 @@ paths:
                   id: fastnear
                   method: EXPERIMENTAL_light_client_proof
                   params:
-                    light_client_head: CoPszhGFqcx9L1HQYM62g3UjxMpuZD8RiZL6QdpBZXA4
-                    sender_id: zerochltest.testnet
-                    transaction_hash: d68i4vS3cwSyqk2oVYkWwDbnhSYYbLBfCzSkciJ2X3Y
-                    type: receipt
-                    receipt_id: 5cJM47ytx5JH4JUqxTPFihnnb9hWpoDU4ZqgR8fAXdJQ
-                    receiver_id: zerochltest.testnet
+                    light_client_head: Ayfw9wu3T3zEqCbrvq9CuKmGmuyiJiETvwCApXZHmCho
+                    sender_id: relay.aurora
+                    transaction_hash: 2HVQfqHKu78VEW1aRidvR5Auqu1bw1V12TJywoqw1aup
+                    type: transaction
       responses:
         200:
           description: Successful response

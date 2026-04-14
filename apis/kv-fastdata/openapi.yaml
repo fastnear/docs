@@ -244,7 +244,7 @@ paths:
       operationId: all_by_predecessor
       parameters:
         - description: Calling account that wrote the FastData keys.
-          example: alice.near
+          example: james.near
           in: path
           name: predecessor_id
           required: true
@@ -266,16 +266,15 @@ paths:
               example:
                 entries:
                   - action_index: 0
-                    block_height: 176826522
-                    block_timestamp: 1768265226000
-                    current_account_id: app.near
-                    key: settings/theme
-                    predecessor_id: alice.near
-                    receipt_id: 2T8mJ5vL8PkYc3Rm6bNZBvA7k8mHh3oJmM4t9g8vP3Qc
-                    signer_id: alice.near
-                    tx_hash: null
-                    value:
-                      theme: dark
+                    block_height: 183302718
+                    block_timestamp: 1769731630602682600
+                    current_account_id: social.near
+                    key: graph/follow/sleet.near
+                    predecessor_id: james.near
+                    receipt_id: gaiLdGpaRwaunXUFnnz9VNj8V7cY18ZPAt2QfZazBkk
+                    signer_id: james.near
+                    tx_hash: FK7qDhHv4otg2wPGrE3DKFjvmmjHhUKBxQDkcAsdH5k3
+                    value: ""
                 page_token: opaque-next-page-token
               schema:
                 $ref: "#/components/schemas/ListResponse"
@@ -310,8 +309,8 @@ paths:
           application/json:
             example:
               asc: false
-              include_metadata: true
-              key: settings/theme
+              include_metadata: false
+              key: graph/follow/sleet.near
               limit: 50
             schema:
               $ref: "#/components/schemas/ByKeyRequest"
@@ -323,16 +322,15 @@ paths:
               example:
                 entries:
                   - action_index: 0
-                    block_height: 176826522
-                    block_timestamp: 1768265226000
-                    current_account_id: app.near
-                    key: settings/theme
-                    predecessor_id: alice.near
-                    receipt_id: 2T8mJ5vL8PkYc3Rm6bNZBvA7k8mHh3oJmM4t9g8vP3Qc
-                    signer_id: alice.near
-                    tx_hash: null
-                    value:
-                      theme: dark
+                    block_height: 183302718
+                    block_timestamp: 1769731630602682600
+                    current_account_id: social.near
+                    key: graph/follow/sleet.near
+                    predecessor_id: james.near
+                    receipt_id: gaiLdGpaRwaunXUFnnz9VNj8V7cY18ZPAt2QfZazBkk
+                    signer_id: james.near
+                    tx_hash: FK7qDhHv4otg2wPGrE3DKFjvmmjHhUKBxQDkcAsdH5k3
+                    value: ""
                 page_token: opaque-next-page-token
               schema:
                 $ref: "#/components/schemas/ListResponse"
@@ -364,7 +362,7 @@ paths:
       operationId: history_by_account
       parameters:
         - description: Contract account whose FastData keys were written.
-          example: app.near
+          example: social.near
           in: path
           name: current_account_id
           required: true
@@ -376,7 +374,7 @@ paths:
             example:
               asc: false
               include_metadata: true
-              key_prefix: settings/
+              key_prefix: graph/follow/
               limit: 50
             schema:
               $ref: "#/components/schemas/QueryRequest"
@@ -388,16 +386,15 @@ paths:
               example:
                 entries:
                   - action_index: 0
-                    block_height: 176826522
-                    block_timestamp: 1768265226000
-                    current_account_id: app.near
-                    key: settings/theme
-                    predecessor_id: alice.near
-                    receipt_id: 2T8mJ5vL8PkYc3Rm6bNZBvA7k8mHh3oJmM4t9g8vP3Qc
-                    signer_id: alice.near
-                    tx_hash: null
-                    value:
-                      theme: dark
+                    block_height: 183302718
+                    block_timestamp: 1769731630602682600
+                    current_account_id: social.near
+                    key: graph/follow/sleet.near
+                    predecessor_id: james.near
+                    receipt_id: gaiLdGpaRwaunXUFnnz9VNj8V7cY18ZPAt2QfZazBkk
+                    signer_id: james.near
+                    tx_hash: FK7qDhHv4otg2wPGrE3DKFjvmmjHhUKBxQDkcAsdH5k3
+                    value: ""
                 page_token: opaque-next-page-token
               schema:
                 $ref: "#/components/schemas/ListResponse"
@@ -429,14 +426,14 @@ paths:
       operationId: history_by_predecessor
       parameters:
         - description: Contract account whose FastData keys were written.
-          example: app.near
+          example: social.near
           in: path
           name: current_account_id
           required: true
           schema:
             type: string
         - description: Calling account that wrote the FastData keys.
-          example: alice.near
+          example: james.near
           in: path
           name: predecessor_id
           required: true
@@ -448,7 +445,7 @@ paths:
             example:
               asc: false
               include_metadata: true
-              key_prefix: settings/
+              key_prefix: graph/follow/
               limit: 50
             schema:
               $ref: "#/components/schemas/QueryRequest"
@@ -460,16 +457,15 @@ paths:
               example:
                 entries:
                   - action_index: 0
-                    block_height: 176826522
-                    block_timestamp: 1768265226000
-                    current_account_id: app.near
-                    key: settings/theme
-                    predecessor_id: alice.near
-                    receipt_id: 2T8mJ5vL8PkYc3Rm6bNZBvA7k8mHh3oJmM4t9g8vP3Qc
-                    signer_id: alice.near
-                    tx_hash: null
-                    value:
-                      theme: dark
+                    block_height: 183302718
+                    block_timestamp: 1769731630602682600
+                    current_account_id: social.near
+                    key: graph/follow/sleet.near
+                    predecessor_id: james.near
+                    receipt_id: gaiLdGpaRwaunXUFnnz9VNj8V7cY18ZPAt2QfZazBkk
+                    signer_id: james.near
+                    tx_hash: FK7qDhHv4otg2wPGrE3DKFjvmmjHhUKBxQDkcAsdH5k3
+                    value: ""
                 page_token: opaque-next-page-token
               schema:
                 $ref: "#/components/schemas/ListResponse"
@@ -501,21 +497,21 @@ paths:
       operationId: get_history_key
       parameters:
         - description: Contract account whose FastData keys were written.
-          example: app.near
+          example: social.near
           in: path
           name: current_account_id
           required: true
           schema:
             type: string
         - description: Calling account that wrote the FastData keys.
-          example: alice.near
+          example: james.near
           in: path
           name: predecessor_id
           required: true
           schema:
             type: string
         - description: Exact FastData key to return.
-          example: settings/theme
+          example: graph/follow/sleet.near
           in: path
           name: key
           required: true
@@ -528,16 +524,15 @@ paths:
               example:
                 entries:
                   - action_index: 0
-                    block_height: 176826522
-                    block_timestamp: 1768265226000
-                    current_account_id: app.near
-                    key: settings/theme
-                    predecessor_id: alice.near
-                    receipt_id: 2T8mJ5vL8PkYc3Rm6bNZBvA7k8mHh3oJmM4t9g8vP3Qc
-                    signer_id: alice.near
-                    tx_hash: null
-                    value:
-                      theme: dark
+                    block_height: 183302718
+                    block_timestamp: 1769731630602682600
+                    current_account_id: social.near
+                    key: graph/follow/sleet.near
+                    predecessor_id: james.near
+                    receipt_id: gaiLdGpaRwaunXUFnnz9VNj8V7cY18ZPAt2QfZazBkk
+                    signer_id: james.near
+                    tx_hash: FK7qDhHv4otg2wPGrE3DKFjvmmjHhUKBxQDkcAsdH5k3
+                    value: ""
                 page_token: opaque-next-page-token
               schema:
                 $ref: "#/components/schemas/ListResponse"
@@ -561,7 +556,7 @@ paths:
       operationId: latest_by_account
       parameters:
         - description: Contract account whose FastData keys were written.
-          example: app.near
+          example: social.near
           in: path
           name: current_account_id
           required: true
@@ -572,7 +567,7 @@ paths:
           application/json:
             example:
               include_metadata: true
-              key_prefix: settings/
+              key_prefix: graph/follow/
               limit: 50
             schema:
               $ref: "#/components/schemas/LatestRequest"
@@ -584,16 +579,15 @@ paths:
               example:
                 entries:
                   - action_index: 0
-                    block_height: 176826522
-                    block_timestamp: 1768265226000
-                    current_account_id: app.near
-                    key: settings/theme
-                    predecessor_id: alice.near
-                    receipt_id: 2T8mJ5vL8PkYc3Rm6bNZBvA7k8mHh3oJmM4t9g8vP3Qc
-                    signer_id: alice.near
-                    tx_hash: null
-                    value:
-                      theme: dark
+                    block_height: 183302718
+                    block_timestamp: 1769731630602682600
+                    current_account_id: social.near
+                    key: graph/follow/sleet.near
+                    predecessor_id: james.near
+                    receipt_id: gaiLdGpaRwaunXUFnnz9VNj8V7cY18ZPAt2QfZazBkk
+                    signer_id: james.near
+                    tx_hash: FK7qDhHv4otg2wPGrE3DKFjvmmjHhUKBxQDkcAsdH5k3
+                    value: ""
                 page_token: opaque-next-page-token
               schema:
                 $ref: "#/components/schemas/ListResponse"
@@ -625,14 +619,14 @@ paths:
       operationId: latest_by_predecessor
       parameters:
         - description: Contract account whose FastData keys were written.
-          example: app.near
+          example: social.near
           in: path
           name: current_account_id
           required: true
           schema:
             type: string
         - description: Calling account that wrote the FastData keys.
-          example: alice.near
+          example: james.near
           in: path
           name: predecessor_id
           required: true
@@ -643,7 +637,7 @@ paths:
           application/json:
             example:
               include_metadata: true
-              key_prefix: settings/
+              key_prefix: graph/follow/
               limit: 50
             schema:
               $ref: "#/components/schemas/LatestRequest"
@@ -655,16 +649,15 @@ paths:
               example:
                 entries:
                   - action_index: 0
-                    block_height: 176826522
-                    block_timestamp: 1768265226000
-                    current_account_id: app.near
-                    key: settings/theme
-                    predecessor_id: alice.near
-                    receipt_id: 2T8mJ5vL8PkYc3Rm6bNZBvA7k8mHh3oJmM4t9g8vP3Qc
-                    signer_id: alice.near
-                    tx_hash: null
-                    value:
-                      theme: dark
+                    block_height: 183302718
+                    block_timestamp: 1769731630602682600
+                    current_account_id: social.near
+                    key: graph/follow/sleet.near
+                    predecessor_id: james.near
+                    receipt_id: gaiLdGpaRwaunXUFnnz9VNj8V7cY18ZPAt2QfZazBkk
+                    signer_id: james.near
+                    tx_hash: FK7qDhHv4otg2wPGrE3DKFjvmmjHhUKBxQDkcAsdH5k3
+                    value: ""
                 page_token: opaque-next-page-token
               schema:
                 $ref: "#/components/schemas/ListResponse"
@@ -696,21 +689,21 @@ paths:
       operationId: get_latest_key
       parameters:
         - description: Contract account whose FastData keys were written.
-          example: app.near
+          example: social.near
           in: path
           name: current_account_id
           required: true
           schema:
             type: string
         - description: Calling account that wrote the FastData keys.
-          example: alice.near
+          example: james.near
           in: path
           name: predecessor_id
           required: true
           schema:
             type: string
         - description: Exact FastData key to return.
-          example: settings/theme
+          example: graph/follow/sleet.near
           in: path
           name: key
           required: true
@@ -723,16 +716,15 @@ paths:
               example:
                 entries:
                   - action_index: 0
-                    block_height: 176826522
-                    block_timestamp: 1768265226000
-                    current_account_id: app.near
-                    key: settings/theme
-                    predecessor_id: alice.near
-                    receipt_id: 2T8mJ5vL8PkYc3Rm6bNZBvA7k8mHh3oJmM4t9g8vP3Qc
-                    signer_id: alice.near
-                    tx_hash: null
-                    value:
-                      theme: dark
+                    block_height: 183302718
+                    block_timestamp: 1769731630602682600
+                    current_account_id: social.near
+                    key: graph/follow/sleet.near
+                    predecessor_id: james.near
+                    receipt_id: gaiLdGpaRwaunXUFnnz9VNj8V7cY18ZPAt2QfZazBkk
+                    signer_id: james.near
+                    tx_hash: FK7qDhHv4otg2wPGrE3DKFjvmmjHhUKBxQDkcAsdH5k3
+                    value: ""
                 page_token: opaque-next-page-token
               schema:
                 $ref: "#/components/schemas/ListResponse"
@@ -760,8 +752,8 @@ paths:
             example:
               include_metadata: true
               keys:
-                - app.near/alice.near/settings/theme
-                - app.near/alice.near/settings/missing
+                - social.near/james.near/graph/follow/sleet.near
+                - social.near/james.near/graph/follow/missing
             schema:
               $ref: "#/components/schemas/MultiRequest"
         required: true
@@ -772,16 +764,15 @@ paths:
               example:
                 entries:
                   - action_index: 0
-                    block_height: 176826522
-                    block_timestamp: 1768265226000
-                    current_account_id: app.near
-                    key: settings/theme
-                    predecessor_id: alice.near
-                    receipt_id: 2T8mJ5vL8PkYc3Rm6bNZBvA7k8mHh3oJmM4t9g8vP3Qc
-                    signer_id: alice.near
-                    tx_hash: null
-                    value:
-                      theme: dark
+                    block_height: 183302718
+                    block_timestamp: 1769731630602682600
+                    current_account_id: social.near
+                    key: graph/follow/sleet.near
+                    predecessor_id: james.near
+                    receipt_id: gaiLdGpaRwaunXUFnnz9VNj8V7cY18ZPAt2QfZazBkk
+                    signer_id: james.near
+                    tx_hash: FK7qDhHv4otg2wPGrE3DKFjvmmjHhUKBxQDkcAsdH5k3
+                    value: ""
                   - null
               schema:
                 $ref: "#/components/schemas/MultiResponse"

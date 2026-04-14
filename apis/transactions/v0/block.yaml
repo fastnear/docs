@@ -43,6 +43,8 @@ paths:
 servers:
   - description: Mainnet
     url: https://tx.main.fastnear.com
+  - description: Testnet
+    url: https://tx.test.fastnear.com
 components:
   schemas:
     AccountInput:

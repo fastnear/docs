@@ -44,12 +44,12 @@ paths:
                 params:
                   type: object
                   required:
-                    - block_id
+                    - finality
                   properties:
-                    block_id:
+                    finality:
                       type: string
-                      enum: ["latest"]
-                      description: "Special identifier for the latest block"
+                      enum: ["final", "near-final", "optimistic"]
+                      description: "Finality selector for the latest visible block"
             examples:
               mainnet:
                 summary: "Mainnet Latest Block"
@@ -58,7 +58,7 @@ paths:
                   id: "fastnear"
                   method: "block"
                   params:
-                    block_id: "latest"
+                    finality: "optimistic"
               testnet:
                 summary: "Testnet Latest Block"
                 value:
@@ -66,7 +66,7 @@ paths:
                   id: "fastnear"
                   method: "block"
                   params:
-                    block_id: "latest"
+                    finality: "optimistic"
       responses:
         "200":
           description: "Successful response"

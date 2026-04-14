@@ -42,7 +42,8 @@ export const DOCS_ENHANCEMENTS = {
           "ecosystem-account": {
             "path": {
               "account_id": {
-                "default": "foundation.near"
+                "mainnet": "root.near",
+                "testnet": "root.testnet"
               }
             }
           }
@@ -64,7 +65,8 @@ export const DOCS_ENHANCEMENTS = {
           "ecosystem-account": {
             "path": {
               "account_id": {
-                "default": "foundation.near"
+                "mainnet": "root.near",
+                "testnet": "root.testnet"
               }
             }
           }
@@ -86,7 +88,8 @@ export const DOCS_ENHANCEMENTS = {
           "ecosystem-account": {
             "path": {
               "account_id": {
-                "default": "foundation.near"
+                "mainnet": "root.near",
+                "testnet": "root.testnet"
               }
             }
           }
@@ -100,6 +103,19 @@ export const DOCS_ENHANCEMENTS = {
           "authTransport": "bearer",
           "sourceSpec": "apis/fastnear/v0/public_key_lookup.yaml",
           "operationRoute": "/apis/fastnear/openapi/public-key/lookup_by_public_key_v0"
+        },
+        "defaults": {
+          "preset": "root-access-key"
+        },
+        "presets": {
+          "root-access-key": {
+            "path": {
+              "public_key": {
+                "mainnet": "ed25519:CCaThr3uokqnUs6Z5vVnaDcJdrfuTpYJHJWcAGubDjT",
+                "testnet": "ed25519:5FiU4tWnA2QmivpLTdHJhLeSfeZ7KuW4KKNaDqoBKue2"
+              }
+            }
+          }
         }
       },
       "/apis/fastnear/v0/public_key_lookup_all": {
@@ -110,6 +126,19 @@ export const DOCS_ENHANCEMENTS = {
           "authTransport": "bearer",
           "sourceSpec": "apis/fastnear/v0/public_key_lookup_all.yaml",
           "operationRoute": "/apis/fastnear/openapi/public-key/lookup_by_public_key_all_v0"
+        },
+        "defaults": {
+          "preset": "root-access-key"
+        },
+        "presets": {
+          "root-access-key": {
+            "path": {
+              "public_key": {
+                "mainnet": "ed25519:CCaThr3uokqnUs6Z5vVnaDcJdrfuTpYJHJWcAGubDjT",
+                "testnet": "ed25519:5FiU4tWnA2QmivpLTdHJhLeSfeZ7KuW4KKNaDqoBKue2"
+              }
+            }
+          }
         }
       },
       "/apis/fastnear/v1/account_staking": {
@@ -128,7 +157,8 @@ export const DOCS_ENHANCEMENTS = {
           "ecosystem-account": {
             "path": {
               "account_id": {
-                "default": "foundation.near"
+                "mainnet": "root.near",
+                "testnet": "root.testnet"
               }
             }
           }
@@ -150,7 +180,8 @@ export const DOCS_ENHANCEMENTS = {
           "ecosystem-account": {
             "path": {
               "account_id": {
-                "default": "foundation.near"
+                "mainnet": "root.near",
+                "testnet": "root.testnet"
               }
             }
           }
@@ -172,7 +203,8 @@ export const DOCS_ENHANCEMENTS = {
           "ecosystem-account": {
             "path": {
               "account_id": {
-                "default": "foundation.near"
+                "mainnet": "root.near",
+                "testnet": "root.testnet"
               }
             }
           }
@@ -194,7 +226,8 @@ export const DOCS_ENHANCEMENTS = {
           "ecosystem-account": {
             "path": {
               "account_id": {
-                "default": "foundation.near"
+                "mainnet": "root.near",
+                "testnet": "root.testnet"
               }
             }
           }
@@ -208,6 +241,19 @@ export const DOCS_ENHANCEMENTS = {
           "authTransport": "bearer",
           "sourceSpec": "apis/fastnear/v1/public_key_lookup.yaml",
           "operationRoute": "/apis/fastnear/openapi/public-key/lookup_by_public_key_v1"
+        },
+        "defaults": {
+          "preset": "root-access-key"
+        },
+        "presets": {
+          "root-access-key": {
+            "path": {
+              "public_key": {
+                "mainnet": "ed25519:CCaThr3uokqnUs6Z5vVnaDcJdrfuTpYJHJWcAGubDjT",
+                "testnet": "ed25519:5FiU4tWnA2QmivpLTdHJhLeSfeZ7KuW4KKNaDqoBKue2"
+              }
+            }
+          }
         }
       },
       "/apis/fastnear/v1/ft_top": {
@@ -226,7 +272,8 @@ export const DOCS_ENHANCEMENTS = {
           "wrapped-near": {
             "path": {
               "token_id": {
-                "default": "wrap.near"
+                "mainnet": "wrap.near",
+                "testnet": "wrap.testnet"
               }
             }
           }
@@ -240,6 +287,19 @@ export const DOCS_ENHANCEMENTS = {
           "authTransport": "bearer",
           "sourceSpec": "apis/fastnear/v1/public_key_lookup_all.yaml",
           "operationRoute": "/apis/fastnear/openapi/public-key/lookup_by_public_key_all_v1"
+        },
+        "defaults": {
+          "preset": "root-access-key"
+        },
+        "presets": {
+          "root-access-key": {
+            "path": {
+              "public_key": {
+                "mainnet": "ed25519:CCaThr3uokqnUs6Z5vVnaDcJdrfuTpYJHJWcAGubDjT",
+                "testnet": "ed25519:5FiU4tWnA2QmivpLTdHJhLeSfeZ7KuW4KKNaDqoBKue2"
+              }
+            }
+          }
         }
       }
     }
@@ -265,8 +325,8 @@ export const DOCS_ENHANCEMENTS = {
           "predecessor-latest": {
             "path": {
               "predecessor_id": {
-                "mainnet": "alice.near",
-                "testnet": "alice.testnet"
+                "mainnet": "james.near",
+                "testnet": "kv.gork-agent.testnet"
               }
             },
             "body": {
@@ -291,11 +351,19 @@ export const DOCS_ENHANCEMENTS = {
         },
         "presets": {
           "global-key-history": {
-            "body": {
-              "asc": false,
-              "include_metadata": true,
-              "key": "settings/theme",
-              "limit": 50
+            "bodyByNetwork": {
+              "mainnet": {
+                "asc": false,
+                "include_metadata": false,
+                "key": "graph/follow/sleet.near",
+                "limit": 50
+              },
+              "testnet": {
+                "asc": false,
+                "include_metadata": false,
+                "key": "value",
+                "limit": 50
+              }
             }
           }
         }
@@ -317,15 +385,23 @@ export const DOCS_ENHANCEMENTS = {
           "account-history": {
             "path": {
               "current_account_id": {
-                "mainnet": "app.near",
-                "testnet": "guest-book.testnet"
+                "mainnet": "social.near",
+                "testnet": "kv.gork-agent.testnet"
               }
             },
-            "body": {
-              "asc": false,
-              "include_metadata": true,
-              "key_prefix": "settings/",
-              "limit": 50
+            "bodyByNetwork": {
+              "mainnet": {
+                "asc": false,
+                "include_metadata": true,
+                "key_prefix": "graph/follow/",
+                "limit": 50
+              },
+              "testnet": {
+                "asc": false,
+                "include_metadata": true,
+                "key_prefix": "value",
+                "limit": 50
+              }
             }
           }
         }
@@ -347,19 +423,27 @@ export const DOCS_ENHANCEMENTS = {
           "predecessor-history": {
             "path": {
               "current_account_id": {
-                "mainnet": "app.near",
-                "testnet": "guest-book.testnet"
+                "mainnet": "social.near",
+                "testnet": "kv.gork-agent.testnet"
               },
               "predecessor_id": {
-                "mainnet": "alice.near",
-                "testnet": "alice.testnet"
+                "mainnet": "james.near",
+                "testnet": "kv.gork-agent.testnet"
               }
             },
-            "body": {
-              "asc": false,
-              "include_metadata": true,
-              "key_prefix": "settings/",
-              "limit": 50
+            "bodyByNetwork": {
+              "mainnet": {
+                "asc": false,
+                "include_metadata": true,
+                "key_prefix": "graph/follow/",
+                "limit": 50
+              },
+              "testnet": {
+                "asc": false,
+                "include_metadata": true,
+                "key_prefix": "value",
+                "limit": 50
+              }
             }
           }
         }
@@ -381,15 +465,16 @@ export const DOCS_ENHANCEMENTS = {
           "exact-history-key": {
             "path": {
               "current_account_id": {
-                "mainnet": "app.near",
-                "testnet": "guest-book.testnet"
+                "mainnet": "social.near",
+                "testnet": "kv.gork-agent.testnet"
               },
               "predecessor_id": {
-                "mainnet": "alice.near",
-                "testnet": "alice.testnet"
+                "mainnet": "james.near",
+                "testnet": "kv.gork-agent.testnet"
               },
               "key": {
-                "default": "settings/theme"
+                "mainnet": "graph/follow/sleet.near",
+                "testnet": "value"
               }
             }
           }
@@ -412,14 +497,21 @@ export const DOCS_ENHANCEMENTS = {
           "account-latest": {
             "path": {
               "current_account_id": {
-                "mainnet": "app.near",
-                "testnet": "guest-book.testnet"
+                "mainnet": "social.near",
+                "testnet": "kv.gork-agent.testnet"
               }
             },
-            "body": {
-              "include_metadata": true,
-              "key_prefix": "settings/",
-              "limit": 50
+            "bodyByNetwork": {
+              "mainnet": {
+                "include_metadata": true,
+                "key_prefix": "graph/follow/",
+                "limit": 50
+              },
+              "testnet": {
+                "include_metadata": true,
+                "key_prefix": "value",
+                "limit": 50
+              }
             }
           }
         }
@@ -441,18 +533,25 @@ export const DOCS_ENHANCEMENTS = {
           "predecessor-latest-contract": {
             "path": {
               "current_account_id": {
-                "mainnet": "app.near",
-                "testnet": "guest-book.testnet"
+                "mainnet": "social.near",
+                "testnet": "kv.gork-agent.testnet"
               },
               "predecessor_id": {
-                "mainnet": "alice.near",
-                "testnet": "alice.testnet"
+                "mainnet": "james.near",
+                "testnet": "kv.gork-agent.testnet"
               }
             },
-            "body": {
-              "include_metadata": true,
-              "key_prefix": "settings/",
-              "limit": 50
+            "bodyByNetwork": {
+              "mainnet": {
+                "include_metadata": true,
+                "key_prefix": "graph/follow/",
+                "limit": 50
+              },
+              "testnet": {
+                "include_metadata": true,
+                "key_prefix": "value",
+                "limit": 50
+              }
             }
           }
         }
@@ -474,15 +573,16 @@ export const DOCS_ENHANCEMENTS = {
           "exact-latest-key": {
             "path": {
               "current_account_id": {
-                "mainnet": "app.near",
-                "testnet": "guest-book.testnet"
+                "mainnet": "social.near",
+                "testnet": "kv.gork-agent.testnet"
               },
               "predecessor_id": {
-                "mainnet": "alice.near",
-                "testnet": "alice.testnet"
+                "mainnet": "james.near",
+                "testnet": "kv.gork-agent.testnet"
               },
               "key": {
-                "default": "settings/theme"
+                "mainnet": "graph/follow/sleet.near",
+                "testnet": "value"
               }
             }
           }
@@ -507,15 +607,15 @@ export const DOCS_ENHANCEMENTS = {
               "mainnet": {
                 "include_metadata": true,
                 "keys": [
-                  "app.near/alice.near/settings/theme",
-                  "app.near/alice.near/settings/missing"
+                  "social.near/james.near/graph/follow/sleet.near",
+                  "social.near/james.near/graph/follow/missing"
                 ]
               },
               "testnet": {
                 "include_metadata": true,
                 "keys": [
-                  "guest-book.testnet/alice.testnet/settings/theme",
-                  "guest-book.testnet/alice.testnet/settings/missing"
+                  "kv.gork-agent.testnet/kv.gork-agent.testnet/value",
+                  "kv.gork-agent.testnet/kv.gork-agent.testnet/missing"
                 ]
               }
             }
@@ -727,11 +827,18 @@ export const DOCS_ENHANCEMENTS = {
         "presets": {
           "recent-account-history": {
             "body": {
-              "account_id": "intents.near",
               "desc": true,
               "is_real_signer": true,
               "is_success": true,
               "limit": 50
+            },
+            "bodyByNetwork": {
+              "mainnet": {
+                "account_id": "intents.near"
+              },
+              "testnet": {
+                "account_id": "root.testnet"
+              }
             }
           }
         }
@@ -751,9 +858,16 @@ export const DOCS_ENHANCEMENTS = {
         "presets": {
           "expanded-block": {
             "body": {
-              "block_id": 130000000,
               "with_receipts": true,
               "with_transactions": true
+            },
+            "bodyByNetwork": {
+              "mainnet": {
+                "block_id": 193916411
+              },
+              "testnet": {
+                "block_id": 46562457
+              }
             }
           }
         }
@@ -774,9 +888,17 @@ export const DOCS_ENHANCEMENTS = {
           "recent-block-range": {
             "body": {
               "desc": false,
-              "from_block_height": 130000000,
-              "limit": 10,
-              "to_block_height": 130000100
+              "limit": 10
+            },
+            "bodyByNetwork": {
+              "mainnet": {
+                "from_block_height": 193916402,
+                "to_block_height": 193916411
+              },
+              "testnet": {
+                "from_block_height": 46562448,
+                "to_block_height": 46562457
+              }
             }
           }
         }
@@ -795,8 +917,13 @@ export const DOCS_ENHANCEMENTS = {
         },
         "presets": {
           "receipt-lookup": {
-            "body": {
-              "receipt_id": "H6Roj3A2SNn7HJXdigLPDHiz2kcob4MHwLg3nnDEH2VZ"
+            "bodyByNetwork": {
+              "mainnet": {
+                "receipt_id": "gzqDSvd3ZMcVUWzBMP7j9KMWz89iZMkkEvW9g8QZjUP"
+              },
+              "testnet": {
+                "receipt_id": "8D3YiLcKYLAeNYmshj9cVwCTX6mgeWNXux4sJQ7FUTvV"
+              }
             }
           }
         }
@@ -815,11 +942,19 @@ export const DOCS_ENHANCEMENTS = {
         },
         "presets": {
           "transaction-hash-pair": {
-            "body": {
-              "tx_hashes": [
-                "HV42hanyDVK3MYoW8c17Ufxw83htNEQGk93bzyQRocvS",
-                "D2pt9ceGUyiGdJeeZLDd3uBGHF11DmPe4aJFMaoWMmDd"
-              ]
+            "bodyByNetwork": {
+              "mainnet": {
+                "tx_hashes": [
+                  "FDrh13CdfGPXsmwUpZLfkZCoXWfpQmaFGj4zYWc1qfh",
+                  "Eq1a46bynaBAjoSxd2XGWdCxkZdrMvN9jMZVdZfPSjM5"
+                ]
+              },
+              "testnet": {
+                "tx_hashes": [
+                  "Cb9GXbQVodeJsVLiK2YnBR28vkiD7y4pEFGhxMGuP33q",
+                  "9ufyhaEEzmerQz1Fvt2N91ZwXCcNZVhJXhq3QzRJZgfW"
+                ]
+              }
             }
           }
         }
@@ -845,12 +980,9 @@ export const DOCS_ENHANCEMENTS = {
         "presets": {
           "recent-near-transfers": {
             "body": {
-              "account_id": "intents.near",
-              "asset_id": "near",
+              "account_id": "root.near",
               "desc": true,
-              "direction": "receiver",
-              "limit": 10,
-              "min_amount": "1000000000000000000000000"
+              "limit": 10
             }
           }
         }

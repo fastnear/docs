@@ -14,11 +14,15 @@ operations:
     presets:
       recent-account-history:
         body:
-          account_id: intents.near
           desc: true
           is_real_signer: true
           is_success: true
           limit: 50
+        bodyByNetwork:
+          mainnet:
+            account_id: intents.near
+          testnet:
+            account_id: root.testnet
   /apis/transactions/v0/block:
     customPage:
       kind: fastnear-rest-body
@@ -32,9 +36,13 @@ operations:
     presets:
       expanded-block:
         body:
-          block_id: 130000000
           with_receipts: true
           with_transactions: true
+        bodyByNetwork:
+          mainnet:
+            block_id: 193916411
+          testnet:
+            block_id: 46562457
   /apis/transactions/v0/blocks:
     customPage:
       kind: fastnear-rest-body
@@ -49,9 +57,14 @@ operations:
       recent-block-range:
         body:
           desc: false
-          from_block_height: 130000000
           limit: 10
-          to_block_height: 130000100
+        bodyByNetwork:
+          mainnet:
+            from_block_height: 193916402
+            to_block_height: 193916411
+          testnet:
+            from_block_height: 46562448
+            to_block_height: 46562457
   /apis/transactions/v0/receipt:
     customPage:
       kind: fastnear-rest-body
@@ -64,8 +77,11 @@ operations:
       preset: receipt-lookup
     presets:
       receipt-lookup:
-        body:
-          receipt_id: H6Roj3A2SNn7HJXdigLPDHiz2kcob4MHwLg3nnDEH2VZ
+        bodyByNetwork:
+          mainnet:
+            receipt_id: gzqDSvd3ZMcVUWzBMP7j9KMWz89iZMkkEvW9g8QZjUP
+          testnet:
+            receipt_id: 8D3YiLcKYLAeNYmshj9cVwCTX6mgeWNXux4sJQ7FUTvV
   /apis/transactions/v0/transactions:
     customPage:
       kind: fastnear-rest-body
@@ -78,7 +94,12 @@ operations:
       preset: transaction-hash-pair
     presets:
       transaction-hash-pair:
-        body:
-          tx_hashes:
-            - HV42hanyDVK3MYoW8c17Ufxw83htNEQGk93bzyQRocvS
-            - D2pt9ceGUyiGdJeeZLDd3uBGHF11DmPe4aJFMaoWMmDd
+        bodyByNetwork:
+          mainnet:
+            tx_hashes:
+              - FDrh13CdfGPXsmwUpZLfkZCoXWfpQmaFGj4zYWc1qfh
+              - Eq1a46bynaBAjoSxd2XGWdCxkZdrMvN9jMZVdZfPSjM5
+          testnet:
+            tx_hashes:
+              - Cb9GXbQVodeJsVLiK2YnBR28vkiD7y4pEFGhxMGuP33q
+              - 9ufyhaEEzmerQz1Fvt2N91ZwXCcNZVhJXhq3QzRJZgfW

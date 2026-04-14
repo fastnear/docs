@@ -13,8 +13,8 @@ paths:
           application/json:
             example:
               asc: false
-              include_metadata: true
-              key: settings/theme
+              include_metadata: false
+              key: graph/follow/sleet.near
               limit: 50
             schema:
               $ref: "#/components/schemas/ByKeyRequest"
@@ -26,16 +26,15 @@ paths:
               example:
                 entries:
                   - action_index: 0
-                    block_height: 176826522
-                    block_timestamp: 1768265226000
-                    current_account_id: app.near
-                    key: settings/theme
-                    predecessor_id: alice.near
-                    receipt_id: 2T8mJ5vL8PkYc3Rm6bNZBvA7k8mHh3oJmM4t9g8vP3Qc
-                    signer_id: alice.near
-                    tx_hash: null
-                    value:
-                      theme: dark
+                    block_height: 183302718
+                    block_timestamp: 1769731630602682600
+                    current_account_id: social.near
+                    key: graph/follow/sleet.near
+                    predecessor_id: james.near
+                    receipt_id: gaiLdGpaRwaunXUFnnz9VNj8V7cY18ZPAt2QfZazBkk
+                    signer_id: james.near
+                    tx_hash: FK7qDhHv4otg2wPGrE3DKFjvmmjHhUKBxQDkcAsdH5k3
+                    value: ""
                 page_token: opaque-next-page-token
               schema:
                 $ref: "#/components/schemas/ListResponse"

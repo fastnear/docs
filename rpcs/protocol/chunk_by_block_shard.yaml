@@ -53,8 +53,8 @@ paths:
                   id: fastnear
                   method: chunk
                   params:
-                    block_id: CU1KcVSuYAZUiehn7TnCxSdpb3RGoHxK1hABC5AKKo2Q
-                    shard_id: 0
+                    block_id: 6sddgq8nkENAz4f8qR72qxRPM25QWNBVMrkYr63DgC2E
+                    shard_id: 10
               testnet:
                 summary: Testnet Block/Shard Example
                 value:
@@ -62,8 +62,8 @@ paths:
                   id: fastnear
                   method: chunk
                   params:
-                    block_id: CoPszhGFqcx9L1HQYM62g3UjxMpuZD8RiZL6QdpBZXA4
-                    shard_id: 0
+                    block_id: Ayfw9wu3T3zEqCbrvq9CuKmGmuyiJiETvwCApXZHmCho
+                    shard_id: 10
       responses:
         200:
           description: Successful response
