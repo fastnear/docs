@@ -100,7 +100,7 @@ This gives the pilot the full operation-width footprint while keeping the route 
 
 The bespoke RPC routes now go one step further than the initial pilot.
 
-- `shared/ViewAccountReference.tsx` renders the request reference, example tabs, request schema, and response schema
+- `shared/FastnearOperationReference.tsx` renders the request reference, example tabs, request schema, and response schema
 - the same shared component is used on both the standalone app and the Redocly route
 - `BeforeOpenApiOperation.tsx` hides the trailing stock Redocly operation subrows for the bespoke RPC endpoints after mounting the custom reference section inside the request row
 - the same hook now also looks up manifest-backed custom pages for API routes and only mounts the bespoke page on the targeted `operationId`, even when the surrounding aggregate page contains sibling operations from the same tag

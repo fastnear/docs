@@ -172,7 +172,7 @@ Redocly/Realm is now treated as the legacy delivery backend. `builder-docs` is t
 - `REDOCLY_LOCAL_PLAN=enterprise npm run build` is green in `/Users/mikepurvis/near/mike-docs`; the local static build now completes end-to-end.
 - `yarn build` is green in `/Users/mikepurvis/near/fn/builder-docs`.
 - Preview smoke coverage now lives in `npm run smoke:operations` for representative RPC and API pretty routes.
-- Production smoke coverage now lives in `npm run smoke:operations:prod` against [fastnear.redocly.app](https://fastnear.redocly.app).
+- Live route verification now belongs to the deployed `builder-docs` site at [docs.fastnear.com](https://docs.fastnear.com), not the retired Redocly production path.
 - April 11, 2026: workspace stale-spec enforcement now lives in `npm run check:external-openapi`, which runs `cargo run --features openapi --bin generate-openapi -- --check` across all converted sibling service repos when the shared FastNEAR workspace is present.
 - April 11, 2026: `npm run lint` and `npm run build` now enforce the external stale-spec check before syncing, while `scripts/sync-external-apis.js` falls back to the committed vendored `apis/<service>/` trees when sibling repos are unavailable.
 - April 11, 2026: `fastnear-openapi-generator` v0.2.0 is published on crates.io and the converted service repos consume it as a normal versioned dependency instead of a sibling path dependency.
@@ -181,7 +181,7 @@ Redocly/Realm is now treated as the legacy delivery backend. `builder-docs` is t
 - `npm run build` in `mike-docs` now prefers `PLAN_GATES` from the shell environment or `.env.redocly.local`, with a local-only fallback via `REDOCLY_LOCAL_PLAN=enterprise|pro` for developer validation.
 - GitHub Actions parity now lives in `.github/workflows/portal-build.yml` and runs `npm ci`, `npm run lint`, and `npm run build` on pull requests, pushes to `main`, and manual dispatches.
 - April 11, 2026: local smoke is green with `20 passed, 0 failed`, covering canonical `/apis/...` routes plus the then-current single-network legacy verification variants from preview.
-- April 11, 2026: production canonical `/apis/...` routes are green, but the then-current single-network legacy verification variants still returned `404` on [fastnear.redocly.app](https://fastnear.redocly.app) until the updated portal was republished.
+- April 11, 2026: the old Redocly production host still lagged canonical `/apis/...` route publication during the migration, which is one of the reasons production ownership moved fully to `builder-docs`.
 - April 12, 2026: the full `neardata-server` public surface is now on the bespoke REST-read page path, with portal-owned manifest metadata, generated shared page models, standalone parity, and aligned mainnet/testnet preset defaults.
 - April 12, 2026: the full FastNEAR API public surface is now on the bespoke REST-read page path across `system`, `v0`, and `v1`, with generated standalone models, a generated shared page registry, and backend coverage data vendored into `builder-docs`.
 - April 12, 2026: Phase 1 backend abstraction is live in `builder-docs`. `ApiDocsFrame` / `RpcDocsFrame` now resolve bespoke slices to the standalone backend locally (`127.0.0.1:4010`) and keep legacy slices on local Redocly preview (`127.0.0.1:4000`) while preserving canonical iframe paths and public query params.

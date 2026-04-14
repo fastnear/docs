@@ -103,7 +103,6 @@ This distinction should stay explicit in the UI copy.
 ### Visual behavior
 
 - `?colorSchema=dark|light`
-- legacy `?darkMode`
 
 ## Hosted Route Model
 

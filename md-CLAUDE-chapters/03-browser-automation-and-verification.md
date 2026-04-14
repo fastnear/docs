@@ -14,8 +14,6 @@ Lint is necessary, but it is not enough. The important failures we have found re
 ### Redocly portal
 
 - `npm run preview`
-- `npm run preview:headless`
-- `npm run preview:portal`
 
 Default preview is `http://127.0.0.1:4000`, but if that port is occupied, use the actual URL printed at startup.
 

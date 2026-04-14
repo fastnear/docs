@@ -6,7 +6,7 @@ import { Security } from "@redocly/openapi-docs/lib/components/Security";
 import { usePageData } from "@redocly/realm/dist/client/app/hooks/usePageData";
 
 import { FastnearOperationPage } from "../../../../shared/FastnearOperationPage";
-import { getFastnearPageModel } from "../../../../shared/viewAccountPageModel";
+import { getFastnearPageModel } from "../../../../shared/fastnearPageModel";
 import { getFastnearCustomPageForPath } from "../../../../shared/fastnearCustomPages";
 
 type BeforeOpenApiOperationProps = {

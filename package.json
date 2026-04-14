@@ -1,20 +1,17 @@
 {
-  "name": "redoc-starter",
+  "name": "mike-docs",
   "version": "1.0.0",
-  "description": "A starter project for working with Redoc",
-  "main": " ",
+  "private": true,
+  "description": "FastNEAR docs backend and generation workspace",
   "scripts": {
     "check:external-openapi": "node scripts/check-external-openapi.js",
     "sync:apis": "node scripts/sync-external-apis.js",
     "preview": "npm run sync:apis && ENABLE_SOURCE_MAPS=true node scripts/redocly-root-guard.js preview",
     "preview:fresh-examples": "npm run sync:apis && node scripts/refresh-examples.js && ENABLE_SOURCE_MAPS=true node scripts/redocly-root-guard.js preview",
-    "preview:headless": "node scripts/toggle-headless.js headless && npm run preview",
-    "preview:portal": "node scripts/toggle-headless.js portal && npm run preview",
     "build": "npm run check:external-openapi && npm run sync:apis && node scripts/redocly-root-guard.js build && node scripts/run-realm-build.js",
     "build:fresh-examples": "npm run check:external-openapi && npm run sync:apis && node scripts/redocly-root-guard.js build && node scripts/run-realm-build.js --refresh-examples",
     "lint": "npm run check:external-openapi && npm run sync:apis && node scripts/redocly-root-guard.js lint",
     "smoke:operations": "node scripts/test-operations.js",
-    "smoke:operations:prod": "node scripts/test-operations.js https://fastnear.redocly.app",
     "generate-rpc": "node scripts/generate-from-nearcore.js",
     "refresh-examples": "node scripts/refresh-examples.js",
     "standalone:dev": "node scripts/standalone-dev.js",
@@ -24,20 +21,20 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Redocly/apidocs-starter.git"
+    "url": "git+https://github.com/fastnear/docs.git"
   },
   "keywords": [
+    "near",
     "openapi",
-    "example",
-    "asyncapi",
-    "documentation"
+    "documentation",
+    "generation"
   ],
-  "author": "team@redocly.com",
+  "author": "FastNEAR",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Redocly/apidocs-starter/issues"
+    "url": "https://github.com/fastnear/docs/issues"
   },
-  "homepage": "https://github.com/Redocly/apidocs-starter#readme",
+  "homepage": "https://github.com/fastnear/docs#readme",
   "dependencies": {
     "@redocly/realm": "0.119.1",
     "esbuild": "^0.17.15",

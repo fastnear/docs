@@ -87,7 +87,7 @@ Optional previews:
 npm run standalone:dev
 
 # legacy Redocly runtime
-npm run preview:headless
+npm run preview
 ```
 
 ## Legacy Redocly Path

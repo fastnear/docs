@@ -6,8 +6,6 @@ This chapter keeps the practical “how do I run this safely?” knowledge in on
 
 - `npm run preview`
 - `npm run preview:fresh-examples`
-- `npm run preview:headless`
-- `npm run preview:portal`
 - `npm run lint`
 - `npm run build`
 - `npm run verify:workspace`
@@ -32,16 +30,9 @@ This chapter keeps the practical “how do I run this safely?” knowledge in on
 
 This means `lint` can modify generated files. That is expected.
 
-## Headless Vs Portal Mode
+## Preview Mode
 
-`scripts/toggle-headless.js` edits `redocly.yaml` in place to show or hide portal chrome.
-
-Use:
-
-- `preview:headless` for iframe-style work
-- `preview:portal` for full portal context
-
-After switching modes, check `git diff` if you are surprised by config changes.
+`npm run preview` is now the single legacy Redocly verification entrypoint. Use it when you need to sanity-check route generation, config wiring, or parity against the public bespoke runtime.
 
 ## Build Credentials
 
@@ -51,11 +42,11 @@ After switching modes, check `git diff` if you are surprised by config changes.
 
 ## Production 404 Rule
 
-If production still 404s after the code is merged or pushed, do not assume the repo is wrong. A common missing step is that the deployed Redocly project has not published the revision yet.
+If production still 404s after the code is merged or pushed, do not assume the repo is wrong. A common missing step is that the deployed `builder-docs` site has not published the revision yet.
 
 Useful mental model:
 
-- GitHub state is not the same thing as deployed Redocly state.
+- GitHub state is not the same thing as deployed docs state.
 
 ## Current High-Value Troubleshooting Paths
 
@@ -63,7 +54,7 @@ Useful mental model:
 
 - confirm the route locally with preview
 - confirm the route is represented in config and generated route helpers
-- confirm the deployed Redocly project has actually published the revision
+- confirm the deployed `builder-docs` site has actually published the revision
 
 ### REST leaf files look wrong after editing
 

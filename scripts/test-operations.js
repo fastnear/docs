@@ -88,7 +88,7 @@ function testUrl(path) {
 }
 
 async function runTests() {
-  console.log(`Testing Redocly endpoints at ${BASE_URL}\n`);
+  console.log(`Testing legacy verification routes at ${BASE_URL}\n`);
   
   let results = {
     passed: 0,
@@ -131,13 +131,6 @@ async function runTests() {
     console.log('2. Restart of preview server');
     console.log('3. Correct operationId in OpenAPI specs');
 
-    const isLocalTarget = BASE_URL.includes('localhost') || BASE_URL.includes('127.0.0.1');
-    const hasApi404s = failedPaths.some((path) => path.startsWith('/apis/'));
-
-    if (!isLocalTarget && hasApi404s) {
-      console.log('\nProduction hint: if RPC routes pass but new /apis/... routes 404,');
-      console.log('the deployed Redocly project likely has not published this revision yet.');
-    }
   }
 }
 

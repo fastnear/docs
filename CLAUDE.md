@@ -4,9 +4,9 @@ This file is the front door for repo continuity. Keep it short, high-signal, and
 
 ## What This Repo Is
 
-FastNEAR docs generation and verification repo. Public docs now render in `builder-docs` at `docs.fastnear.com`; this repo owns spec sync, enhancement manifests, page-model generation, the local standalone runtime, and the legacy Redocly backend.
+FastNEAR docs backend and generation repo. Public docs now render in `builder-docs` at `docs.fastnear.com`; this repo owns spec sync, enhancement manifests, page-model generation, and the local verification runtimes that support the shipped experience.
 
-As of April 12, 2026, there are now two important runtime tracks to keep in mind:
+As of April 13, 2026, there are two important local verification tracks to keep in mind:
 
 - The standalone bespoke runtime, which is now a local verification surface for the shared bespoke page model/runtime.
 - The Redocly portal, which remains for legacy verification and parity checks.
@@ -15,8 +15,6 @@ As of April 12, 2026, there are now two important runtime tracks to keep in mind
 
 ```bash
 npm run preview               # Main Redocly preview
-npm run preview:headless      # Legacy headless Redocly preview
-npm run preview:portal        # Full portal chrome
 npm run standalone:dev        # Standalone bespoke runtime on canonical /rpcs/... and /apis/... paths
 npm run standalone:build      # Static build for the standalone runtime
 npm run lint                  # Workspace-aware sync + Redocly validation
@@ -35,7 +33,7 @@ npm run smoke:operations      # Smoke-check representative operation routes
   - the local standalone runtime
   - the legacy Redocly verification path
 - The public canonical host is `https://docs.fastnear.com`.
-- The legacy Redocly host at `https://fastnear.redocly.app` is no longer the target architecture.
+- The legacy Redocly host is no longer the target architecture.
 - Auth precedence remains `?apiKey=` first, then `fastnear:apiKey`, with `fastnear_api_key` migrated away automatically.
 - The shared runtime uses `Authorization: Bearer ...` when the page model calls for bearer transport, while preserving the public `?apiKey=` input contract.
 

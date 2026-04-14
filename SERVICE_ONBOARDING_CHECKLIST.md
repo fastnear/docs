@@ -118,7 +118,7 @@ In `mike-docs`:
 npm run sync:apis
 npm run lint
 REDOCLY_LOCAL_PLAN=enterprise npm run build
-npm run preview:headless
+npm run preview
 node scripts/test-operations.js http://127.0.0.1:4000
 ```
 
@@ -140,17 +140,13 @@ Then verify:
 
 Before calling the rollout done:
 
-- publish the updated portal
-- verify the live Redocly site
-- run:
-
-```bash
-npm run smoke:operations:prod
-```
+- publish the updated `builder-docs` site
+- verify the live canonical route on `docs.fastnear.com`
+- confirm the service section is reachable from the public docs navigation where applicable
 
 If local is green but production still 404s:
 
-- the missing step is usually publication of the latest portal revision, not service-spec generation
+- the missing step is usually publication of the latest `builder-docs` revision, not service-spec generation
 
 ## 9. Definition Of Done
 
@@ -161,7 +157,7 @@ The onboarding is done when all of these are true:
 - direct `/apis/<service>/...` browsing reaches interactive operation pages
 - `builder-docs` pages work with the right auth and network behavior
 - local lint, build, and smoke are green
-- production smoke is green after publish
+- the live `builder-docs` route is green after publish
 
 ## 10. Current Reference Implementations
 
