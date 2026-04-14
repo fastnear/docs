@@ -1,5 +1,5 @@
-import { DOCS_ENHANCEMENTS } from "../@theme/ext/generatedEnhancements";
-import { AGGREGATE_OPERATION_ROUTE_TO_CANONICAL } from "../@theme/ext/generatedOperationRoutes";
+import { DOCS_ENHANCEMENTS } from "./generatedEnhancements";
+import { AGGREGATE_OPERATION_ROUTE_TO_CANONICAL } from "./generatedOperationRoutes";
 
 type CustomPageConfig = {
   authTransport?: "bearer" | "query";

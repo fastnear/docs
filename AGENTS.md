@@ -6,15 +6,13 @@ This file provides guidance to Codex (Codex.ai/code) when working with code in t
 
 FastNEAR docs generation and verification repo. It owns the OpenAPI sync pipeline, per-operation leaf specs, enhancement manifests, generated page models, the local standalone runtime, and the legacy Redocly backend.
 
-The consumer-facing site is [builder-docs](https://github.com/fastnear/builder-docs), which now renders public API and RPC pages directly at [docs.fastnear.com](https://docs.fastnear.com). The Redocly host at [fastnear.redocly.app](https://fastnear.redocly.app) is legacy infrastructure used for parity checks and migration cleanup.
+The consumer-facing site is [builder-docs](https://github.com/fastnear/builder-docs), which now renders public API and RPC pages directly at [docs.fastnear.com](https://docs.fastnear.com). The legacy Redocly host remains only for parity checks and migration cleanup.
 
 ## Common Commands
 
 ```bash
  npm run preview              # Sync vendored REST specs and start preview (http://127.0.0.1:4000)
  npm run preview:fresh-examples # Refresh tracked RPC examples, then start preview
- npm run preview:headless     # Preview the legacy Redocly runtime without portal chrome
- npm run preview:portal       # Preview in full portal mode (sidebar, navbar visible)
  npm run standalone:dev       # Preview the standalone bespoke runtime on canonical /rpcs/... and /apis/... paths
  npm run standalone:build     # Build the standalone bespoke runtime
  npm run check:external-openapi # Run aggregate-spec freshness checks across sibling service repos when present
@@ -23,7 +21,6 @@ The consumer-facing site is [builder-docs](https://github.com/fastnear/builder-d
 npm run lint                 # Sync vendored REST specs, then validate OpenAPI specs
 npm run verify:workspace     # Workspace stale-spec checks + portal lint + local build
 npm run smoke:operations     # Smoke test representative pretty routes while preview is running
-npm run smoke:operations:prod # Smoke test representative pretty routes on fastnear.redocly.app
 npm run generate-rpc         # Regenerate rpcs/*.yaml from nearcore OpenAPI spec
 ```
 
@@ -49,7 +46,7 @@ When those sibling repos are not available, `scripts/sync-external-apis.js` keep
 
 ### Docs Enhancement Manifests (`enhancements/`)
 
-The docs-enhancement layer is portal-owned in this repo under `enhancements/<service>/manifest.yaml`, and `scripts/sync-external-apis.js` compiles those manifests into `@theme/ext/generatedEnhancements.ts`.
+The docs-enhancement layer is portal-owned in this repo under `enhancements/<service>/manifest.yaml`, and `scripts/sync-external-apis.js` compiles those manifests into `shared/generatedEnhancements.ts`.
 
 This layer is intentionally separate from OpenAPI:
 - OpenAPI remains the contract truth.
@@ -67,18 +64,6 @@ TypeScript file — Redocly's `configure()` extension hook. Returns `{ requestVa
 ### Theme Styling (`@theme/styles.css`)
 
 Custom CSS overrides for the Redocly portal. Brand colors use `#1e4aba` blue; dark mode inverts to warm yellows. Hides the download button (`.panel-download`) and language selector (`.panel-language-list`) via `display: none`. Also customizes font sizes, panel border radius, and button styles.
-
-### Curl Post-Processing (`scripts/curl-postprocess.js`)
-
-Redocly hardcodes `curl -i` (include response headers) in generated curl samples with no config option to change it. This script fixes that with two mechanisms:
-
-1. **DOM post-processing**: A `MutationObserver` watches for code sample re-renders (triggered by server/example switches) and walks text nodes in `<pre data-component-name="CodeBlock/CodeBlockContainer">` blocks to replace `-i` → `-s` and append `| jq`. Handles Shiki syntax highlighting splitting flags across separate `<span>` elements.
-
-2. **Clipboard interception**: A **capture-phase** `copy` event listener intercepts clipboard writes. When the copied text starts with `curl`, it applies the same `-i` → `-s` and `| jq` transforms before writing to `clipboardData`.
-
-The capture phase (`addEventListener('copy', ..., true)`) is critical. Redocly's copy button reads from React state (not the DOM), so DOM modifications don't affect what gets copied. The copy chain is: `CopyButton` → `ClipboardService.copyCustom()` → `copy-to-clipboard` npm package → creates a hidden `<span>` with the raw source text, selects it, calls `document.execCommand('copy')`. The `copy-to-clipboard` package adds its own listener on that `<span>` that calls `stopPropagation()`, which blocks bubbling-phase listeners. A capture-phase listener on `document` fires first (top-down), before the span's listener can stop propagation.
-
-The `MutationObserver` setup is deferred to `DOMContentLoaded` because the script loads via `scripts.head` in `redocly.yaml`, when `document.body` does not yet exist.
 
 ### URL Patterns
 
@@ -104,12 +89,8 @@ Four RPC server URLs are configured in `rpcs/openapi.yaml`:
 
 `redocly.yaml` loads client-side scripts via the `scripts.head` array. These execute in `<head>` before `document.body` exists, so any DOM access must be deferred to `DOMContentLoaded`. Currently loaded:
 
-- `scripts/dark-mode.js` — Reads `?colorSchema=dark|light` or legacy `?darkMode` from the URL, sets the root element class, and persists to localStorage. Runs synchronously at parse time (only touches `document.documentElement`, which exists in `<head>`).
-- `scripts/curl-postprocess.js` — DOM transforms and clipboard interception for curl samples. Defers `MutationObserver` setup to `DOMContentLoaded`; registers the capture-phase `copy` listener immediately (event listeners don't require DOM elements).
-
-### Headless vs Portal Mode
-
-`scripts/toggle-headless.js` modifies `redocly.yaml` to show/hide sidebar, navbar, breadcrumbs, and navigation buttons. Headless mode is now primarily for validating the legacy Redocly surface without its chrome.
+- `scripts/generated-operation-routes.js`
+- `scripts/api-operation-redirect.js`
 
 ## The nearcore Generator Pipeline
 
@@ -169,14 +150,11 @@ node scripts/generate-from-nearcore.js /path/to/openapi.json
 | `apis/<service>/openapi.yaml` | Vendored per-service REST API specs |
 | `enhancements/<service>/manifest.yaml` | Vendored docs enhancement manifests for preset-driven request defaults |
 | `@theme/ext/configure.ts` | Try-It console config: auth, presets, body, env vars |
-| `@theme/ext/generatedEnhancements.ts` | Auto-generated manifest bundle consumed by `configure.ts` |
+| `shared/generatedEnhancements.ts` | Auto-generated enhancement bundle consumed by shared helpers and `configure.ts` |
 | `scripts/generate-from-nearcore.js` | nearcore → YAML generator |
 | `scripts/sync-external-apis.js` | Sync sibling service specs into `apis/<service>/` |
 | `scripts/run-realm-build.js` | Wrapped Reunite build with local-plan fallback |
 | `scripts/nearcore-operation-map.js` | Declarative operation mapping |
-| `scripts/toggle-headless.js` | Switch headless/portal mode |
-| `scripts/curl-postprocess.js` | Curl sample fix: `-i`→`-s`, `| jq`, clipboard interception |
-| `scripts/dark-mode.js` | Dark mode via `?colorSchema=` or `?darkMode` URL param |
 | `scripts/test-operations.js` | Smoke test operation pages |
 | `INTEGRATION_GUIDE.md` | Integration reference for embedding in builder-docs |
 | `PORTAL_WORKFLOW.md` | Working agreement for sync, validation, deployment, and limitations |
@@ -185,11 +163,9 @@ node scripts/generate-from-nearcore.js /path/to/openapi.json
 
 - Redocly CLI version: `@redocly/realm` 0.119.1
 - Preview server default port: 4000
-- Dark mode: append `?darkMode` to any page URL
 - Run Redocly preview from the `mike-docs` repo root only.
 - Do not use `.claude/worktrees/*` as a local Redocly project; preview commands now fail fast if those nested configs are present.
 - If broken-link diagnostics mention `.claude/worktrees/...`, you are looking at a stale nested agent worktree rather than the current portal config.
-- The `redocly.yaml` file is modified in-place by `toggle-headless.js` — check `git diff` after switching modes
 - `custom` type operations in the operation map are not overwritten by the generator
 - `PLAN_GATES` is the production-equivalent entitlement JWT for `realm build`; `REDOCLY_AUTHORIZATION` is a separate API key and does not replace it
 - For local validation, `npm run build` can fall back to `REDOCLY_LOCAL_PLAN=enterprise` or `pro`

@@ -39,7 +39,7 @@ const ENHANCEMENTS_ROOT = path.resolve(ROOT, "enhancements");
 
 const GENERATED_ENHANCEMENTS_MODULE = path.resolve(
   ROOT,
-  "@theme/ext/generatedEnhancements.ts"
+  "shared/generatedEnhancements.ts"
 );
 
 function readAggregateSpec({ name, src, dest }) {

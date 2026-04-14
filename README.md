@@ -1,6 +1,6 @@
-# FastNEAR Docs Generation Pipeline
+# FastNEAR Docs Backend
 
-`mike-docs` is the generation and verification repo for FastNEAR API and RPC docs. The public docs runtime now lives in `builder-docs` at [docs.fastnear.com](https://docs.fastnear.com); this repo owns the specs, enhancement manifests, page-model generation, standalone verification runtime, and the legacy Redocly backend.
+`mike-docs` is the docs backend and generation workspace for FastNEAR API and RPC docs. The public docs runtime now lives in `builder-docs` at [docs.fastnear.com](https://docs.fastnear.com); this repo owns spec sync, enhancement manifests, page-model generation, and the local verification runtimes that support the shipped experience.
 
 ## Repository Structure
 
@@ -28,9 +28,8 @@ mike-docs/
 │   └── transfers/
 ├── @theme/
 │   └── ext/
-│       ├── configure.ts        # Legacy Redocly extension for auth, presets, and request shaping
-│       └── generatedEnhancements.ts # Auto-generated manifest bundle for configure.ts
-├── shared/                     # Shared generated page-model registry and runtime helpers
+│       └── configure.ts        # Legacy Redocly extension for auth, presets, and request shaping
+├── shared/                     # Shared generated registries, page-models, and runtime helpers
 ├── standalone/                 # Local standalone runtime for bespoke pages
 ├── scripts/
 │   ├── check-external-openapi.js   # Workspace stale-spec check for sibling service repos
@@ -38,9 +37,6 @@ mike-docs/
 │   ├── run-realm-build.js          # Wrapped Reunite build with local-plan fallback + SSR fixes
 │   ├── generate-from-nearcore.js   # Generator: nearcore openapi.json → rpcs/*.yaml
 │   ├── nearcore-operation-map.js   # Declarative mapping of nearcore paths → output files
-│   ├── toggle-headless.js          # Switch between headless and portal Redocly modes
-│   ├── curl-postprocess.js          # Fixes curl samples: -i→-s, appends | jq, clipboard interception
-│   ├── dark-mode.js                # Client-side dark/light mode via ?colorSchema= or ?darkMode
 │   └── test-operations.js          # Smoke test for operation page accessibility
 ├── docs/
 │   └── snapshots.md            # Validator snapshot documentation
@@ -59,14 +55,8 @@ mike-docs/
 ```bash
 npm install
 
-# Preview the legacy Redocly runtime
-npm run preview:headless
-
 # Preview the standalone bespoke runtime
 npm run standalone:dev
-
-# Preview the full Redocly portal chrome
-npm run preview:portal
 
 # Default preview
 npm run preview
@@ -74,8 +64,7 @@ npm run preview
 # Build the standalone runtime
 npm run standalone:build
 
-# Build the legacy Redocly portal
-npm run preview:headless
+# Build the legacy verification path
 npm run build
 
 # Workspace stale-spec check for sibling service repos
@@ -84,8 +73,6 @@ npm run check:external-openapi
 # Full local validation before publish
 npm run verify:workspace
 
-# Production smoke test
-npm run smoke:operations:prod
 ```
 
 The legacy Redocly preview runs on port `4000` by default. The standalone bespoke runtime runs on `http://127.0.0.1:4010`.
@@ -115,7 +102,7 @@ REDOCLY_LOCAL_PLAN=enterprise npm run build
 npm run standalone:dev
 
 # legacy Redocly runtime
-npm run preview:headless
+npm run preview
 ```
 
 ### Public docs UI
@@ -130,7 +117,7 @@ yarn start
 
 Then open `http://localhost:3000`.
 
-`npm run preview`, `npm run preview:headless`, and `npm run preview:portal` now enforce that policy. They print the effective project directory/config, and they fail fast if nested `.claude/worktrees/*` Redocly configs are present so a stale agent worktree cannot masquerade as the real portal.
+`npm run preview` enforces that policy. It prints the effective project directory/config, and it fails fast if nested `.claude/worktrees/*` Redocly configs are present so a stale agent worktree cannot masquerade as the real portal.
 
 Useful local validation commands:
 
@@ -143,7 +130,7 @@ Useful local validation commands:
 
 `npm run lint` and `npm run build` also print the authoritative Redocly project/config they are validating. If nested `.claude/worktrees/*` Redocly files are present, those commands warn but continue because the root repo is still the supported validation target.
 
-Those commands also regenerate `@theme/ext/generatedEnhancements.ts` from the portal-owned manifests under `enhancements/<service>/manifest.yaml`.
+Those commands also regenerate `shared/generatedEnhancements.ts` from the portal-owned manifests under `enhancements/<service>/manifest.yaml`.
 
 `npm run lint` and `npm run build` also run `npm run check:external-openapi` first. In a multi-repo workspace, that executes `cargo run --features openapi --bin generate-openapi -- --check` in each converted service repo so stale aggregate specs fail before the portal syncs and splits them. In a standalone `mike-docs` checkout, the check skips missing sibling repos and the portal falls back to the committed vendored copies under `apis/<service>/`.
 
@@ -169,7 +156,6 @@ For production-oriented validation in this repo:
 ```bash
 npm run lint
 PLAN_GATES=... npm run build
-npm run smoke:operations:prod
 ```
 
 If you do not have a `PLAN_GATES` JWT locally, use:
@@ -190,7 +176,7 @@ Important production caveat:
 For pages that need more interaction polish than raw OpenAPI can provide, the portal supports a docs-enhancement layer:
 
 - `mike-docs` owns the enhancement manifests under `enhancements/<service>/manifest.yaml`.
-- `scripts/sync-external-apis.js` compiles those manifests into `@theme/ext/generatedEnhancements.ts`.
+- `scripts/sync-external-apis.js` compiles those manifests into `shared/generatedEnhancements.ts`.
 - `@theme/ext/configure.ts` reads that data and can seed `requestValues.path`, `requestValues.query`, and `requestValues.body` before Redocly renders Try-It.
 - the generated page-model runtime in `builder-docs` consumes those defaults directly for native pages
 - `configure.ts` still consumes them on the legacy Redocly path
@@ -295,8 +281,7 @@ Do not edit the vendored copies under `apis/<service>/` by hand unless you are i
 | `?apiKey=KEY` | string | Injected as `?apiKey=` query param, `x-api-key` header, security scheme values, and `{{API_KEY}}` code sample variable |
 | `?token=TOKEN` | string | Injected as `Authorization: Bearer TOKEN` header, security scheme values, and `{{ACCESS_TOKEN}}` code sample variable |
 | `?body=JSON` | URL-encoded JSON | Passed as `requestValues.body` — pre-populates the Try-It request body |
-| `?colorSchema=dark\|light` | string | Sets color scheme (handled by `scripts/dark-mode.js`, not configure.ts) |
-| `?darkMode` | flag | Legacy alias for `?colorSchema=dark` |
+| `?colorSchema=dark\|light` | string | Used by hosted pages in `builder-docs`; the local legacy Redocly path no longer has dedicated theme-sync glue |
 
 ### Auth resolution order
 
@@ -318,14 +303,9 @@ Example URL:
 
 When `?body=` is absent, the YAML-defined named examples render as normal — fully backward compatible.
 
-## Curl Sample Post-Processing
+## Legacy Redocly Presentation
 
-Redocly hardcodes `curl -i` in generated code samples with no config option to change it. `scripts/curl-postprocess.js` (loaded via `redocly.yaml` `scripts.head`) applies two fixes:
-
-- **DOM**: Replaces `-i` with `-s` (silent mode) and appends `| jq` in the rendered code blocks. A `MutationObserver` re-applies these transforms when samples re-render (e.g., switching servers/examples).
-- **Clipboard**: Intercepts the `copy` event to apply the same transforms when users click the copy button or Cmd+C selected curl text.
-
-The clipboard interception uses a **capture-phase** event listener because Redocly's copy button uses the `copy-to-clipboard` package, which calls `stopPropagation()` on its internal copy handler — blocking standard bubbling listeners. The capture phase fires before the package's handler can suppress the event.
+The local Redocly verification path is intentionally no longer polished to match the public docs runtime. The shipped request, curl, copy, and theme behavior now lives in `builder-docs`.
 
 ## URL Patterns
 
@@ -346,14 +326,13 @@ Four RPC server URLs are configured in `rpcs/openapi.yaml`:
 - `INTEGRATION_GUIDE.md` — Current contract between generation in `mike-docs` and rendering in `builder-docs`
 - `npm run check:external-openapi` — Run `cargo run --features openapi --bin generate-openapi -- --check` across sibling service repos when they are present
 - `npm run smoke:operations` — Smoke test representative local pretty routes
-- `npm run smoke:operations:prod` — Smoke test representative production pretty routes
 
 ## Known Limitations
 
 - This repo validates and builds the portal, but it does not encode the Redocly publish target. If production is stale after a push, the missing step is in the Redocly deployment side, not in the generated `public/` output.
+- This repo validates and builds the legacy verification surfaces, but it does not publish the public docs site. If `docs.fastnear.com` is stale after a push, the missing step is usually a `builder-docs` deployment, not anything in the generated `mike-docs` output.
 - Workspace stale-spec enforcement depends on the sibling service repos being present. In a standalone `mike-docs` checkout, `npm run check:external-openapi` skips those checks and CI validates the committed vendored `apis/<service>/` trees instead.
 - `npm run preview:fresh-examples`, `npm run refresh-examples`, and `npm run build:fresh-examples` update current-chain example values in several `rpcs/*.yaml` files. Those diffs are expected.
-- `scripts/toggle-headless.js` edits `redocly.yaml` in place.
 - `REDOCLY_AUTHORIZATION` is not a substitute for `PLAN_GATES` on the production-equivalent build path.
 - Docs-only or ingestion-only repos without a public HTTP surface are out of scope for the OpenAPI/Redocly flow.
 
@@ -367,5 +346,4 @@ npm run lint                   # Validate OpenAPI specs
 npm run preview:fresh-examples # Preview after refreshing tracked RPC example values
 npm run verify:workspace       # Stale-spec checks + portal lint + local build
 npm run smoke:operations       # Smoke test representative local pretty routes
-npm run smoke:operations:prod  # Smoke test representative production pretty routes
 ```

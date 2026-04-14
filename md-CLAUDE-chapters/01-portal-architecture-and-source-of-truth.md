@@ -35,7 +35,7 @@ The bespoke UI styling source of truth is now `builder-docs/src/css/custom.css`.
 
 - Docs-only behavior for REST APIs lives under `enhancements/<service>/manifest.yaml`.
 - This is intentionally separate from OpenAPI.
-- Enhancements are compiled into `@theme/ext/generatedEnhancements.ts`.
+- Enhancements are compiled into `shared/generatedEnhancements.ts`.
 
 ## Runtime Surfaces
 

@@ -1,7 +1,6 @@
 [
   {
     "canonicalPath": "/rpcs/account/view_access_key",
-    "generatedAt": "2026-04-13T15:41:39.677Z",
     "info": {
       "description": "Retrieves information about a specific access key for a NEAR account",
       "operationId": "view_access_key",
@@ -62,7 +61,6 @@
       "supportsFinality": true,
       "transport": "json-rpc"
     },
-    "outputModel": "standalone/generated/rpc-view-access-key-page-model.json",
     "pageModelId": "rpc-view-access-key",
     "replaceOperationPage": true,
     "request": {
@@ -334,7 +332,6 @@
   },
   {
     "canonicalPath": "/rpcs/account/view_access_key_list",
-    "generatedAt": "2026-04-13T15:41:39.682Z",
     "info": {
       "description": "Retrieves a list of all access keys for a NEAR account",
       "operationId": "view_access_key_list",
@@ -382,7 +379,6 @@
       "supportsFinality": true,
       "transport": "json-rpc"
     },
-    "outputModel": "standalone/generated/rpc-view-access-key-list-page-model.json",
     "pageModelId": "rpc-view-access-key-list",
     "replaceOperationPage": true,
     "request": {
@@ -637,7 +633,6 @@
   },
   {
     "canonicalPath": "/rpcs/account/view_account",
-    "generatedAt": "2026-04-13T15:41:39.684Z",
     "info": {
       "description": "Retrieves detailed information about a NEAR account including balance and storage usage",
       "operationId": "view_account",
@@ -685,7 +680,6 @@
       "supportsFinality": true,
       "transport": "json-rpc"
     },
-    "outputModel": "standalone/generated/rpc-view-account-page-model.json",
     "pageModelId": "rpc-view-account",
     "replaceOperationPage": true,
     "request": {
@@ -992,7 +986,6 @@
   },
   {
     "canonicalPath": "/rpcs/block/block_by_height",
-    "generatedAt": "2026-04-13T15:41:39.685Z",
     "info": {
       "description": "Retrieves block details using a specific block height (number)",
       "operationId": "block_by_height",
@@ -1039,7 +1032,6 @@
       "supportsFinality": false,
       "transport": "json-rpc"
     },
-    "outputModel": "standalone/generated/rpc-block-by-height-page-model.json",
     "pageModelId": "rpc-block-by-height",
     "replaceOperationPage": true,
     "request": {
@@ -1248,7 +1240,6 @@
   },
   {
     "canonicalPath": "/rpcs/block/block_by_id",
-    "generatedAt": "2026-04-13T15:41:39.686Z",
     "info": {
       "description": "Retrieves block details using a specific block hash",
       "operationId": "block_by_id",
@@ -1295,7 +1286,6 @@
       "supportsFinality": false,
       "transport": "json-rpc"
     },
-    "outputModel": "standalone/generated/rpc-block-by-id-page-model.json",
     "pageModelId": "rpc-block-by-id",
     "replaceOperationPage": true,
     "request": {
@@ -1504,7 +1494,6 @@
   },
   {
     "canonicalPath": "/rpcs/block/block_effects",
-    "generatedAt": "2026-04-13T15:41:39.687Z",
     "info": {
       "description": "Returns changes in block for given block height or hash over all transactions for all types",
       "operationId": "block_effects",
@@ -1560,7 +1549,6 @@
       "supportsFinality": false,
       "transport": "json-rpc"
     },
-    "outputModel": "standalone/generated/rpc-block-effects-page-model.json",
     "pageModelId": "rpc-block-effects",
     "replaceOperationPage": true,
     "request": {
@@ -1803,7 +1791,6 @@
   },
   {
     "canonicalPath": "/rpcs/contract/call",
-    "generatedAt": "2026-04-13T15:41:39.689Z",
     "info": {
       "description": "Execute a view method on a smart contract without modifying state",
       "operationId": "call_function",
@@ -1875,7 +1862,6 @@
       "supportsFinality": true,
       "transport": "json-rpc"
     },
-    "outputModel": "standalone/generated/rpc-call-function-page-model.json",
     "pageModelId": "rpc-call-function",
     "replaceOperationPage": true,
     "request": {
@@ -2162,7 +2148,6 @@
   },
   {
     "canonicalPath": "/rpcs/contract/view_code",
-    "generatedAt": "2026-04-13T15:41:39.690Z",
     "info": {
       "description": "Returns the contract code (Wasm binary) deployed to the account",
       "operationId": "view_code",
@@ -2210,7 +2195,6 @@
       "supportsFinality": true,
       "transport": "json-rpc"
     },
-    "outputModel": "standalone/generated/rpc-view-code-page-model.json",
     "pageModelId": "rpc-view-code",
     "replaceOperationPage": true,
     "request": {
@@ -2470,7 +2454,6 @@
   },
   {
     "canonicalPath": "/rpcs/contract/view_global_contract_code",
-    "generatedAt": "2026-04-13T15:41:39.691Z",
     "info": {
       "description": "Returns a globally deployed contract code by its code hash",
       "operationId": "view_global_contract_code",
@@ -2518,7 +2501,6 @@
       "supportsFinality": true,
       "transport": "json-rpc"
     },
-    "outputModel": "standalone/generated/rpc-view-global-contract-code-page-model.json",
     "pageModelId": "rpc-view-global-contract-code",
     "replaceOperationPage": true,
     "request": {
@@ -2778,7 +2760,6 @@
   },
   {
     "canonicalPath": "/rpcs/contract/view_global_contract_code_by_account_id",
-    "generatedAt": "2026-04-13T15:41:39.693Z",
     "info": {
       "description": "Returns the globally deployed contract code used by a specific account",
       "operationId": "view_global_contract_code_by_account_id",
@@ -2826,7 +2807,6 @@
       "supportsFinality": true,
       "transport": "json-rpc"
     },
-    "outputModel": "standalone/generated/rpc-view-global-contract-code-by-account-id-page-model.json",
     "pageModelId": "rpc-view-global-contract-code-by-account-id",
     "replaceOperationPage": true,
     "request": {
@@ -3086,7 +3066,6 @@
   },
   {
     "canonicalPath": "/rpcs/contract/view_state",
-    "generatedAt": "2026-04-13T15:41:39.695Z",
     "info": {
       "description": "Retrieves the state (key-value pairs) stored for a contract account",
       "operationId": "view_state",
@@ -3156,7 +3135,6 @@
       "supportsFinality": true,
       "transport": "json-rpc"
     },
-    "outputModel": "standalone/generated/rpc-view-state-page-model.json",
     "pageModelId": "rpc-view-state",
     "replaceOperationPage": true,
     "request": {
@@ -3439,7 +3417,6 @@
   },
   {
     "canonicalPath": "/rpcs/protocol/EXPERIMENTAL_congestion_level",
-    "generatedAt": "2026-04-13T15:41:39.696Z",
     "info": {
       "description": "Queries the congestion level of a shard",
       "operationId": "EXPERIMENTAL_congestion_level",
@@ -3508,7 +3485,6 @@
       "supportsFinality": false,
       "transport": "json-rpc"
     },
-    "outputModel": "standalone/generated/rpc-EXPERIMENTAL-congestion-level-page-model.json",
     "pageModelId": "rpc-EXPERIMENTAL-congestion-level",
     "replaceOperationPage": true,
     "request": {
@@ -3751,7 +3727,6 @@
   },
   {
     "canonicalPath": "/rpcs/protocol/EXPERIMENTAL_light_client_block_proof",
-    "generatedAt": "2026-04-13T15:41:39.698Z",
     "info": {
       "description": "Returns the proofs for a transaction execution",
       "operationId": "EXPERIMENTAL_light_client_block_proof",
@@ -3811,7 +3786,6 @@
       "supportsFinality": false,
       "transport": "json-rpc"
     },
-    "outputModel": "standalone/generated/rpc-EXPERIMENTAL-light-client-block-proof-page-model.json",
     "pageModelId": "rpc-EXPERIMENTAL-light-client-block-proof",
     "replaceOperationPage": true,
     "request": {
@@ -4085,7 +4059,6 @@
   },
   {
     "canonicalPath": "/rpcs/protocol/EXPERIMENTAL_light_client_proof",
-    "generatedAt": "2026-04-13T15:41:39.702Z",
     "info": {
       "description": "Returns the proofs for a transaction execution",
       "operationId": "EXPERIMENTAL_light_client_proof",
@@ -4198,7 +4171,6 @@
       "supportsFinality": false,
       "transport": "json-rpc"
     },
-    "outputModel": "standalone/generated/rpc-EXPERIMENTAL-light-client-proof-page-model.json",
     "pageModelId": "rpc-EXPERIMENTAL-light-client-proof",
     "replaceOperationPage": true,
     "request": {
@@ -4573,7 +4545,6 @@
   },
   {
     "canonicalPath": "/rpcs/protocol/EXPERIMENTAL_protocol_config",
-    "generatedAt": "2026-04-13T15:41:39.705Z",
     "info": {
       "description": "A configuration that defines the protocol-level parameters such as gas/storage costs, limits, feature flags, and other settings",
       "operationId": "EXPERIMENTAL_protocol_config",
@@ -4604,7 +4575,6 @@
       "supportsFinality": false,
       "transport": "json-rpc"
     },
-    "outputModel": "standalone/generated/rpc-EXPERIMENTAL-protocol-config-page-model.json",
     "pageModelId": "rpc-EXPERIMENTAL-protocol-config",
     "replaceOperationPage": true,
     "request": {
@@ -5163,7 +5133,6 @@
   },
   {
     "canonicalPath": "/rpcs/protocol/EXPERIMENTAL_split_storage_info",
-    "generatedAt": "2026-04-13T15:41:39.707Z",
     "info": {
       "description": "Contains the split storage information for archival nodes",
       "operationId": "EXPERIMENTAL_split_storage_info",
@@ -5194,7 +5163,6 @@
       "supportsFinality": false,
       "transport": "json-rpc"
     },
-    "outputModel": "standalone/generated/rpc-EXPERIMENTAL-split-storage-info-page-model.json",
     "pageModelId": "rpc-EXPERIMENTAL-split-storage-info",
     "replaceOperationPage": true,
     "request": {
@@ -5426,7 +5394,6 @@
   },
   {
     "canonicalPath": "/rpcs/protocol/changes",
-    "generatedAt": "2026-04-13T15:41:39.708Z",
     "info": {
       "description": "Returns changes for a given account, contract or contract code for given block height or hash",
       "operationId": "changes",
@@ -5457,7 +5424,6 @@
       "supportsFinality": false,
       "transport": "json-rpc"
     },
-    "outputModel": "standalone/generated/rpc-changes-page-model.json",
     "pageModelId": "rpc-changes",
     "replaceOperationPage": true,
     "request": {
@@ -5687,7 +5653,6 @@
   },
   {
     "canonicalPath": "/rpcs/protocol/chunk_by_block_shard",
-    "generatedAt": "2026-04-13T15:41:39.710Z",
     "info": {
       "description": "Retrieves chunk details using block ID and shard ID coordinates",
       "operationId": "chunk_by_block_shard",
@@ -5756,7 +5721,6 @@
       "supportsFinality": false,
       "transport": "json-rpc"
     },
-    "outputModel": "standalone/generated/rpc-chunk-by-block-shard-page-model.json",
     "pageModelId": "rpc-chunk-by-block-shard",
     "replaceOperationPage": true,
     "request": {
@@ -6215,7 +6179,6 @@
   },
   {
     "canonicalPath": "/rpcs/protocol/chunk_by_hash",
-    "generatedAt": "2026-04-13T15:41:39.712Z",
     "info": {
       "description": "Retrieves chunk details using a specific chunk hash",
       "operationId": "chunk_by_hash",
@@ -6262,7 +6225,6 @@
       "supportsFinality": false,
       "transport": "json-rpc"
     },
-    "outputModel": "standalone/generated/rpc-chunk-by-hash-page-model.json",
     "pageModelId": "rpc-chunk-by-hash",
     "replaceOperationPage": true,
     "request": {
@@ -6701,7 +6663,6 @@
   },
   {
     "canonicalPath": "/rpcs/protocol/client_config",
-    "generatedAt": "2026-04-13T15:41:39.717Z",
     "info": {
       "description": "Queries client node configuration",
       "operationId": "client_config",
@@ -6732,7 +6693,6 @@
       "supportsFinality": false,
       "transport": "json-rpc"
     },
-    "outputModel": "standalone/generated/rpc-client-config-page-model.json",
     "pageModelId": "rpc-client-config",
     "replaceOperationPage": true,
     "request": {
@@ -7780,7 +7740,6 @@
   },
   {
     "canonicalPath": "/rpcs/protocol/gas_price",
-    "generatedAt": "2026-04-13T15:41:39.719Z",
     "info": {
       "description": "Retrieves information about the current gas price",
       "operationId": "gas_price",
@@ -7811,7 +7770,6 @@
       "supportsFinality": false,
       "transport": "json-rpc"
     },
-    "outputModel": "standalone/generated/rpc-gas-price-page-model.json",
     "pageModelId": "rpc-gas-price",
     "replaceOperationPage": true,
     "request": {
@@ -8026,7 +7984,6 @@
   },
   {
     "canonicalPath": "/rpcs/protocol/gas_price_by_block",
-    "generatedAt": "2026-04-13T15:41:39.720Z",
     "info": {
       "description": "Retrieves gas price information for a specific block",
       "operationId": "gas_price_by_block",
@@ -8082,7 +8039,6 @@
       "supportsFinality": false,
       "transport": "json-rpc"
     },
-    "outputModel": "standalone/generated/rpc-gas-price-by-block-page-model.json",
     "pageModelId": "rpc-gas-price-by-block",
     "replaceOperationPage": true,
     "request": {
@@ -8313,7 +8269,6 @@
   },
   {
     "canonicalPath": "/rpcs/protocol/genesis_config",
-    "generatedAt": "2026-04-13T15:41:39.723Z",
     "info": {
       "description": "Get initial state and parameters for the genesis block",
       "operationId": "genesis_config",
@@ -8344,7 +8299,6 @@
       "supportsFinality": false,
       "transport": "json-rpc"
     },
-    "outputModel": "standalone/generated/rpc-genesis-config-page-model.json",
     "pageModelId": "rpc-genesis-config",
     "replaceOperationPage": true,
     "request": {
@@ -8960,7 +8914,6 @@
   },
   {
     "canonicalPath": "/rpcs/protocol/health",
-    "generatedAt": "2026-04-13T15:41:39.724Z",
     "info": {
       "description": "Performs a health check on the node to determine if it's operating correctly",
       "operationId": "health",
@@ -8991,7 +8944,6 @@
       "supportsFinality": false,
       "transport": "json-rpc"
     },
-    "outputModel": "standalone/generated/rpc-health-page-model.json",
     "pageModelId": "rpc-health",
     "replaceOperationPage": true,
     "request": {
@@ -9186,7 +9138,6 @@
   },
   {
     "canonicalPath": "/rpcs/protocol/latest_block",
-    "generatedAt": "2026-04-13T15:41:39.725Z",
     "info": {
       "description": "Retrieves the most recent block from the blockchain",
       "operationId": "latest_block",
@@ -9252,7 +9203,6 @@
       "supportsFinality": false,
       "transport": "json-rpc"
     },
-    "outputModel": "standalone/generated/rpc-latest-block-page-model.json",
     "pageModelId": "rpc-latest-block",
     "replaceOperationPage": true,
     "request": {
@@ -9464,7 +9414,6 @@
   },
   {
     "canonicalPath": "/rpcs/protocol/light_client_proof",
-    "generatedAt": "2026-04-13T15:41:39.726Z",
     "info": {
       "description": "Retrieves verification proof data for light clients",
       "operationId": "light_client_proof",
@@ -9573,7 +9522,6 @@
       "supportsFinality": false,
       "transport": "json-rpc"
     },
-    "outputModel": "standalone/generated/rpc-light-client-proof-page-model.json",
     "pageModelId": "rpc-light-client-proof",
     "replaceOperationPage": true,
     "request": {
@@ -9944,7 +9892,6 @@
   },
   {
     "canonicalPath": "/rpcs/protocol/maintenance_windows",
-    "generatedAt": "2026-04-13T15:41:39.728Z",
     "info": {
       "description": "Returns the future windows for maintenance in current epoch for the specified account",
       "operationId": "maintenance_windows",
@@ -9991,7 +9938,6 @@
       "supportsFinality": false,
       "transport": "json-rpc"
     },
-    "outputModel": "standalone/generated/rpc-maintenance-windows-page-model.json",
     "pageModelId": "rpc-maintenance-windows",
     "replaceOperationPage": true,
     "request": {
@@ -10225,7 +10171,6 @@
   },
   {
     "canonicalPath": "/rpcs/protocol/metrics",
-    "generatedAt": "2026-04-13T15:41:39.730Z",
     "info": {
       "description": "Retrieves performance metrics and operational statistics from the node",
       "operationId": "metrics",
@@ -10256,7 +10201,6 @@
       "supportsFinality": false,
       "transport": "json-rpc"
     },
-    "outputModel": "standalone/generated/rpc-metrics-page-model.json",
     "pageModelId": "rpc-metrics",
     "replaceOperationPage": true,
     "request": {
@@ -10450,7 +10394,6 @@
   },
   {
     "canonicalPath": "/rpcs/protocol/network_info",
-    "generatedAt": "2026-04-13T15:41:39.731Z",
     "info": {
       "description": "Retrieves information about the network and connected peers including active connections, peer addresses, and network configuration",
       "operationId": "network_info",
@@ -10481,7 +10424,6 @@
       "supportsFinality": false,
       "transport": "json-rpc"
     },
-    "outputModel": "standalone/generated/rpc-network-info-page-model.json",
     "pageModelId": "rpc-network-info",
     "replaceOperationPage": true,
     "request": {
@@ -10738,7 +10680,6 @@
   },
   {
     "canonicalPath": "/rpcs/protocol/next_light_client_block",
-    "generatedAt": "2026-04-13T15:41:39.732Z",
     "info": {
       "description": "Returns the next light client block",
       "operationId": "next_light_client_block",
@@ -10785,7 +10726,6 @@
       "supportsFinality": false,
       "transport": "json-rpc"
     },
-    "outputModel": "standalone/generated/rpc-next-light-client-block-page-model.json",
     "pageModelId": "rpc-next-light-client-block",
     "replaceOperationPage": true,
     "request": {
@@ -11137,7 +11077,6 @@
   },
   {
     "canonicalPath": "/rpcs/protocol/status",
-    "generatedAt": "2026-04-13T15:41:39.734Z",
     "info": {
       "description": "Retrieves current status of the node including sync info, validator status and build information",
       "operationId": "status",
@@ -11168,7 +11107,6 @@
       "supportsFinality": false,
       "transport": "json-rpc"
     },
-    "outputModel": "standalone/generated/rpc-status-page-model.json",
     "pageModelId": "rpc-status",
     "replaceOperationPage": true,
     "request": {
@@ -11682,7 +11620,6 @@
   },
   {
     "canonicalPath": "/rpcs/transaction/EXPERIMENTAL_receipt",
-    "generatedAt": "2026-04-13T15:41:39.735Z",
     "info": {
       "description": "Fetches a receipt by its ID (as is, without a status or execution outcome)",
       "operationId": "EXPERIMENTAL_receipt",
@@ -11729,7 +11666,6 @@
       "supportsFinality": false,
       "transport": "json-rpc"
     },
-    "outputModel": "standalone/generated/rpc-EXPERIMENTAL-receipt-page-model.json",
     "pageModelId": "rpc-EXPERIMENTAL-receipt",
     "replaceOperationPage": true,
     "request": {
@@ -11988,7 +11924,6 @@
   },
   {
     "canonicalPath": "/rpcs/transaction/EXPERIMENTAL_tx_status",
-    "generatedAt": "2026-04-13T15:41:39.737Z",
     "info": {
       "description": "Queries status of a transaction by hash, returning the final transaction result and details of all receipts",
       "operationId": "EXPERIMENTAL_tx_status",
@@ -12083,7 +12018,6 @@
       "supportsFinality": false,
       "transport": "json-rpc"
     },
-    "outputModel": "standalone/generated/rpc-EXPERIMENTAL-tx-status-page-model.json",
     "pageModelId": "rpc-EXPERIMENTAL-tx-status",
     "replaceOperationPage": true,
     "request": {
@@ -12395,7 +12329,6 @@
   },
   {
     "canonicalPath": "/rpcs/transaction/broadcast_tx_async",
-    "generatedAt": "2026-04-13T15:41:39.740Z",
     "info": {
       "description": "Submits a transaction to the network without waiting for its execution",
       "operationId": "broadcast_tx_async",
@@ -12462,7 +12395,6 @@
       "supportsFinality": false,
       "transport": "json-rpc"
     },
-    "outputModel": "standalone/generated/rpc-broadcast-tx-async-page-model.json",
     "pageModelId": "rpc-broadcast-tx-async",
     "replaceOperationPage": true,
     "request": {
@@ -12689,7 +12621,6 @@
   },
   {
     "canonicalPath": "/rpcs/transaction/broadcast_tx_commit",
-    "generatedAt": "2026-04-13T15:41:39.744Z",
     "info": {
       "description": "Submits a transaction and waits until it's fully committed to the blockchain",
       "operationId": "broadcast_tx_commit",
@@ -12756,7 +12687,6 @@
       "supportsFinality": false,
       "transport": "json-rpc"
     },
-    "outputModel": "standalone/generated/rpc-broadcast-tx-commit-page-model.json",
     "pageModelId": "rpc-broadcast-tx-commit",
     "replaceOperationPage": true,
     "request": {
@@ -13049,7 +12979,6 @@
   },
   {
     "canonicalPath": "/rpcs/transaction/send_tx",
-    "generatedAt": "2026-04-13T15:41:39.746Z",
     "info": {
       "description": "Sends transaction and returns the guaranteed execution status and results",
       "operationId": "send_tx",
@@ -13118,7 +13047,6 @@
       "supportsFinality": false,
       "transport": "json-rpc"
     },
-    "outputModel": "standalone/generated/rpc-send-tx-page-model.json",
     "pageModelId": "rpc-send-tx",
     "replaceOperationPage": true,
     "request": {
@@ -13413,7 +13341,6 @@
   },
   {
     "canonicalPath": "/rpcs/transaction/tx_status",
-    "generatedAt": "2026-04-13T15:41:39.747Z",
     "info": {
       "description": "Get the status and details of a transaction",
       "operationId": "tx_status",
@@ -13504,7 +13431,6 @@
       "supportsFinality": false,
       "transport": "json-rpc"
     },
-    "outputModel": "standalone/generated/rpc-tx-status-page-model.json",
     "pageModelId": "rpc-tx-status",
     "replaceOperationPage": true,
     "request": {
@@ -13812,7 +13738,6 @@
   },
   {
     "canonicalPath": "/rpcs/validators/EXPERIMENTAL_validators_ordered",
-    "generatedAt": "2026-04-13T15:41:39.750Z",
     "info": {
       "description": "Returns the current epoch validators ordered in the block producer order with repetition",
       "operationId": "EXPERIMENTAL_validators_ordered",
@@ -13871,7 +13796,6 @@
       "supportsFinality": false,
       "transport": "json-rpc"
     },
-    "outputModel": "standalone/generated/rpc-EXPERIMENTAL-validators-ordered-page-model.json",
     "pageModelId": "rpc-EXPERIMENTAL-validators-ordered",
     "replaceOperationPage": true,
     "request": {
@@ -14093,7 +14017,6 @@
   },
   {
     "canonicalPath": "/rpcs/validators/validators_by_epoch",
-    "generatedAt": "2026-04-13T15:41:39.753Z",
     "info": {
       "description": "Retrieves the list of validators and their details for a specific epoch",
       "operationId": "validators_by_epoch",
@@ -14140,7 +14063,6 @@
       "supportsFinality": false,
       "transport": "json-rpc"
     },
-    "outputModel": "standalone/generated/rpc-validators-by-epoch-page-model.json",
     "pageModelId": "rpc-validators-by-epoch",
     "replaceOperationPage": true,
     "request": {
@@ -14450,7 +14372,6 @@
   },
   {
     "canonicalPath": "/rpcs/validators/validators_current",
-    "generatedAt": "2026-04-13T15:41:39.756Z",
     "info": {
       "description": "Retrieves the list of current validators and their details",
       "operationId": "validators_current",
@@ -14481,7 +14402,6 @@
       "supportsFinality": false,
       "transport": "json-rpc"
     },
-    "outputModel": "standalone/generated/rpc-validators-current-page-model.json",
     "pageModelId": "rpc-validators-current",
     "replaceOperationPage": true,
     "request": {
@@ -14784,7 +14704,6 @@
   },
   {
     "canonicalPath": "/apis/fastnear/system/health",
-    "generatedAt": "2026-04-13T15:41:39.759Z",
     "info": {
       "description": "Returns `ok` when the service is healthy. When FastNEAR is degraded, the same `status` field carries a diagnostic string instead.",
       "operationId": "get_health",
@@ -14814,7 +14733,6 @@
       "supportsFinality": false,
       "transport": "http"
     },
-    "outputModel": "standalone/generated/fastnear-system-health-page-model.json",
     "pageModelId": "fastnear-system-health",
     "replaceOperationPage": true,
     "request": {
@@ -14914,7 +14832,6 @@
   },
   {
     "canonicalPath": "/apis/fastnear/system/status",
-    "generatedAt": "2026-04-13T15:41:39.775Z",
     "info": {
       "description": "Returns the latest indexed sync heights, the indexed block timestamp, the measured sync latency, and the deployed FastNEAR API version.",
       "operationId": "get_status",
@@ -14944,7 +14861,6 @@
       "supportsFinality": false,
       "transport": "http"
     },
-    "outputModel": "standalone/generated/fastnear-system-status-page-model.json",
     "pageModelId": "fastnear-system-status",
     "replaceOperationPage": true,
     "request": {
@@ -15079,7 +14995,6 @@
   },
   {
     "canonicalPath": "/apis/fastnear/v0/account_staking",
-    "generatedAt": "2026-04-13T15:41:39.791Z",
     "info": {
       "description": "Returns staking pool account IDs that FastNEAR has indexed for the requested account. Unlike the v1 route, this response does not include `last_update_block_height` metadata.",
       "operationId": "account_staking_v0",
@@ -15125,7 +15040,6 @@
       "supportsFinality": false,
       "transport": "http"
     },
-    "outputModel": "standalone/generated/fastnear-v0-account-staking-page-model.json",
     "pageModelId": "fastnear-v0-account-staking",
     "replaceOperationPage": true,
     "request": {
@@ -15259,7 +15173,6 @@
   },
   {
     "canonicalPath": "/apis/fastnear/v0/account_ft",
-    "generatedAt": "2026-04-13T15:41:39.799Z",
     "info": {
       "description": "Returns only fungible token contract account IDs that FastNEAR has indexed for the requested account. Unlike the v1 route, this response does not include balances or block-height metadata.",
       "operationId": "account_ft_v0",
@@ -15305,7 +15218,6 @@
       "supportsFinality": false,
       "transport": "http"
     },
-    "outputModel": "standalone/generated/fastnear-v0-account-ft-page-model.json",
     "pageModelId": "fastnear-v0-account-ft",
     "replaceOperationPage": true,
     "request": {
@@ -15439,7 +15351,6 @@
   },
   {
     "canonicalPath": "/apis/fastnear/v0/account_nft",
-    "generatedAt": "2026-04-13T15:41:39.804Z",
     "info": {
       "description": "Returns only NFT contract account IDs that FastNEAR has indexed for the requested account. Unlike the v1 route, this response does not include `last_update_block_height` metadata.",
       "operationId": "account_nft_v0",
@@ -15485,7 +15396,6 @@
       "supportsFinality": false,
       "transport": "http"
     },
-    "outputModel": "standalone/generated/fastnear-v0-account-nft-page-model.json",
     "pageModelId": "fastnear-v0-account-nft",
     "replaceOperationPage": true,
     "request": {
@@ -15619,7 +15529,6 @@
   },
   {
     "canonicalPath": "/apis/fastnear/v0/public_key_lookup",
-    "generatedAt": "2026-04-13T15:41:39.807Z",
     "info": {
       "description": "Returns account IDs currently associated with the provided full-access public key. The response includes account IDs only.",
       "operationId": "lookup_by_public_key_v0",
@@ -15665,7 +15574,6 @@
       "supportsFinality": false,
       "transport": "http"
     },
-    "outputModel": "standalone/generated/fastnear-v0-public-key-lookup-page-model.json",
     "pageModelId": "fastnear-v0-public-key-lookup",
     "replaceOperationPage": true,
     "request": {
@@ -15799,7 +15707,6 @@
   },
   {
     "canonicalPath": "/apis/fastnear/v0/public_key_lookup_all",
-    "generatedAt": "2026-04-13T15:41:39.812Z",
     "info": {
       "description": "Returns account IDs currently associated with the supplied public key, including limited-access keys when they are present in the FastNEAR index.",
       "operationId": "lookup_by_public_key_all_v0",
@@ -15845,7 +15752,6 @@
       "supportsFinality": false,
       "transport": "http"
     },
-    "outputModel": "standalone/generated/fastnear-v0-public-key-lookup-all-page-model.json",
     "pageModelId": "fastnear-v0-public-key-lookup-all",
     "replaceOperationPage": true,
     "request": {
@@ -15979,7 +15885,6 @@
   },
   {
     "canonicalPath": "/apis/fastnear/v1/account_staking",
-    "generatedAt": "2026-04-13T15:41:39.814Z",
     "info": {
       "description": "Returns staking pool rows for the requested account. `last_update_block_height` is nullable when FastNEAR has not recorded a recent indexed update for that pool relationship.",
       "operationId": "account_staking_v1",
@@ -16025,7 +15930,6 @@
       "supportsFinality": false,
       "transport": "http"
     },
-    "outputModel": "standalone/generated/fastnear-v1-account-staking-page-model.json",
     "pageModelId": "fastnear-v1-account-staking",
     "replaceOperationPage": true,
     "request": {
@@ -16182,7 +16086,6 @@
   },
   {
     "canonicalPath": "/apis/fastnear/v1/account_ft",
-    "generatedAt": "2026-04-13T15:41:39.816Z",
     "info": {
       "description": "Returns fungible token rows for the requested account. Balances and `last_update_block_height` remain nullable when the index has not recorded them yet.",
       "operationId": "account_ft_v1",
@@ -16228,7 +16131,6 @@
       "supportsFinality": false,
       "transport": "http"
     },
-    "outputModel": "standalone/generated/fastnear-v1-account-ft-page-model.json",
     "pageModelId": "fastnear-v1-account-ft",
     "replaceOperationPage": true,
     "request": {
@@ -16393,7 +16295,6 @@
   },
   {
     "canonicalPath": "/apis/fastnear/v1/account_nft",
-    "generatedAt": "2026-04-13T15:41:39.820Z",
     "info": {
       "description": "Returns NFT contract rows for the requested account. `last_update_block_height` is nullable when FastNEAR has not recorded a recent indexed update for that contract relationship.",
       "operationId": "account_nft_v1",
@@ -16439,7 +16340,6 @@
       "supportsFinality": false,
       "transport": "http"
     },
-    "outputModel": "standalone/generated/fastnear-v1-account-nft-page-model.json",
     "pageModelId": "fastnear-v1-account-nft",
     "replaceOperationPage": true,
     "request": {
@@ -16596,7 +16496,6 @@
   },
   {
     "canonicalPath": "/apis/fastnear/v1/account_full",
-    "generatedAt": "2026-04-13T15:41:39.823Z",
     "info": {
       "description": "Returns staking, fungible token, NFT, and account-state information for the requested account. `state` remains nullable when the account state has not been recorded.",
       "operationId": "account_full_v1",
@@ -16642,7 +16541,6 @@
       "supportsFinality": false,
       "transport": "http"
     },
-    "outputModel": "standalone/generated/fastnear-v1-account-full-page-model.json",
     "pageModelId": "fastnear-v1-account-full",
     "replaceOperationPage": true,
     "request": {
@@ -16883,7 +16781,6 @@
   },
   {
     "canonicalPath": "/apis/fastnear/v1/public_key_lookup",
-    "generatedAt": "2026-04-13T15:41:39.826Z",
     "info": {
       "description": "Returns account IDs currently associated with the supplied full-access public key. This v1 route currently uses the same `{ public_key, account_ids }` response shape as the v0 route.",
       "operationId": "lookup_by_public_key_v1",
@@ -16929,7 +16826,6 @@
       "supportsFinality": false,
       "transport": "http"
     },
-    "outputModel": "standalone/generated/fastnear-v1-public-key-lookup-page-model.json",
     "pageModelId": "fastnear-v1-public-key-lookup",
     "replaceOperationPage": true,
     "request": {
@@ -17063,7 +16959,6 @@
   },
   {
     "canonicalPath": "/apis/fastnear/v1/ft_top",
-    "generatedAt": "2026-04-13T15:41:39.828Z",
     "info": {
       "description": "Returns the top indexed accounts by balance for the requested fungible token.",
       "operationId": "ft_top_v1",
@@ -17109,7 +17004,6 @@
       "supportsFinality": false,
       "transport": "http"
     },
-    "outputModel": "standalone/generated/fastnear-v1-ft-top-page-model.json",
     "pageModelId": "fastnear-v1-ft-top",
     "replaceOperationPage": true,
     "request": {
@@ -17265,7 +17159,6 @@
   },
   {
     "canonicalPath": "/apis/fastnear/v1/public_key_lookup_all",
-    "generatedAt": "2026-04-13T15:41:39.830Z",
     "info": {
       "description": "Returns account IDs currently associated with the supplied public key, including limited-access keys when they are present in the FastNEAR index. This v1 route currently uses the same `{ public_key, account_ids }` response shape as the v0 route.",
       "operationId": "lookup_by_public_key_all_v1",
@@ -17311,7 +17204,6 @@
       "supportsFinality": false,
       "transport": "http"
     },
-    "outputModel": "standalone/generated/fastnear-v1-public-key-lookup-all-page-model.json",
     "pageModelId": "fastnear-v1-public-key-lookup-all",
     "replaceOperationPage": true,
     "request": {
@@ -17445,7 +17337,6 @@
   },
   {
     "canonicalPath": "/apis/kv-fastdata/v0/all_by_predecessor",
-    "generatedAt": "2026-04-13T15:41:39.834Z",
     "info": {
       "description": "Returns the latest row for each `(current_account_id, key)` pair written by the selected predecessor. `page_token` values are opaque and scoped to this endpoint and predecessor.",
       "operationId": "all_by_predecessor",
@@ -17531,7 +17422,6 @@
       "supportsFinality": false,
       "transport": "http"
     },
-    "outputModel": "standalone/generated/kv-fastdata-v0-all-by-predecessor-page-model.json",
     "pageModelId": "kv-fastdata-v0-all-by-predecessor",
     "replaceOperationPage": true,
     "request": {
@@ -17798,7 +17688,6 @@
   },
   {
     "canonicalPath": "/apis/kv-fastdata/v0/history_by_key",
-    "generatedAt": "2026-04-13T15:41:39.836Z",
     "info": {
       "description": "Returns historical FastData rows for one exact key across every indexed contract and predecessor. `page_token` values are opaque and only valid when reused with the same endpoint and filters.",
       "operationId": "history_by_key",
@@ -17899,7 +17788,6 @@
       "supportsFinality": false,
       "transport": "http"
     },
-    "outputModel": "standalone/generated/kv-fastdata-v0-history-by-key-page-model.json",
     "pageModelId": "kv-fastdata-v0-history-by-key",
     "replaceOperationPage": true,
     "request": {
@@ -18175,7 +18063,6 @@
   },
   {
     "canonicalPath": "/apis/kv-fastdata/v0/history_by_account",
-    "generatedAt": "2026-04-13T15:41:39.839Z",
     "info": {
       "description": "Returns historical rows for the requested contract account across all predecessors. `page_token` values are opaque and only valid when reused with the same endpoint and filters.",
       "operationId": "history_by_account",
@@ -18302,7 +18189,6 @@
       "supportsFinality": false,
       "transport": "http"
     },
-    "outputModel": "standalone/generated/kv-fastdata-v0-history-by-account-page-model.json",
     "pageModelId": "kv-fastdata-v0-history-by-account",
     "replaceOperationPage": true,
     "request": {
@@ -18598,7 +18484,6 @@
   },
   {
     "canonicalPath": "/apis/kv-fastdata/v0/history_by_predecessor",
-    "generatedAt": "2026-04-13T15:41:39.842Z",
     "info": {
       "description": "Returns historical rows for one `predecessor_id` + `current_account_id` pair. Use `key` or `key_prefix` to narrow the search. `page_token` values are opaque and only valid when reused with the same endpoint and filters.",
       "operationId": "history_by_predecessor",
@@ -18738,7 +18623,6 @@
       "supportsFinality": false,
       "transport": "http"
     },
-    "outputModel": "standalone/generated/kv-fastdata-v0-history-by-predecessor-page-model.json",
     "pageModelId": "kv-fastdata-v0-history-by-predecessor",
     "replaceOperationPage": true,
     "request": {
@@ -19046,7 +18930,6 @@
   },
   {
     "canonicalPath": "/apis/kv-fastdata/v0/get_history_key",
-    "generatedAt": "2026-04-13T15:41:39.846Z",
     "info": {
       "description": "Returns historical rows for one exact key written by the selected predecessor to the selected contract.",
       "operationId": "get_history_key",
@@ -19118,7 +19001,6 @@
       "supportsFinality": false,
       "transport": "http"
     },
-    "outputModel": "standalone/generated/kv-fastdata-v0-get-history-key-page-model.json",
     "pageModelId": "kv-fastdata-v0-get-history-key",
     "replaceOperationPage": true,
     "request": {
@@ -19349,7 +19231,6 @@
   },
   {
     "canonicalPath": "/apis/kv-fastdata/v0/latest_by_account",
-    "generatedAt": "2026-04-13T15:41:39.850Z",
     "info": {
       "description": "Returns the latest row for each `(predecessor_id, key)` pair written to the contract. `page_token` values are opaque and scoped to this endpoint, the contract account, and the active filters.",
       "operationId": "latest_by_account",
@@ -19461,7 +19342,6 @@
       "supportsFinality": false,
       "transport": "http"
     },
-    "outputModel": "standalone/generated/kv-fastdata-v0-latest-by-account-page-model.json",
     "pageModelId": "kv-fastdata-v0-latest-by-account",
     "replaceOperationPage": true,
     "request": {
@@ -19746,7 +19626,6 @@
   },
   {
     "canonicalPath": "/apis/kv-fastdata/v0/latest_by_predecessor",
-    "generatedAt": "2026-04-13T15:41:39.854Z",
     "info": {
       "description": "Returns the latest row for each key written by the selected predecessor to the requested contract. `page_token` values are opaque and scoped to this endpoint and filter set.",
       "operationId": "latest_by_predecessor",
@@ -19871,7 +19750,6 @@
       "supportsFinality": false,
       "transport": "http"
     },
-    "outputModel": "standalone/generated/kv-fastdata-v0-latest-by-predecessor-page-model.json",
     "pageModelId": "kv-fastdata-v0-latest-by-predecessor",
     "replaceOperationPage": true,
     "request": {
@@ -20168,7 +20046,6 @@
   },
   {
     "canonicalPath": "/apis/kv-fastdata/v0/get_latest_key",
-    "generatedAt": "2026-04-13T15:41:39.857Z",
     "info": {
       "description": "Returns the latest row for one exact key written by the selected predecessor to the selected contract.",
       "operationId": "get_latest_key",
@@ -20240,7 +20117,6 @@
       "supportsFinality": false,
       "transport": "http"
     },
-    "outputModel": "standalone/generated/kv-fastdata-v0-get-latest-key-page-model.json",
     "pageModelId": "kv-fastdata-v0-get-latest-key",
     "replaceOperationPage": true,
     "request": {
@@ -20471,7 +20347,6 @@
   },
   {
     "canonicalPath": "/apis/kv-fastdata/v0/multi",
-    "generatedAt": "2026-04-13T15:41:39.861Z",
     "info": {
       "description": "Returns the latest entry for each requested fully qualified key. Missing keys are represented as `null` entries in the response array.",
       "operationId": "multi",
@@ -20541,7 +20416,6 @@
       "supportsFinality": false,
       "transport": "http"
     },
-    "outputModel": "standalone/generated/kv-fastdata-v0-multi-page-model.json",
     "pageModelId": "kv-fastdata-v0-multi",
     "replaceOperationPage": true,
     "request": {
@@ -20797,7 +20671,6 @@
   },
   {
     "canonicalPath": "/apis/neardata/system/health",
-    "generatedAt": "2026-04-13T15:41:39.862Z",
     "info": {
       "description": "Returns `ok` when the current deployment is healthy and `unhealthy` when the latest indexed block is too stale. Invalid API keys can be rejected upstream before the request reaches the app.",
       "operationId": "get_health",
@@ -20827,7 +20700,6 @@
       "supportsFinality": false,
       "transport": "http"
     },
-    "outputModel": "standalone/generated/neardata-system-health-page-model.json",
     "pageModelId": "neardata-system-health",
     "replaceOperationPage": true,
     "request": {
@@ -20935,7 +20807,6 @@
   },
   {
     "canonicalPath": "/apis/neardata/v0/first_block",
-    "generatedAt": "2026-04-13T15:41:39.864Z",
     "info": {
       "description": "Returns a redirect to the canonical first block URL for the selected deployment. Clients that automatically follow redirects will receive the full block document instead.",
       "operationId": "get_first_block",
@@ -20965,7 +20836,6 @@
       "supportsFinality": false,
       "transport": "http"
     },
-    "outputModel": "standalone/generated/neardata-v0-first-block-page-model.json",
     "pageModelId": "neardata-v0-first-block",
     "replaceOperationPage": true,
     "request": {
@@ -21058,7 +20928,6 @@
   },
   {
     "canonicalPath": "/apis/neardata/v0/block",
-    "generatedAt": "2026-04-13T15:41:39.865Z",
     "info": {
       "description": "Returns the finalized block document for the requested height, or `null` when the block does not exist within the requested archive segment. Depending on deployment topology, the request may redirect to another host that owns the canonical archive range.",
       "operationId": "get_block",
@@ -21104,7 +20973,6 @@
       "supportsFinality": false,
       "transport": "http"
     },
-    "outputModel": "standalone/generated/neardata-v0-block-page-model.json",
     "pageModelId": "neardata-v0-block",
     "replaceOperationPage": true,
     "request": {
@@ -21256,7 +21124,6 @@
   },
   {
     "canonicalPath": "/apis/neardata/v0/block_headers",
-    "generatedAt": "2026-04-13T15:41:39.867Z",
     "info": {
       "description": "Returns the `block` object extracted from the full block response, not just the nested `header` sub-object. Depending on deployment topology, the request may redirect to another host that owns the canonical archive range.",
       "operationId": "get_block_headers",
@@ -21302,7 +21169,6 @@
       "supportsFinality": false,
       "transport": "http"
     },
-    "outputModel": "standalone/generated/neardata-v0-block-headers-page-model.json",
     "pageModelId": "neardata-v0-block-headers",
     "replaceOperationPage": true,
     "request": {
@@ -21454,7 +21320,6 @@
   },
   {
     "canonicalPath": "/apis/neardata/v0/block_chunk",
-    "generatedAt": "2026-04-13T15:41:39.868Z",
     "info": {
       "description": "Returns the chunk object for the requested shard ID, or `null` when that chunk is absent. Depending on deployment topology, the request may redirect to another host that owns the canonical archive range.",
       "operationId": "get_chunk",
@@ -21513,7 +21378,6 @@
       "supportsFinality": false,
       "transport": "http"
     },
-    "outputModel": "standalone/generated/neardata-v0-block-chunk-page-model.json",
     "pageModelId": "neardata-v0-block-chunk",
     "replaceOperationPage": true,
     "request": {
@@ -21677,7 +21541,6 @@
   },
   {
     "canonicalPath": "/apis/neardata/v0/block_shard",
-    "generatedAt": "2026-04-13T15:41:39.869Z",
     "info": {
       "description": "Returns the shard object for the requested shard ID, or `null` when that shard is absent. Depending on deployment topology, the request may redirect to another host that owns the canonical archive range.",
       "operationId": "get_shard",
@@ -21736,7 +21599,6 @@
       "supportsFinality": false,
       "transport": "http"
     },
-    "outputModel": "standalone/generated/neardata-v0-block-shard-page-model.json",
     "pageModelId": "neardata-v0-block-shard",
     "replaceOperationPage": true,
     "request": {
@@ -21900,7 +21762,6 @@
   },
   {
     "canonicalPath": "/apis/neardata/v0/block_optimistic",
-    "generatedAt": "2026-04-13T15:41:39.873Z",
     "info": {
       "description": "Returns an optimistic block document when the deployment can serve it directly. Older or archive-only heights may redirect to a canonical finalized or archive URL instead.",
       "operationId": "get_block_optimistic",
@@ -21946,7 +21807,6 @@
       "supportsFinality": false,
       "transport": "http"
     },
-    "outputModel": "standalone/generated/neardata-v0-block-optimistic-page-model.json",
     "pageModelId": "neardata-v0-block-optimistic",
     "replaceOperationPage": true,
     "request": {
@@ -22098,7 +21958,6 @@
   },
   {
     "canonicalPath": "/apis/neardata/v0/last_block_final",
-    "generatedAt": "2026-04-13T15:41:39.876Z",
     "info": {
       "description": "Returns a redirect to the canonical latest finalized block URL for the current deployment. Clients that automatically follow redirects will receive the full block document instead.",
       "operationId": "get_last_block_final",
@@ -22128,7 +21987,6 @@
       "supportsFinality": false,
       "transport": "http"
     },
-    "outputModel": "standalone/generated/neardata-v0-last-block-final-page-model.json",
     "pageModelId": "neardata-v0-last-block-final",
     "replaceOperationPage": true,
     "request": {
@@ -22229,7 +22087,6 @@
   },
   {
     "canonicalPath": "/apis/neardata/v0/last_block_optimistic",
-    "generatedAt": "2026-04-13T15:41:39.881Z",
     "info": {
       "description": "Returns a redirect to the canonical latest optimistic block URL for the current deployment. Clients that automatically follow redirects will receive the resulting block document instead.",
       "operationId": "get_last_block_optimistic",
@@ -22259,7 +22116,6 @@
       "supportsFinality": false,
       "transport": "http"
     },
-    "outputModel": "standalone/generated/neardata-v0-last-block-optimistic-page-model.json",
     "pageModelId": "neardata-v0-last-block-optimistic",
     "replaceOperationPage": true,
     "request": {
@@ -22360,7 +22216,6 @@
   },
   {
     "canonicalPath": "/apis/transactions/v0/account",
-    "generatedAt": "2026-04-13T15:41:39.890Z",
     "info": {
       "description": "Returns account transaction rows, an optional total count on the first page, and an optional resume token.",
       "operationId": "get_account",
@@ -22571,7 +22426,6 @@
       "supportsFinality": false,
       "transport": "http"
     },
-    "outputModel": "standalone/generated/transactions-v0-account-page-model.json",
     "pageModelId": "transactions-v0-account",
     "replaceOperationPage": true,
     "request": {
@@ -22982,7 +22836,6 @@
   },
   {
     "canonicalPath": "/apis/transactions/v0/block",
-    "generatedAt": "2026-04-13T15:41:39.894Z",
     "info": {
       "description": "Returns a block row and optionally its transactions and receipts.",
       "operationId": "get_block",
@@ -23045,7 +22898,6 @@
       "supportsFinality": false,
       "transport": "http"
     },
-    "outputModel": "standalone/generated/transactions-v0-block-page-model.json",
     "pageModelId": "transactions-v0-block",
     "replaceOperationPage": true,
     "request": {
@@ -23663,7 +23515,6 @@
   },
   {
     "canonicalPath": "/apis/transactions/v0/blocks",
-    "generatedAt": "2026-04-13T15:41:39.904Z",
     "info": {
       "description": "Returns up to 100 block rows for the requested height window.",
       "operationId": "get_blocks",
@@ -23732,7 +23583,6 @@
       "supportsFinality": false,
       "transport": "http"
     },
-    "outputModel": "standalone/generated/transactions-v0-blocks-page-model.json",
     "pageModelId": "transactions-v0-blocks",
     "replaceOperationPage": true,
     "request": {
@@ -24026,7 +23876,6 @@
   },
   {
     "canonicalPath": "/apis/transactions/v0/receipt",
-    "generatedAt": "2026-04-13T15:41:39.919Z",
     "info": {
       "description": "Returns a receipt row and, when present, the associated raw transaction payload.",
       "operationId": "get_receipt",
@@ -24062,7 +23911,6 @@
       "supportsFinality": false,
       "transport": "http"
     },
-    "outputModel": "standalone/generated/transactions-v0-receipt-page-model.json",
     "pageModelId": "transactions-v0-receipt",
     "replaceOperationPage": true,
     "request": {
@@ -24332,7 +24180,6 @@
   },
   {
     "canonicalPath": "/apis/transactions/v0/transactions",
-    "generatedAt": "2026-04-13T15:41:39.924Z",
     "info": {
       "description": "Returns up to 20 raw transaction payloads for the supplied transaction hashes.",
       "operationId": "get_transactions",
@@ -24374,7 +24221,6 @@
       "supportsFinality": false,
       "transport": "http"
     },
-    "outputModel": "standalone/generated/transactions-v0-transactions-page-model.json",
     "pageModelId": "transactions-v0-transactions",
     "replaceOperationPage": true,
     "request": {
@@ -24504,7 +24350,6 @@
   },
   {
     "canonicalPath": "/apis/transfers/v0/transfers",
-    "generatedAt": "2026-04-13T15:41:39.927Z",
     "info": {
       "description": "Returns transfer rows plus an opaque resume token for pagination.",
       "operationId": "get_transfers_by_account",
@@ -24663,7 +24508,6 @@
       "supportsFinality": false,
       "transport": "http"
     },
-    "outputModel": "standalone/generated/transfers-v0-transfers-page-model.json",
     "pageModelId": "transfers-v0-transfers",
     "replaceOperationPage": true,
     "request": {

@@ -8,7 +8,7 @@ const ROOT = path.resolve(__dirname, "..");
 
 const GENERATED_TS_MODULE = path.resolve(
   ROOT,
-  "@theme/ext/generatedOperationRoutes.ts"
+  "shared/generatedOperationRoutes.ts"
 );
 const GENERATED_BROWSER_SCRIPT = path.resolve(
   ROOT,

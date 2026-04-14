@@ -11,7 +11,7 @@ That is what the enhancements layer is for.
 ## Source Files
 
 - `enhancements/<service>/manifest.yaml`
-- generated output: `@theme/ext/generatedEnhancements.ts`
+- generated output: `shared/generatedEnhancements.ts`
 - consumer: `@theme/ext/configure.ts`
 
 ## What Enhancements Can Do

@@ -1,8 +1,8 @@
 /* eslint-disable no-restricted-globals */
 
-import { DOCS_ENHANCEMENTS } from "./generatedEnhancements";
-import { AGGREGATE_OPERATION_ROUTE_TO_CANONICAL } from "./generatedOperationRoutes";
-import { getPortalAuth } from "./browserAuth";
+import { getPortalAuth } from "../../shared/portalAuth";
+import { DOCS_ENHANCEMENTS } from "../../shared/generatedEnhancements";
+import { AGGREGATE_OPERATION_ROUTE_TO_CANONICAL } from "../../shared/generatedOperationRoutes";
 
 type RequestValues = {
   headers?: Record<string, string>;

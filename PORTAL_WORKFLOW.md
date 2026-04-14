@@ -22,13 +22,11 @@ If you are adding a brand-new REST API service, pair this guide with [SERVICE_ON
 2. Edit `enhancements/<service>/manifest.yaml` in this repo when an operation needs portal-side preset or interaction behavior.
 3. Run `npm run check:external-openapi` in this repo when the sibling service repos are available.
 4. Run `npm run preview`, `npm run lint`, or `npm run build` in this repo.
-5. Those commands resync the aggregate specs, regenerate `apis/<service>/` leaf files, regenerate `@theme/ext/generatedEnhancements.ts`, and refresh the generated page-model artifacts automatically before they continue.
+5. Those commands resync the aggregate specs, regenerate `apis/<service>/` leaf files, regenerate the shared enhancement bundle, and refresh the generated page-model artifacts automatically before they continue.
 6. Verify routes locally:
    - `npm run smoke:operations`
    - `npm run standalone:build`
 7. Push the changes in this repo or through the existing Redocly-connected publish path.
-8. Verify production:
-   - `npm run smoke:operations:prod`
 
 ## Local Environment
 
@@ -61,10 +59,6 @@ Supported variables:
   Syncs REST specs, verifies you are running from the repo root, rejects stale nested `.claude/worktrees/*` Redocly configs, then starts Redocly preview without mutating tracked RPC examples.
 - `npm run preview:fresh-examples`
   Syncs REST specs, refreshes tracked RPC examples, then applies the same root-only Redocly preview guard.
-- `npm run preview:headless`
-  Same as preview, but hides portal chrome for legacy parity checks.
-- `npm run preview:portal`
-  Same as preview, but restores full portal chrome.
 - `npm run lint`
   Syncs REST specs, prints the authoritative Redocly project/config, warns about stale nested `.claude/worktrees/*` Redocly configs, then validates all OpenAPI definitions.
 - `npm run build`
@@ -75,14 +69,12 @@ Supported variables:
   Run the stale-spec check, portal lint, and a local static build in one command.
 - `npm run smoke:operations`
   Smoke-tests representative local pretty routes.
-- `npm run smoke:operations:prod`
-  Smoke-tests representative routes on [fastnear.redocly.app](https://fastnear.redocly.app).
 
 ## What Will Not Work
 
 - Hand-editing vendored files under `apis/<service>/` is not durable.
   `npm run sync:apis`, `npm run preview`, `npm run lint`, and `npm run build` overwrite them from the owning service repo.
-- Hand-editing `@theme/ext/generatedEnhancements.ts` is not durable.
+- Hand-editing `shared/generatedEnhancements.ts` is not durable.
   Update the portal-owned manifest at `enhancements/<service>/manifest.yaml` instead.
 - `npm run check:external-openapi` is workspace-aware, not standalone-repo magic.
   It expects the sibling service repos; when those are absent, it skips and the portal validates the committed vendored `apis/<service>/` trees instead.
@@ -94,8 +86,6 @@ Supported variables:
   CI validates and uploads the static `public/` artifact, but org/project/mount-path live outside this repo.
 - `npm run preview:fresh-examples`, `npm run refresh-examples`, and `npm run build:fresh-examples` mutate tracked RPC example values.
   `scripts/refresh-examples.js` fetches fresh chain data and updates several `rpcs/*.yaml` files with current block, chunk, tx, and receipt examples.
-- `scripts/toggle-headless.js` edits `redocly.yaml` in place.
-  If chrome visibility looks wrong, check `git diff`.
 - Nested `.claude/worktrees/*` Redocly configs are not supported preview targets.
   Preview commands now fail fast when they detect those stale worktree copies so they cannot confuse local QA.
 - `server=` is currently only a docs-enhancement hint, not a forced Redocly server switch.
@@ -107,11 +97,6 @@ Supported variables:
 When rollout changes are published correctly:
 
 - `builder-docs` should serve fresh canonical `/rpcs/...` and `/apis/...` pages.
-- legacy Redocly pretty routes should still return `200` when you are intentionally validating that host.
-- `npm run smoke:operations:prod` should be green for the legacy checks it still covers.
-
-If RPC routes work but new API routes return 404:
-
 - the local build is probably fine,
 - the generated `public/page-data/apis/...` output is probably present,
-- and the missing step is publication of the updated portal to the deployed Redocly project.
+- and the missing step is usually publication of the updated public site from `builder-docs`.
