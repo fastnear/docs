@@ -125,7 +125,7 @@ function mirrorServerCacheEntriesToMjs(serverOutDir) {
 function printPlanGatesError(status, loadedLocalEnv) {
   const envHint = loadedLocalEnv
     ? `The file ${LOCAL_ENV_PATH} was loaded, but it does not provide a valid PLAN_GATES value.`
-    : `Create ${LOCAL_ENV_PATH} from .env.redocly.local.example or export PLAN_GATES in your shell.`;
+    : `Create ${LOCAL_ENV_PATH} with PLAN_GATES=... or export PLAN_GATES in your shell.`;
 
   if (status.kind === "missing") {
     console.error("Missing PLAN_GATES for Redocly Reunite build.");

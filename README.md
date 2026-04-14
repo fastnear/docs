@@ -137,8 +137,11 @@ Those commands also regenerate `shared/generatedEnhancements.ts` from the portal
 `npm run build` prefers a real `PLAN_GATES` JWT for a production-equivalent Reunite build. The repo looks for it in either the shell environment or a local `.env.redocly.local` file.
 
 ```bash
-cp .env.redocly.local.example .env.redocly.local
-# then fill in PLAN_GATES=... for a full build
+cat > .env.redocly.local <<'EOF'
+PLAN_GATES=replace_with_real_plan_gates_jwt
+REDOCLY_AUTHORIZATION=replace_with_redocly_api_key
+REDOCLY_LOCAL_PLAN=enterprise
+EOF
 ```
 
 If you do not have a `PLAN_GATES` JWT yet, you can still do a local static build by setting `REDOCLY_LOCAL_PLAN=enterprise` (or `pro`) in `.env.redocly.local`. That uses the same local plan fallback Redocly already exposes in `preview`, and is intended for developer validation rather than CI/deploy parity.

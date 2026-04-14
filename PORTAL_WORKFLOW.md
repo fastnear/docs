@@ -39,12 +39,17 @@ Local Redocly policy:
 Create a local Redocly env file if you want static builds:
 
 ```bash
-cp .env.redocly.local.example .env.redocly.local
+cat > .env.redocly.local <<'EOF'
+PLAN_GATES=replace_with_real_plan_gates_jwt
+REDOCLY_AUTHORIZATION=replace_with_redocly_api_key
+REDOCLY_LOCAL_PLAN=enterprise
+EOF
 ```
 
 Supported variables:
 
 - `PLAN_GATES=<jwt>` for a production-equivalent Reunite build.
+- `REDOCLY_AUTHORIZATION=<key>` for personal Redocly CLI/API auth when needed.
 - `REDOCLY_LOCAL_PLAN=enterprise` or `REDOCLY_LOCAL_PLAN=pro` for local-only validation builds.
 - `FASTNEAR_API_KEY=<key>` for authenticated `/metrics` checks in the RPC example audit.
 

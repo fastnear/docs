@@ -163,6 +163,30 @@ Redocly/Realm is now treated as the legacy delivery backend. `builder-docs` is t
 - [ ] Simplify `mike-docs` into the generation pipeline and any remaining delivery glue only.
 - [ ] Reduce `mike-docs` bespoke CSS to a minimal verification baseline, with `builder-docs` CSS treated as the only polished source of truth.
 
+#### Concrete Cleanup Checklist
+
+- [ ] Replace legacy Redocly verification in `npm run preview`, `npm run lint`, and `npm run build` with standalone-only or generator-only validation paths.
+- [ ] Rewrite `scripts/test-operations.js` so smoke coverage no longer assumes the legacy Redocly route family or `reference.page.yaml` pagination.
+- [ ] Remove browser-only Redocly route glue after the previous step:
+  `scripts/generated-operation-routes.js`
+  `scripts/api-operation-redirect.js`
+- [ ] Remove the legacy Redocly interaction and theme hooks once no local QA flow depends on them:
+  `@theme/ext/configure.ts`
+  `@theme/styles.css`
+  `@theme/components/OpenApiDocs/hooks/BeforeOpenApiOperation.tsx`
+- [ ] Remove the remaining Redocly config surface after no scripts invoke it:
+  `redocly.yaml`
+  `reference.page.yaml`
+  `sidebars.yaml`
+  `scripts/redocly-root-guard.js`
+  `scripts/run-realm-build.js`
+- [ ] Drop `@redocly/realm` from `package.json` after build/preview decommission is complete.
+- [ ] Remove local Plan Gates onboarding leftovers that only existed for the legacy build path.
+- [ ] Archive or delete historical Redocly migration notes once they stop informing active work:
+  `docs/no-redocly-view-account-spike.md`
+  `md-CLAUDE-chapters/04-custom-interactions-and-redocly-overrides.md`
+  `md-CLAUDE-chapters/05-standalone-no-redocly-spike.md`
+
 ## Validation Notes
 
 - April 10, 2026: `fastnear-api-server-rs` now generates its OpenAPI from typed Rust DTOs and a Rust-owned operation registry. `/exp/*` support remains generator-ready but unpublished by default until public deployment enables `EXPERIMENTAL_API=true`.
