@@ -47,7 +47,7 @@ paths:
                       enum: [view_state]
                     finality:
                       type: string
-                      enum: [final, optimistic]
+                      enum: [final, near-final, optimistic]
                       description: Block finality
                   required: [request_type, account_id, prefix_base64, finality]
             examples:

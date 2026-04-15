@@ -1,0 +1,132 @@
+service: neardata
+pathPrefix: /apis/neardata/
+operations:
+  /apis/neardata/system/health:
+    customPage:
+      kind: fastnear-rest-read
+      pageModelId: neardata-system-health
+      replaceOperationPage: true
+      authTransport: bearer
+      sourceSpec: apis/neardata/system/health.yaml
+      operationRoute: /apis/neardata/openapi/system/get_health
+    defaults:
+      network: mainnet
+  /apis/neardata/v0/first_block:
+    customPage:
+      kind: fastnear-rest-read
+      pageModelId: neardata-v0-first-block
+      replaceOperationPage: true
+      authTransport: bearer
+      sourceSpec: apis/neardata/v0/first_block.yaml
+      operationRoute: /apis/neardata/openapi/blocks/get_first_block
+    defaults:
+      network: mainnet
+  /apis/neardata/v0/block:
+    customPage:
+      kind: fastnear-rest-read
+      pageModelId: neardata-v0-block
+      replaceOperationPage: true
+      authTransport: bearer
+      sourceSpec: apis/neardata/v0/block.yaml
+      operationRoute: /apis/neardata/openapi/blocks/get_block
+    defaults:
+      preset: genesis
+      network: mainnet
+    presets:
+      genesis:
+        path:
+          block_height:
+            mainnet: "9820210"
+            testnet: "42376888"
+  /apis/neardata/v0/block_headers:
+    customPage:
+      kind: fastnear-rest-read
+      pageModelId: neardata-v0-block-headers
+      replaceOperationPage: true
+      authTransport: bearer
+      sourceSpec: apis/neardata/v0/block_headers.yaml
+      operationRoute: /apis/neardata/openapi/blocks/get_block_headers
+    defaults:
+      preset: genesis
+      network: mainnet
+    presets:
+      genesis:
+        path:
+          block_height:
+            mainnet: "9820210"
+            testnet: "42376888"
+  /apis/neardata/v0/block_chunk:
+    customPage:
+      kind: fastnear-rest-read
+      pageModelId: neardata-v0-block-chunk
+      replaceOperationPage: true
+      authTransport: bearer
+      sourceSpec: apis/neardata/v0/block_chunk.yaml
+      operationRoute: /apis/neardata/openapi/blocks/get_chunk
+    defaults:
+      preset: genesis-chunk
+      network: mainnet
+    presets:
+      genesis-chunk:
+        path:
+          block_height:
+            mainnet: "9820210"
+            testnet: "42376888"
+          shard_id:
+            default: "0"
+  /apis/neardata/v0/block_shard:
+    customPage:
+      kind: fastnear-rest-read
+      pageModelId: neardata-v0-block-shard
+      replaceOperationPage: true
+      authTransport: bearer
+      sourceSpec: apis/neardata/v0/block_shard.yaml
+      operationRoute: /apis/neardata/openapi/blocks/get_shard
+    defaults:
+      preset: genesis-shard
+      network: mainnet
+    presets:
+      genesis-shard:
+        path:
+          block_height:
+            mainnet: "9820210"
+            testnet: "42376888"
+          shard_id:
+            default: "0"
+  /apis/neardata/v0/block_optimistic:
+    customPage:
+      kind: fastnear-rest-read
+      pageModelId: neardata-v0-block-optimistic
+      replaceOperationPage: true
+      authTransport: bearer
+      sourceSpec: apis/neardata/v0/block_optimistic.yaml
+      operationRoute: /apis/neardata/openapi/blocks/get_block_optimistic
+    defaults:
+      preset: genesis
+      network: mainnet
+    presets:
+      genesis:
+        path:
+          block_height:
+            mainnet: "9820210"
+            testnet: "42376888"
+  /apis/neardata/v0/last_block_final:
+    customPage:
+      kind: fastnear-rest-read
+      pageModelId: neardata-v0-last-block-final
+      replaceOperationPage: true
+      authTransport: bearer
+      sourceSpec: apis/neardata/v0/last_block_final.yaml
+      operationRoute: /apis/neardata/openapi/blocks/get_last_block_final
+    defaults:
+      network: mainnet
+  /apis/neardata/v0/last_block_optimistic:
+    customPage:
+      kind: fastnear-rest-read
+      pageModelId: neardata-v0-last-block-optimistic
+      replaceOperationPage: true
+      authTransport: bearer
+      sourceSpec: apis/neardata/v0/last_block_optimistic.yaml
+      operationRoute: /apis/neardata/openapi/blocks/get_last_block_optimistic
+    defaults:
+      network: mainnet

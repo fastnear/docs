@@ -1,73 +1,666 @@
-openapi: 3.1.0
+openapi: 3.0.3
 info:
   title: Transactions API - Receipt Lookup
-  version: 1.0.0
-servers:
-  - url: https://tx.main.fastnear.com
-    description: Mainnet
+  version: 3.0.3
+  description: Returns a receipt row and, when present, the associated raw transaction payload.
 paths:
   /v0/receipt:
     post:
+      description: Returns a receipt row and, when present, the associated raw transaction payload.
       operationId: get_receipt
-      summary: Fetch a receipt by ID
-      description: Returns a receipt row and, when present, the associated transaction row.
-      tags:
-        - receipts
       requestBody:
-        required: true
         content:
           application/json:
-            schema:
-              type: object
-              additionalProperties: false
-              required:
-                - receipt_id
-              properties:
-                receipt_id:
-                  type: string
             example:
               receipt_id: H6Roj3A2SNn7HJXdigLPDHiz2kcob4MHwLg3nnDEH2VZ
+            schema:
+              $ref: "#/components/schemas/ReceiptInput"
+        required: true
       responses:
         "200":
-          description: Receipt lookup result
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  receipt:
-                    oneOf:
-                      - $ref: "#/components/schemas/ReceiptTxRow"
-                      - type: "null"
-                  transaction:
-                    oneOf:
-                      - $ref: "#/components/schemas/BlockTxRow"
-                      - type: "null"
+                $ref: "#/components/schemas/ReceiptResponse"
+          description: Receipt lookup result
         "400":
-          description: Bad request
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/ApiError"
+          description: Bad request
         "500":
-          description: ClickHouse query failure
           content:
             application/json:
               schema:
                 type: string
+          description: ClickHouse query failure
+      summary: Fetch a receipt by ID
+      tags:
+        - receipts
+servers:
+  - description: Mainnet
+    url: https://tx.main.fastnear.com
+  - description: Testnet
+    url: https://tx.test.fastnear.com
 components:
   schemas:
-    ReceiptTxRow:
-      $ref: "./block.yaml#/components/schemas/ReceiptTxRow"
-    BlockTxRow:
-      $ref: "./transactions.yaml#/components/schemas/BlockTxRow"
-    ApiError:
-      type: object
+    AccountInput:
+      additionalProperties: false
+      properties:
+        account_id:
+          type: string
+        desc:
+          nullable: true
+          type: boolean
+        from_tx_block_height:
+          format: uint64
+          minimum: 0
+          nullable: true
+          type: integer
+        is_action_arg:
+          nullable: true
+          type: boolean
+        is_any_signer:
+          nullable: true
+          type: boolean
+        is_delegated_signer:
+          nullable: true
+          type: boolean
+        is_event_log:
+          nullable: true
+          type: boolean
+        is_explicit_refund_to:
+          nullable: true
+          type: boolean
+        is_function_call:
+          nullable: true
+          type: boolean
+        is_predecessor:
+          nullable: true
+          type: boolean
+        is_real_receiver:
+          nullable: true
+          type: boolean
+        is_real_signer:
+          nullable: true
+          type: boolean
+        is_receiver:
+          nullable: true
+          type: boolean
+        is_signer:
+          nullable: true
+          type: boolean
+        is_success:
+          nullable: true
+          type: boolean
+        limit:
+          format: uint
+          maximum: 200
+          minimum: 1
+          nullable: true
+          type: integer
+        resume_token:
+          default: null
+          nullable: true
+          type: string
+        to_tx_block_height:
+          format: uint64
+          minimum: 0
+          nullable: true
+          type: integer
       required:
-        - error
-        - message
+        - account_id
+      type: object
+    AccountResponse:
+      additionalProperties: false
+      properties:
+        account_txs:
+          items:
+            $ref: "#/components/schemas/AccountTxRow"
+          type: array
+        resume_token:
+          type: string
+        txs_count:
+          format: uint64
+          minimum: 0
+          type: integer
+      required:
+        - account_txs
+        - resume_token
+        - txs_count
+      type: object
+    AccountTxRow:
+      additionalProperties: false
+      properties:
+        account_id:
+          type: string
+        is_action_arg:
+          type: boolean
+        is_any_signer:
+          type: boolean
+        is_delegated_signer:
+          type: boolean
+        is_event_log:
+          type: boolean
+        is_explicit_refund_to:
+          type: boolean
+        is_function_call:
+          type: boolean
+        is_predecessor:
+          type: boolean
+        is_real_receiver:
+          type: boolean
+        is_real_signer:
+          type: boolean
+        is_receiver:
+          type: boolean
+        is_signer:
+          type: boolean
+        is_success:
+          type: boolean
+        transaction_hash:
+          type: string
+        tx_block_height:
+          format: uint64
+          minimum: 0
+          type: integer
+        tx_block_timestamp:
+          type: string
+        tx_index:
+          format: uint32
+          minimum: 0
+          type: integer
+      required:
+        - account_id
+        - transaction_hash
+        - tx_block_height
+        - tx_block_timestamp
+        - tx_index
+        - is_signer
+        - is_delegated_signer
+        - is_real_signer
+        - is_any_signer
+        - is_predecessor
+        - is_explicit_refund_to
+        - is_receiver
+        - is_real_receiver
+        - is_function_call
+        - is_action_arg
+        - is_event_log
+        - is_success
+      type: object
+    ApiError:
+      additionalProperties: false
       properties:
         error:
           type: string
         message:
           type: string
+      required:
+        - error
+        - message
+      type: object
+    BlockInput:
+      additionalProperties: false
+      properties:
+        block_id:
+          oneOf:
+            - minimum: 0
+              type: integer
+            - type: string
+        with_receipts:
+          nullable: true
+          type: boolean
+        with_transactions:
+          nullable: true
+          type: boolean
+      required:
+        - block_id
+      type: object
+    BlockResponse:
+      additionalProperties: false
+      properties:
+        block:
+          additionalProperties: false
+          nullable: true
+          properties:
+            author_id:
+              type: string
+            block_hash:
+              type: string
+            block_height:
+              format: uint64
+              minimum: 0
+              type: integer
+            block_ordinal:
+              format: uint64
+              minimum: 0
+              nullable: true
+              type: integer
+            block_timestamp:
+              type: string
+            chunks_included:
+              format: uint64
+              minimum: 0
+              type: integer
+            epoch_id:
+              type: string
+            gas_burnt:
+              type: string
+            gas_price:
+              type: string
+            next_epoch_id:
+              type: string
+            num_receipts:
+              format: uint32
+              minimum: 0
+              type: integer
+            num_transactions:
+              format: uint32
+              minimum: 0
+              type: integer
+            prev_block_hash:
+              type: string
+            prev_block_height:
+              format: uint64
+              minimum: 0
+              nullable: true
+              type: integer
+            protocol_version:
+              format: uint32
+              minimum: 0
+              type: integer
+            tokens_burnt:
+              type: string
+            total_supply:
+              type: string
+          required:
+            - block_height
+            - block_hash
+            - prev_block_hash
+            - block_timestamp
+            - epoch_id
+            - next_epoch_id
+            - chunks_included
+            - author_id
+            - protocol_version
+            - gas_price
+            - total_supply
+            - num_transactions
+            - num_receipts
+            - gas_burnt
+            - tokens_burnt
+          type: object
+        block_receipts:
+          items:
+            $ref: "#/components/schemas/ReceiptTxRow"
+          type: array
+        block_txs:
+          items:
+            $ref: "#/components/schemas/BlockTxRow"
+          type: array
+      required:
+        - block
+        - block_txs
+        - block_receipts
+      type: object
+    BlockRow:
+      additionalProperties: false
+      properties:
+        author_id:
+          type: string
+        block_hash:
+          type: string
+        block_height:
+          format: uint64
+          minimum: 0
+          type: integer
+        block_ordinal:
+          format: uint64
+          minimum: 0
+          nullable: true
+          type: integer
+        block_timestamp:
+          type: string
+        chunks_included:
+          format: uint64
+          minimum: 0
+          type: integer
+        epoch_id:
+          type: string
+        gas_burnt:
+          type: string
+        gas_price:
+          type: string
+        next_epoch_id:
+          type: string
+        num_receipts:
+          format: uint32
+          minimum: 0
+          type: integer
+        num_transactions:
+          format: uint32
+          minimum: 0
+          type: integer
+        prev_block_hash:
+          type: string
+        prev_block_height:
+          format: uint64
+          minimum: 0
+          nullable: true
+          type: integer
+        protocol_version:
+          format: uint32
+          minimum: 0
+          type: integer
+        tokens_burnt:
+          type: string
+        total_supply:
+          type: string
+      required:
+        - block_height
+        - block_hash
+        - prev_block_hash
+        - block_timestamp
+        - epoch_id
+        - next_epoch_id
+        - chunks_included
+        - author_id
+        - protocol_version
+        - gas_price
+        - total_supply
+        - num_transactions
+        - num_receipts
+        - gas_burnt
+        - tokens_burnt
+      type: object
+    BlockTxRow:
+      additionalProperties: false
+      properties:
+        gas_burnt:
+          format: uint64
+          minimum: 0
+          type: integer
+        is_completed:
+          type: boolean
+        is_relayed:
+          type: boolean
+        is_success:
+          type: boolean
+        last_block_height:
+          format: uint64
+          minimum: 0
+          type: integer
+        nonce:
+          format: uint64
+          minimum: 0
+          type: integer
+        priority_fee:
+          format: uint64
+          minimum: 0
+          type: integer
+        real_receiver_id:
+          type: string
+        real_signer_id:
+          type: string
+        receiver_id:
+          type: string
+        shard_id:
+          format: uint64
+          minimum: 0
+          type: integer
+        signer_id:
+          type: string
+        signer_public_key:
+          type: string
+        tokens_burnt:
+          type: string
+        transaction_hash:
+          type: string
+        tx_block_hash:
+          type: string
+        tx_block_height:
+          format: uint64
+          minimum: 0
+          type: integer
+        tx_block_timestamp:
+          type: string
+        tx_index:
+          format: uint32
+          minimum: 0
+          type: integer
+      required:
+        - transaction_hash
+        - signer_id
+        - tx_block_height
+        - tx_index
+        - tx_block_hash
+        - tx_block_timestamp
+        - last_block_height
+        - is_completed
+        - shard_id
+        - receiver_id
+        - signer_public_key
+        - priority_fee
+        - nonce
+        - is_relayed
+        - real_signer_id
+        - real_receiver_id
+        - is_success
+        - gas_burnt
+        - tokens_burnt
+      type: object
+    BlocksInput:
+      additionalProperties: false
+      properties:
+        desc:
+          nullable: true
+          type: boolean
+        from_block_height:
+          format: uint64
+          minimum: 0
+          nullable: true
+          type: integer
+        limit:
+          format: uint
+          maximum: 100
+          minimum: 1
+          nullable: true
+          type: integer
+        to_block_height:
+          format: uint64
+          minimum: 0
+          nullable: true
+          type: integer
+      type: object
+    BlocksResponse:
+      additionalProperties: false
+      properties:
+        blocks:
+          items:
+            $ref: "#/components/schemas/BlockRow"
+          type: array
+      required:
+        - blocks
+      type: object
+    ReceiptInput:
+      additionalProperties: false
+      properties:
+        receipt_id:
+          type: string
+      required:
+        - receipt_id
+      type: object
+    ReceiptResponse:
+      additionalProperties: false
+      properties:
+        receipt:
+          additionalProperties: false
+          nullable: true
+          properties:
+            appear_block_height:
+              format: uint64
+              minimum: 0
+              type: integer
+            appear_receipt_index:
+              format: uint32
+              minimum: 0
+              type: integer
+            block_height:
+              format: uint64
+              minimum: 0
+              type: integer
+            block_timestamp:
+              type: string
+            is_success:
+              type: boolean
+            predecessor_id:
+              type: string
+            priority:
+              format: uint64
+              minimum: 0
+              type: integer
+            receipt_id:
+              type: string
+            receipt_index:
+              format: uint32
+              minimum: 0
+              type: integer
+            receipt_type:
+              type: string
+            receiver_id:
+              type: string
+            shard_id:
+              format: uint64
+              minimum: 0
+              type: integer
+            transaction_hash:
+              type: string
+            tx_block_height:
+              format: uint64
+              minimum: 0
+              type: integer
+            tx_block_timestamp:
+              type: string
+            tx_index:
+              format: uint32
+              minimum: 0
+              type: integer
+          required:
+            - receipt_id
+            - block_height
+            - block_timestamp
+            - receipt_index
+            - appear_block_height
+            - appear_receipt_index
+            - transaction_hash
+            - tx_block_height
+            - tx_block_timestamp
+            - tx_index
+            - predecessor_id
+            - receiver_id
+            - receipt_type
+            - priority
+            - shard_id
+            - is_success
+          type: object
+        transaction:
+          additionalProperties: true
+          nullable: true
+          type: object
+      required:
+        - receipt
+        - transaction
+      type: object
+    ReceiptTxRow:
+      additionalProperties: false
+      properties:
+        appear_block_height:
+          format: uint64
+          minimum: 0
+          type: integer
+        appear_receipt_index:
+          format: uint32
+          minimum: 0
+          type: integer
+        block_height:
+          format: uint64
+          minimum: 0
+          type: integer
+        block_timestamp:
+          type: string
+        is_success:
+          type: boolean
+        predecessor_id:
+          type: string
+        priority:
+          format: uint64
+          minimum: 0
+          type: integer
+        receipt_id:
+          type: string
+        receipt_index:
+          format: uint32
+          minimum: 0
+          type: integer
+        receipt_type:
+          type: string
+        receiver_id:
+          type: string
+        shard_id:
+          format: uint64
+          minimum: 0
+          type: integer
+        transaction_hash:
+          type: string
+        tx_block_height:
+          format: uint64
+          minimum: 0
+          type: integer
+        tx_block_timestamp:
+          type: string
+        tx_index:
+          format: uint32
+          minimum: 0
+          type: integer
+      required:
+        - receipt_id
+        - block_height
+        - block_timestamp
+        - receipt_index
+        - appear_block_height
+        - appear_receipt_index
+        - transaction_hash
+        - tx_block_height
+        - tx_block_timestamp
+        - tx_index
+        - predecessor_id
+        - receiver_id
+        - receipt_type
+        - priority
+        - shard_id
+        - is_success
+      type: object
+    TransactionsResponse:
+      additionalProperties: false
+      properties:
+        transactions:
+          items:
+            additionalProperties: true
+            type: object
+          type: array
+      required:
+        - transactions
+      type: object
+    TxInput:
+      additionalProperties: false
+      properties:
+        tx_hashes:
+          items:
+            type: string
+          maxItems: 20
+          type: array
+      required:
+        - tx_hashes
+      type: object

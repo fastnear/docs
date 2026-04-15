@@ -7,6 +7,7 @@
 
 const http = require('http');
 const https = require('https');
+const { URL } = require('url');
 
 const OPERATIONS = [
   '/rpcs/account/view_account',
@@ -14,10 +15,18 @@ const OPERATIONS = [
   '/rpcs/block/block_by_height',
   '/rpcs/transaction/tx_status',
   '/apis/fastnear/v1/account_full',
+  '/apis/fastnear/openapi/accounts/account_full_v1',
+  '/apis/fastnear/v1/account_full?preset=ecosystem-account',
   '/apis/transactions/v0/transactions',
+  '/apis/transactions/openapi/account/get_account',
+  '/apis/transactions/v0/account?preset=recent-account-history',
   '/apis/transfers/v0/transfers',
+  '/apis/transfers/openapi/transfers/get_transfers_by_account',
+  '/apis/transfers/v0/transfers?preset=recent-near-transfers',
   '/apis/kv-fastdata/v0/multi',
   '/apis/neardata/v0/block',
+  '/apis/neardata/v0/block?preset=genesis&network=testnet',
+  '/apis/neardata/v0/first_block',
   '/apis/neardata/system/health',
 ];
 
@@ -31,6 +40,21 @@ const BODY_TESTS = [
     body: { jsonrpc: '2.0', id: 'fastnear', method: 'query', params: { request_type: 'view_account', finality: 'final', account_id: 'near' } }
   },
   {
+    path: '/apis/transactions/v0/account',
+    body: { account_id: 'intents.near', desc: true, is_real_signer: true, is_success: true, limit: 50 }
+  },
+  {
+    path: '/apis/transfers/v0/transfers',
+    body: {
+      account_id: 'intents.near',
+      asset_id: 'near',
+      desc: true,
+      direction: 'receiver',
+      limit: 10,
+      min_amount: '1000000000000000000000000'
+    }
+  },
+  {
     path: '/apis/neardata/v0/first_block?apiKey=test-key',
     body: null
   }
@@ -39,33 +63,60 @@ const BODY_TESTS = [
 const cliBaseUrl = process.argv[2];
 const envBaseUrl = process.env.BASE_URL;
 const PORT = process.env.PORT || 4000;
-const BASE_URL = cliBaseUrl || envBaseUrl || `http://localhost:${PORT}`;
+const BASE_URL = cliBaseUrl || envBaseUrl || `http://127.0.0.1:${PORT}`;
 const TRANSPORT = BASE_URL.startsWith('https://') ? https : http;
 
-function testUrl(path) {
+function fetchUrl(url) {
+  const transport = url.startsWith('https://') ? https : http;
+
   return new Promise((resolve) => {
-    const url = `${BASE_URL}${path}`;
-    
-    TRANSPORT.get(url, (res) => {
-      if (res.statusCode === 200) {
-        console.log(`✅ ${path} - OK`);
-        resolve(true);
-      } else if (res.statusCode === 404) {
-        console.log(`❌ ${path} - NOT FOUND`);
-        resolve(false);
-      } else {
-        console.log(`⚠️  ${path} - Status: ${res.statusCode}`);
-        resolve(false);
-      }
-    }).on('error', (err) => {
-      console.log(`❌ ${path} - Error: ${err.message}`);
-      resolve(false);
-    });
+    transport
+      .get(url, (res) => {
+        resolve(res);
+      })
+      .on('error', (err) => {
+        resolve({ error: err });
+      });
   });
 }
 
+async function testUrl(path, redirects = 0) {
+  const url = `${BASE_URL}${path}`;
+  const res = await fetchUrl(url);
+
+  if (res.error) {
+    console.log(`❌ ${path} - Error: ${res.error.message}`);
+    return false;
+  }
+
+  if (
+    res.statusCode &&
+    res.statusCode >= 300 &&
+    res.statusCode < 400 &&
+    res.headers.location &&
+    redirects < 5
+  ) {
+    const redirectUrl = new URL(res.headers.location, url);
+    const redirectedPath = `${redirectUrl.pathname}${redirectUrl.search}`;
+    return testUrl(redirectedPath, redirects + 1);
+  }
+
+  if (res.statusCode === 200) {
+    console.log(`✅ ${path} - OK`);
+    return true;
+  }
+
+  if (res.statusCode === 404) {
+    console.log(`❌ ${path} - NOT FOUND`);
+    return false;
+  }
+
+  console.log(`⚠️  ${path} - Status: ${res.statusCode}`);
+  return false;
+}
+
 async function runTests() {
-  console.log(`Testing Redocly endpoints at ${BASE_URL}\n`);
+  console.log(`Testing legacy verification routes at ${BASE_URL}\n`);
   
   let results = {
     passed: 0,
@@ -108,13 +159,6 @@ async function runTests() {
     console.log('2. Restart of preview server');
     console.log('3. Correct operationId in OpenAPI specs');
 
-    const isLocalTarget = BASE_URL.includes('localhost') || BASE_URL.includes('127.0.0.1');
-    const hasApi404s = failedPaths.some((path) => path.startsWith('/apis/'));
-
-    if (!isLocalTarget && hasApi404s) {
-      console.log('\nProduction hint: if RPC routes pass but new /apis/... routes 404,');
-      console.log('the deployed Redocly project likely has not published this revision yet.');
-    }
   }
 }
 

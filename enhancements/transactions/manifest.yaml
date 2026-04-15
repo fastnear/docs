@@ -1,0 +1,105 @@
+service: transactions
+pathPrefix: /apis/transactions/
+operations:
+  /apis/transactions/v0/account:
+    customPage:
+      kind: fastnear-rest-body
+      pageModelId: transactions-v0-account
+      replaceOperationPage: true
+      authTransport: bearer
+      sourceSpec: apis/transactions/v0/account.yaml
+      operationRoute: /apis/transactions/openapi/account/get_account
+    defaults:
+      preset: recent-account-history
+    presets:
+      recent-account-history:
+        body:
+          desc: true
+          is_real_signer: true
+          is_success: true
+          limit: 50
+        bodyByNetwork:
+          mainnet:
+            account_id: intents.near
+          testnet:
+            account_id: root.testnet
+  /apis/transactions/v0/block:
+    customPage:
+      kind: fastnear-rest-body
+      pageModelId: transactions-v0-block
+      replaceOperationPage: true
+      authTransport: bearer
+      sourceSpec: apis/transactions/v0/block.yaml
+      operationRoute: /apis/transactions/openapi/blocks/get_block
+    defaults:
+      preset: expanded-block
+    presets:
+      expanded-block:
+        body:
+          with_receipts: true
+          with_transactions: true
+        bodyByNetwork:
+          mainnet:
+            block_id: 193916411
+          testnet:
+            block_id: 46562457
+  /apis/transactions/v0/blocks:
+    customPage:
+      kind: fastnear-rest-body
+      pageModelId: transactions-v0-blocks
+      replaceOperationPage: true
+      authTransport: bearer
+      sourceSpec: apis/transactions/v0/blocks.yaml
+      operationRoute: /apis/transactions/openapi/blocks/get_blocks
+    defaults:
+      preset: recent-block-range
+    presets:
+      recent-block-range:
+        body:
+          desc: false
+          limit: 10
+        bodyByNetwork:
+          mainnet:
+            from_block_height: 193916402
+            to_block_height: 193916411
+          testnet:
+            from_block_height: 46562448
+            to_block_height: 46562457
+  /apis/transactions/v0/receipt:
+    customPage:
+      kind: fastnear-rest-body
+      pageModelId: transactions-v0-receipt
+      replaceOperationPage: true
+      authTransport: bearer
+      sourceSpec: apis/transactions/v0/receipt.yaml
+      operationRoute: /apis/transactions/openapi/receipts/get_receipt
+    defaults:
+      preset: receipt-lookup
+    presets:
+      receipt-lookup:
+        bodyByNetwork:
+          mainnet:
+            receipt_id: gzqDSvd3ZMcVUWzBMP7j9KMWz89iZMkkEvW9g8QZjUP
+          testnet:
+            receipt_id: 8D3YiLcKYLAeNYmshj9cVwCTX6mgeWNXux4sJQ7FUTvV
+  /apis/transactions/v0/transactions:
+    customPage:
+      kind: fastnear-rest-body
+      pageModelId: transactions-v0-transactions
+      replaceOperationPage: true
+      authTransport: bearer
+      sourceSpec: apis/transactions/v0/transactions.yaml
+      operationRoute: /apis/transactions/openapi/transactions/get_transactions
+    defaults:
+      preset: transaction-hash-pair
+    presets:
+      transaction-hash-pair:
+        bodyByNetwork:
+          mainnet:
+            tx_hashes:
+              - FDrh13CdfGPXsmwUpZLfkZCoXWfpQmaFGj4zYWc1qfh
+              - Eq1a46bynaBAjoSxd2XGWdCxkZdrMvN9jMZVdZfPSjM5
+          testnet:
+            tx_hashes:
+              - Cb9GXbQVodeJsVLiK2YnBR28vkiD7y4pEFGhxMGuP33q
+              - 9ufyhaEEzmerQz1Fvt2N91ZwXCcNZVhJXhq3QzRJZgfW

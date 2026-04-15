@@ -1,0 +1,231 @@
+service: kv-fastdata
+pathPrefix: /apis/kv-fastdata/
+operations:
+  /apis/kv-fastdata/v0/all_by_predecessor:
+    customPage:
+      kind: fastnear-rest-body
+      pageModelId: kv-fastdata-v0-all-by-predecessor
+      replaceOperationPage: true
+      authTransport: bearer
+      sourceSpec: apis/kv-fastdata/v0/all_by_predecessor.yaml
+      operationRoute: /apis/kv-fastdata/openapi/latest/all_by_predecessor
+    defaults:
+      network: mainnet
+      preset: predecessor-latest
+    presets:
+      predecessor-latest:
+        path:
+          predecessor_id:
+            mainnet: james.near
+            testnet: kv.gork-agent.testnet
+        body:
+          include_metadata: true
+          limit: 50
+  /apis/kv-fastdata/v0/history_by_key:
+    customPage:
+      kind: fastnear-rest-body
+      pageModelId: kv-fastdata-v0-history-by-key
+      replaceOperationPage: true
+      authTransport: bearer
+      sourceSpec: apis/kv-fastdata/v0/history_by_key.yaml
+      operationRoute: /apis/kv-fastdata/openapi/history/history_by_key
+    defaults:
+      network: mainnet
+      preset: global-key-history
+    presets:
+      global-key-history:
+        bodyByNetwork:
+          mainnet:
+            asc: false
+            include_metadata: false
+            key: graph/follow/sleet.near
+            limit: 50
+          testnet:
+            asc: false
+            include_metadata: false
+            key: value
+            limit: 50
+  /apis/kv-fastdata/v0/history_by_account:
+    customPage:
+      kind: fastnear-rest-body
+      pageModelId: kv-fastdata-v0-history-by-account
+      replaceOperationPage: true
+      authTransport: bearer
+      sourceSpec: apis/kv-fastdata/v0/history_by_account.yaml
+      operationRoute: /apis/kv-fastdata/openapi/history/history_by_account
+    defaults:
+      network: mainnet
+      preset: account-history
+    presets:
+      account-history:
+        path:
+          current_account_id:
+            mainnet: social.near
+            testnet: kv.gork-agent.testnet
+        bodyByNetwork:
+          mainnet:
+            asc: false
+            include_metadata: true
+            key_prefix: graph/follow/
+            limit: 50
+          testnet:
+            asc: false
+            include_metadata: true
+            key_prefix: value
+            limit: 50
+  /apis/kv-fastdata/v0/history_by_predecessor:
+    customPage:
+      kind: fastnear-rest-body
+      pageModelId: kv-fastdata-v0-history-by-predecessor
+      replaceOperationPage: true
+      authTransport: bearer
+      sourceSpec: apis/kv-fastdata/v0/history_by_predecessor.yaml
+      operationRoute: /apis/kv-fastdata/openapi/history/history_by_predecessor
+    defaults:
+      network: mainnet
+      preset: predecessor-history
+    presets:
+      predecessor-history:
+        path:
+          current_account_id:
+            mainnet: social.near
+            testnet: kv.gork-agent.testnet
+          predecessor_id:
+            mainnet: james.near
+            testnet: kv.gork-agent.testnet
+        bodyByNetwork:
+          mainnet:
+            asc: false
+            include_metadata: true
+            key_prefix: graph/follow/
+            limit: 50
+          testnet:
+            asc: false
+            include_metadata: true
+            key_prefix: value
+            limit: 50
+  /apis/kv-fastdata/v0/get_history_key:
+    customPage:
+      kind: fastnear-rest-read
+      pageModelId: kv-fastdata-v0-get-history-key
+      replaceOperationPage: true
+      authTransport: bearer
+      sourceSpec: apis/kv-fastdata/v0/get_history_key.yaml
+      operationRoute: /apis/kv-fastdata/openapi/history/get_history_key
+    defaults:
+      network: mainnet
+      preset: exact-history-key
+    presets:
+      exact-history-key:
+        path:
+          current_account_id:
+            mainnet: social.near
+            testnet: kv.gork-agent.testnet
+          predecessor_id:
+            mainnet: james.near
+            testnet: kv.gork-agent.testnet
+          key:
+            mainnet: graph/follow/sleet.near
+            testnet: value
+  /apis/kv-fastdata/v0/latest_by_account:
+    customPage:
+      kind: fastnear-rest-body
+      pageModelId: kv-fastdata-v0-latest-by-account
+      replaceOperationPage: true
+      authTransport: bearer
+      sourceSpec: apis/kv-fastdata/v0/latest_by_account.yaml
+      operationRoute: /apis/kv-fastdata/openapi/latest/latest_by_account
+    defaults:
+      network: mainnet
+      preset: account-latest
+    presets:
+      account-latest:
+        path:
+          current_account_id:
+            mainnet: social.near
+            testnet: kv.gork-agent.testnet
+        bodyByNetwork:
+          mainnet:
+            include_metadata: true
+            key_prefix: graph/follow/
+            limit: 50
+          testnet:
+            include_metadata: true
+            key_prefix: value
+            limit: 50
+  /apis/kv-fastdata/v0/latest_by_predecessor:
+    customPage:
+      kind: fastnear-rest-body
+      pageModelId: kv-fastdata-v0-latest-by-predecessor
+      replaceOperationPage: true
+      authTransport: bearer
+      sourceSpec: apis/kv-fastdata/v0/latest_by_predecessor.yaml
+      operationRoute: /apis/kv-fastdata/openapi/latest/latest_by_predecessor
+    defaults:
+      network: mainnet
+      preset: predecessor-latest-contract
+    presets:
+      predecessor-latest-contract:
+        path:
+          current_account_id:
+            mainnet: social.near
+            testnet: kv.gork-agent.testnet
+          predecessor_id:
+            mainnet: james.near
+            testnet: kv.gork-agent.testnet
+        bodyByNetwork:
+          mainnet:
+            include_metadata: true
+            key_prefix: graph/follow/
+            limit: 50
+          testnet:
+            include_metadata: true
+            key_prefix: value
+            limit: 50
+  /apis/kv-fastdata/v0/get_latest_key:
+    customPage:
+      kind: fastnear-rest-read
+      pageModelId: kv-fastdata-v0-get-latest-key
+      replaceOperationPage: true
+      authTransport: bearer
+      sourceSpec: apis/kv-fastdata/v0/get_latest_key.yaml
+      operationRoute: /apis/kv-fastdata/openapi/latest/get_latest_key
+    defaults:
+      network: mainnet
+      preset: exact-latest-key
+    presets:
+      exact-latest-key:
+        path:
+          current_account_id:
+            mainnet: social.near
+            testnet: kv.gork-agent.testnet
+          predecessor_id:
+            mainnet: james.near
+            testnet: kv.gork-agent.testnet
+          key:
+            mainnet: graph/follow/sleet.near
+            testnet: value
+  /apis/kv-fastdata/v0/multi:
+    customPage:
+      kind: fastnear-rest-body
+      pageModelId: kv-fastdata-v0-multi
+      replaceOperationPage: true
+      authTransport: bearer
+      sourceSpec: apis/kv-fastdata/v0/multi.yaml
+      operationRoute: /apis/kv-fastdata/openapi/latest/multi
+    defaults:
+      network: mainnet
+      preset: multi-settings
+    presets:
+      multi-settings:
+        bodyByNetwork:
+          mainnet:
+            include_metadata: true
+            keys:
+              - social.near/james.near/graph/follow/sleet.near
+              - social.near/james.near/graph/follow/missing
+          testnet:
+            include_metadata: true
+            keys:
+              - kv.gork-agent.testnet/kv.gork-agent.testnet/value
+              - kv.gork-agent.testnet/kv.gork-agent.testnet/missing

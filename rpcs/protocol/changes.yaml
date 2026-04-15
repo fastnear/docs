@@ -33,7 +33,22 @@ paths:
                   enum: [changes]
                 params:
                   type: object
-                  description: One of multiple possible types
+                  required: [finality, changes_type, account_ids]
+                  properties:
+                    finality:
+                      type: string
+                      enum: [final, near-final, optimistic]
+                      description: Block finality
+                    changes_type:
+                      type: string
+                      enum: [account_changes]
+                      description: State change selector used by this example
+                    account_ids:
+                      type: array
+                      description: Accounts whose state changes should be returned
+                      items:
+                        type: string
+                        description: NEAR account ID
             examples:
               mainnet:
                 summary: Get state changes (Mainnet)
@@ -41,14 +56,22 @@ paths:
                   jsonrpc: "2.0"
                   id: fastnear
                   method: changes
-                  params: {}
+                  params:
+                    finality: final
+                    changes_type: account_changes
+                    account_ids:
+                      - root.near
               testnet:
                 summary: Get state changes (Testnet)
                 value:
                   jsonrpc: "2.0"
                   id: fastnear
                   method: changes
-                  params: {}
+                  params:
+                    finality: final
+                    changes_type: account_changes
+                    account_ids:
+                      - root.testnet
       responses:
         200:
           description: Successful response

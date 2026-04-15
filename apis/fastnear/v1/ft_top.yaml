@@ -1,68 +1,292 @@
-openapi: 3.1.0
+openapi: 3.0.3
 info:
-  title: FastNEAR API - V1 Top FT Holders
-  version: 1.0.0
-servers:
-  - url: https://api.fastnear.com
-    description: Mainnet
-  - url: https://test.api.fastnear.com
-    description: Testnet
+  title: FastNEAR API - V1 FT Top Holders
+  version: 3.0.3
+  description: Returns the top indexed accounts by balance for the requested fungible token.
 paths:
   /v1/ft/{token_id}/top:
     get:
+      description: Returns the top indexed accounts by balance for the requested fungible token.
       operationId: ft_top_v1
-      summary: Get the top holders for a fungible token
-      tags:
-        - v1
       parameters:
-        - name: token_id
+        - description: Fungible token contract account ID.
+          example: wrap.near
           in: path
+          name: token_id
           required: true
+          schema:
+            type: string
+        - description: Optional API key forwarded by embedded portal clients. The public FastNEAR API does not require it.
+          in: query
+          name: apiKey
+          required: false
           schema:
             type: string
       responses:
         "200":
-          description: Top holders for the requested fungible token
           content:
             application/json:
-              schema:
-                type: object
-                required:
-                  - token_id
-                  - accounts
-                properties:
-                  token_id:
-                    type: string
-                  accounts:
-                    type: array
-                    items:
-                      type: object
-                      required:
-                        - account_id
-                        - balance
-                      properties:
-                        account_id:
-                          type: string
-                        balance:
-                          type:
-                            - string
-                            - "null"
               example:
-                token_id: first.tkn.near
                 accounts:
                   - account_id: mob.near
                     balance: "979894691374420631019486155"
-                  - account_id: lucky-bastard.near
-                    balance: "10319841074196024761995069"
+                token_id: wrap.near
+              schema:
+                $ref: "#/components/schemas/TokenAccountsResponse"
+          description: Indexed top holders for the requested fungible token
         "400":
-          description: Invalid token ID
           content:
             application/json:
               schema:
                 type: string
+          description: Bad Request
         "500":
-          description: Redis or upstream failure
           content:
             application/json:
               schema:
                 type: string
+          description: Internal Server Error
+      summary: Lookup top indexed holders for a fungible token
+      tags:
+        - fungible-tokens
+servers:
+  - description: Mainnet
+    url: https://api.fastnear.com
+  - description: Testnet
+    url: https://test.api.fastnear.com
+components:
+  schemas:
+    AccountBalanceRow:
+      additionalProperties: false
+      properties:
+        account_id:
+          type: string
+        balance:
+          nullable: true
+          type: string
+      required:
+        - account_id
+        - balance
+      type: object
+    AccountFullResponse:
+      additionalProperties: false
+      properties:
+        account_id:
+          type: string
+        nfts:
+          items:
+            $ref: "#/components/schemas/NftRow"
+          type: array
+        pools:
+          items:
+            $ref: "#/components/schemas/PoolRow"
+          type: array
+        state:
+          allOf:
+            - $ref: "#/components/schemas/AccountStateResponse"
+          nullable: true
+          type: object
+        tokens:
+          items:
+            $ref: "#/components/schemas/TokenRow"
+          type: array
+      required:
+        - account_id
+        - pools
+        - tokens
+        - nfts
+        - state
+      type: object
+    AccountStateResponse:
+      additionalProperties: false
+      properties:
+        balance:
+          nullable: true
+          type: string
+        locked:
+          nullable: true
+          type: string
+        storage_bytes:
+          format: uint64
+          minimum: 0
+          nullable: true
+          type: integer
+      required:
+        - balance
+        - locked
+        - storage_bytes
+      type: object
+    HealthResponse:
+      additionalProperties: false
+      properties:
+        status:
+          type: string
+      required:
+        - status
+      type: object
+    NftRow:
+      additionalProperties: false
+      properties:
+        contract_id:
+          type: string
+        last_update_block_height:
+          format: uint64
+          minimum: 0
+          nullable: true
+          type: integer
+      required:
+        - contract_id
+        - last_update_block_height
+      type: object
+    PoolRow:
+      additionalProperties: false
+      properties:
+        last_update_block_height:
+          format: uint64
+          minimum: 0
+          nullable: true
+          type: integer
+        pool_id:
+          type: string
+      required:
+        - pool_id
+        - last_update_block_height
+      type: object
+    PublicKeyLookupResponse:
+      additionalProperties: false
+      properties:
+        account_ids:
+          items:
+            type: string
+          type: array
+        public_key:
+          type: string
+      required:
+        - public_key
+        - account_ids
+      type: object
+    StatusResponse:
+      additionalProperties: false
+      properties:
+        sync_balance_block_height:
+          format: uint64
+          minimum: 0
+          nullable: true
+          type: integer
+        sync_block_height:
+          format: uint64
+          minimum: 0
+          nullable: true
+          type: integer
+        sync_block_timestamp_nanosec:
+          nullable: true
+          type: string
+        sync_latency_sec:
+          format: double
+          nullable: true
+          type: number
+        version:
+          type: string
+      required:
+        - version
+        - sync_block_height
+        - sync_latency_sec
+        - sync_block_timestamp_nanosec
+        - sync_balance_block_height
+      type: object
+    TokenAccountsResponse:
+      additionalProperties: false
+      properties:
+        accounts:
+          items:
+            $ref: "#/components/schemas/AccountBalanceRow"
+          type: array
+        token_id:
+          type: string
+      required:
+        - token_id
+        - accounts
+      type: object
+    TokenRow:
+      additionalProperties: false
+      properties:
+        balance:
+          nullable: true
+          type: string
+        contract_id:
+          type: string
+        last_update_block_height:
+          format: uint64
+          minimum: 0
+          nullable: true
+          type: integer
+      required:
+        - contract_id
+        - last_update_block_height
+        - balance
+      type: object
+    V0ContractsResponse:
+      additionalProperties: false
+      properties:
+        account_id:
+          type: string
+        contract_ids:
+          items:
+            type: string
+          type: array
+      required:
+        - account_id
+        - contract_ids
+      type: object
+    V0StakingResponse:
+      additionalProperties: false
+      properties:
+        account_id:
+          type: string
+        pools:
+          items:
+            type: string
+          type: array
+      required:
+        - account_id
+        - pools
+      type: object
+    V1FtResponse:
+      additionalProperties: false
+      properties:
+        account_id:
+          type: string
+        tokens:
+          items:
+            $ref: "#/components/schemas/TokenRow"
+          type: array
+      required:
+        - account_id
+        - tokens
+      type: object
+    V1NftResponse:
+      additionalProperties: false
+      properties:
+        account_id:
+          type: string
+        tokens:
+          items:
+            $ref: "#/components/schemas/NftRow"
+          type: array
+      required:
+        - account_id
+        - tokens
+      type: object
+    V1StakingResponse:
+      additionalProperties: false
+      properties:
+        account_id:
+          type: string
+        pools:
+          items:
+            $ref: "#/components/schemas/PoolRow"
+          type: array
+      required:
+        - account_id
+        - pools
+      type: object

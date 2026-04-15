@@ -33,7 +33,12 @@ paths:
                   enum: [EXPERIMENTAL_protocol_config]
                 params:
                   type: object
-                  description: One of multiple possible types
+                  required: [finality]
+                  properties:
+                    finality:
+                      type: string
+                      enum: [final, near-final, optimistic]
+                      description: Block finality
             examples:
               mainnet:
                 summary: Get protocol config (Mainnet)
@@ -41,14 +46,16 @@ paths:
                   jsonrpc: "2.0"
                   id: fastnear
                   method: EXPERIMENTAL_protocol_config
-                  params: {}
+                  params:
+                    finality: final
               testnet:
                 summary: Get protocol config (Testnet)
                 value:
                   jsonrpc: "2.0"
                   id: fastnear
                   method: EXPERIMENTAL_protocol_config
-                  params: {}
+                  params:
+                    finality: final
       responses:
         200:
           description: Successful response

@@ -11,87 +11,33 @@ servers:
 security:
   - ApiKeyAuth: []
 paths:
-  /:
-    post:
+  /metrics:
+    get:
       operationId: metrics
       summary: "Get node metrics"
-      description: "Retrieves performance metrics and operational statistics from the node"
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - jsonrpc
-                - id
-                - method
-                - params
-              properties:
-                jsonrpc:
-                  type: string
-                  enum: ["2.0"]
-                id:
-                  type: string
-                  example: "fastnear"
-                method:
-                  type: string
-                  enum: ["metrics"]
-                params:
-                  type: array
-                  maxItems: 0
-                  description: "Empty array as this method takes no parameters"
-            examples:
-              mainnet:
-                summary: "Mainnet Node Metrics"
-                value:
-                  jsonrpc: "2.0"
-                  id: "fastnear"
-                  method: "metrics"
-                  params: []
-              testnet:
-                summary: "Testnet Node Metrics"
-                value:
-                  jsonrpc: "2.0"
-                  id: "fastnear"
-                  method: "metrics"
-                  params: []
+      description: "Retrieves Prometheus-format node metrics from the HTTP `/metrics` endpoint. Requires an API key."
       responses:
         "200":
           description: "Successful response"
           content:
-            application/json:
+            text/plain:
               schema:
-                $ref: '#/components/schemas/JsonRpcResponse'
+                type: string
+                description: "Prometheus exposition text"
+                example: |-
+                  # HELP process_cpu_seconds_total Total user and system CPU time spent in seconds.
+                  # TYPE process_cpu_seconds_total counter
+                  process_cpu_seconds_total 12.34
+        "403":
+          description: "Missing or invalid API key"
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: Forbidden
 components:
   securitySchemes:
     ApiKeyAuth:
       type: apiKey
       in: query
       name: apiKey
-  schemas:
-    JsonRpcResponse:
-      type: object
-      required:
-        - jsonrpc
-        - id
-      properties:
-        jsonrpc:
-          type: string
-          enum: ["2.0"]
-        id:
-          oneOf:
-            - type: string
-            - type: number
-        result:
-          type: object
-          description: "Detailed metrics on node performance, resource usage, and operational statistics"
-        error:
-          type: object
-          properties:
-            code:
-              type: integer
-            message:
-              type: string
-            data:
-              type: object

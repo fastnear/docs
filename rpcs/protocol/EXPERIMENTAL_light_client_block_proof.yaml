@@ -49,8 +49,8 @@ paths:
                   id: fastnear
                   method: EXPERIMENTAL_light_client_block_proof
                   params:
-                    block_hash: ExampleBlockHash
-                    light_client_head: ExampleBlockHash
+                    block_hash: 8fbT7nWhBwsBJjPcwhv2uqzseFJSd5Y4XcqfLAWryBsu
+                    light_client_head: 6sddgq8nkENAz4f8qR72qxRPM25QWNBVMrkYr63DgC2E
               testnet:
                 summary: Get light client block proof (Testnet)
                 value:
@@ -58,8 +58,8 @@ paths:
                   id: fastnear
                   method: EXPERIMENTAL_light_client_block_proof
                   params:
-                    block_hash: ExampleBlockHash
-                    light_client_head: ExampleBlockHash
+                    block_hash: 6MSNnEmewGXHVCbW6hSqNRgptByQbfyrvQJyho88EM1A
+                    light_client_head: Ayfw9wu3T3zEqCbrvq9CuKmGmuyiJiETvwCApXZHmCho
       responses:
         200:
           description: Successful response

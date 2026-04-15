@@ -17,7 +17,7 @@ const LEAF_TYPE_MAP = {
   FunctionArgs: { type: 'string', description: 'Base64-encoded method arguments' },
   StoreKey: { type: 'string', description: 'Base64-encoded storage key' },
   StoreValue: { type: 'string', description: 'Base64-encoded storage value' },
-  Finality: { type: 'string', enum: ['final', 'optimistic'], description: 'Block finality' },
+  Finality: { type: 'string', enum: ['final', 'near-final', 'optimistic'], description: 'Block finality' },
   SyncCheckpoint: { type: 'string', enum: ['genesis', 'earliest_available'] },
   EpochId: { type: 'string', description: 'Base58-encoded epoch identifier hash' },
   ShardId: { type: 'integer', description: 'Shard identifier' },
@@ -80,6 +80,22 @@ const OPERATIONS = [
     operationId: 'view_account',
     summary: 'View account',
     description: 'Retrieves detailed information about a NEAR account including balance and storage usage',
+    exampleParamsByNetwork: {
+      mainnet: {
+        account_id: 'root.near',
+        request_type: 'view_account',
+        finality: 'final',
+      },
+      testnet: {
+        account_id: 'root.testnet',
+        request_type: 'view_account',
+        finality: 'final',
+      },
+    },
+    extensions: {
+      'x-fastnear-interaction': { kind: 'rpc-view-account' },
+      'x-hideReplay': true,
+    },
   },
   {
     type: 'query',
@@ -89,6 +105,24 @@ const OPERATIONS = [
     operationId: 'view_access_key',
     summary: 'View access key',
     description: 'Returns information about a single access key for given account',
+    exampleParamsByNetwork: {
+      mainnet: {
+        account_id: 'root.near',
+        public_key: 'ed25519:6666666666666666666666666666666666666666666',
+        request_type: 'view_access_key',
+        finality: 'final',
+      },
+      testnet: {
+        account_id: 'root.testnet',
+        public_key: 'ed25519:Bt6gx87fRm99KkkN1Q9UEA8vY9DBLkRSntqcLDuZt3S',
+        request_type: 'view_access_key',
+        finality: 'final',
+      },
+    },
+    extensions: {
+      'x-fastnear-interaction': { kind: 'rpc-view-access-key' },
+      'x-hideReplay': true,
+    },
   },
   {
     type: 'query',
@@ -98,6 +132,22 @@ const OPERATIONS = [
     operationId: 'view_access_key_list',
     summary: 'View access key list',
     description: 'Returns all access keys for a given account',
+    exampleParamsByNetwork: {
+      mainnet: {
+        account_id: 'root.near',
+        request_type: 'view_access_key_list',
+        finality: 'final',
+      },
+      testnet: {
+        account_id: 'root.testnet',
+        request_type: 'view_access_key_list',
+        finality: 'final',
+      },
+    },
+    extensions: {
+      'x-fastnear-interaction': { kind: 'rpc-view-access-key-list' },
+      'x-hideReplay': true,
+    },
   },
 
   // === Block operations ===
@@ -109,6 +159,18 @@ const OPERATIONS = [
     operationId: 'block_by_height',
     summary: 'Get block by height',
     description: 'Returns block details for a given block height',
+    exampleParamsByNetwork: {
+      mainnet: {
+        block_id: 193543361,
+      },
+      testnet: {
+        block_id: 245254793,
+      },
+    },
+    extensions: {
+      'x-fastnear-interaction': { kind: 'rpc-block-by-height' },
+      'x-hideReplay': true,
+    },
   },
   {
     type: 'block_variant',
@@ -118,6 +180,18 @@ const OPERATIONS = [
     operationId: 'block_by_id',
     summary: 'Get block by hash',
     description: 'Returns block details for a given block hash',
+    exampleParamsByNetwork: {
+      mainnet: {
+        block_id: 'CU1KcVSuYAZUiehn7TnCxSdpb3RGoHxK1hABC5AKKo2Q',
+      },
+      testnet: {
+        block_id: 'CoPszhGFqcx9L1HQYM62g3UjxMpuZD8RiZL6QdpBZXA4',
+      },
+    },
+    extensions: {
+      'x-fastnear-interaction': { kind: 'rpc-block-by-id' },
+      'x-hideReplay': true,
+    },
   },
   {
     type: 'simple',
@@ -127,6 +201,25 @@ const OPERATIONS = [
     operationId: 'block_effects',
     summary: 'Get block effects',
     description: 'Returns changes in block for given block height or hash over all transactions for all types',
+    exampleParamsByNetwork: {
+      mainnet: {
+        block_id: 193543361,
+      },
+      testnet: {
+        block_id: 245254793,
+      },
+    },
+    paramsSchemaOverride: {
+      type: 'object',
+      required: ['block_id'],
+      properties: {
+        block_id: BLOCK_ID_SCHEMA,
+      },
+    },
+    extensions: {
+      'x-fastnear-interaction': { kind: 'rpc-block-effects' },
+      'x-hideReplay': true,
+    },
   },
 
   // === Contract operations ===

@@ -45,13 +45,7 @@ paths:
                       description: Base58-encoded hash
                     type:
                       type: string
-                      enum: [receipt]
-                    receipt_id:
-                      type: string
-                      description: Base58-encoded hash
-                    receiver_id:
-                      type: string
-                      description: NEAR account ID
+                      enum: [transaction]
                   required: [light_client_head]
             examples:
               mainnet:
@@ -61,10 +55,10 @@ paths:
                   id: fastnear
                   method: light_client_proof
                   params:
-                    type: receipt
-                    transaction_hash: 8gR9ivViWQnf7xASYiAqE4ftgSYoCfE6kbUNV11Gmb2M
-                    sender_id: 0-relay.hot.tg
-                    light_client_head: 3ut7DttXoW1tFcxqkhScsXg1rE4D4ksYarYZ3EceCWfC
+                    type: transaction
+                    transaction_hash: 4EQZ5qoEJUbz8SRNkNwrAPtsn2VFhg9Ci1weaNNpiuR7
+                    sender_id: intents.near
+                    light_client_head: 6sddgq8nkENAz4f8qR72qxRPM25QWNBVMrkYr63DgC2E
               testnet:
                 summary: Testnet Light Client Proof
                 value:
@@ -72,10 +66,10 @@ paths:
                   id: fastnear
                   method: light_client_proof
                   params:
-                    type: receipt
-                    transaction_hash: ErQ2ryNgxXa1ZuRqrkg14fWPbDBumrLaetoYgrw127aW
-                    sender_id: zcash-relayer.testnet
-                    light_client_head: HpzRGLFds3FqJP1oBPExdMjupovgUr9HzD5hCBKE6KQ6
+                    type: transaction
+                    transaction_hash: 2HVQfqHKu78VEW1aRidvR5Auqu1bw1V12TJywoqw1aup
+                    sender_id: relay.aurora
+                    light_client_head: Ayfw9wu3T3zEqCbrvq9CuKmGmuyiJiETvwCApXZHmCho
       responses:
         200:
           description: Successful response

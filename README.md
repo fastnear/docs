@@ -1,8 +1,6 @@
-# FastNEAR RPC & API Documentation Portal
+# FastNEAR Docs Backend
 
-Redocly Reunite-based documentation portal for [FastNEAR](https://fastnear.com) RPC and REST API endpoints. Renders per-operation pages from OpenAPI YAML specs, with Try-It consoles and auto-generated code samples.
-
-Deployed to: https://fastnear.redocly.app
+`mike-docs` is the docs backend and generation workspace for FastNEAR API and RPC docs. The public docs runtime now lives in `builder-docs` at [docs.fastnear.com](https://docs.fastnear.com); this repo owns spec sync, enhancement manifests, page-model generation, and the local verification runtimes that support the shipped experience.
 
 ## Repository Structure
 
@@ -16,23 +14,29 @@ mike-docs/
 │   ├── protocol/               # 20 operations (status, health, gas_price, genesis_config, EXPERIMENTAL_*, ...)
 │   ├── transaction/            # 6 operations (tx_status, send_tx, broadcast_tx_async, ...)
 │   └── validators/             # 3 operations (validators_current, validators_by_epoch, ...)
-├── apis/                       # Vendored REST API specs (owned in sibling service repos)
+├── apis/                       # Portal-owned per-operation REST API pages, split from sibling aggregate specs
 │   ├── fastnear/
 │   ├── transactions/
 │   ├── transfers/
 │   ├── kv-fastdata/
 │   └── neardata/
+├── enhancements/               # Portal-owned docs enhancement manifests for Try-It presets and overrides
+│   ├── fastnear/
+│   ├── kv-fastdata/
+│   ├── neardata/
+│   ├── transactions/
+│   └── transfers/
 ├── @theme/
 │   └── ext/
-│       └── configure.ts        # Redocly extension — injects auth, body, and env vars into Try-It
+│       └── configure.ts        # Legacy Redocly extension for auth, presets, and request shaping
+├── shared/                     # Shared generated registries, page-models, and runtime helpers
+├── standalone/                 # Local standalone runtime for bespoke pages
 ├── scripts/
-│   ├── sync-external-apis.js       # Copies service-owned openapi/ trees into apis/<service>/
+│   ├── check-external-openapi.js   # Workspace stale-spec check for sibling service repos
+│   ├── sync-external-apis.js       # Syncs aggregate specs, splits portal leaf files, regenerates page-model artifacts
 │   ├── run-realm-build.js          # Wrapped Reunite build with local-plan fallback + SSR fixes
 │   ├── generate-from-nearcore.js   # Generator: nearcore openapi.json → rpcs/*.yaml
 │   ├── nearcore-operation-map.js   # Declarative mapping of nearcore paths → output files
-│   ├── toggle-headless.js          # Switch between headless (embed) and portal (standalone) mode
-│   ├── curl-postprocess.js          # Fixes curl samples: -i→-s, appends | jq, clipboard interception
-│   ├── dark-mode.js                # Client-side dark/light mode via ?colorSchema= or ?darkMode
 │   └── test-operations.js          # Smoke test for operation page accessibility
 ├── docs/
 │   └── snapshots.md            # Validator snapshot documentation
@@ -51,38 +55,154 @@ mike-docs/
 ```bash
 npm install
 
-# Preview in headless mode (for testing iframe embedding)
-npm run preview:headless
+# Preview the standalone bespoke runtime
+npm run standalone:dev
 
-# Preview in full portal mode (standalone with sidebar/navbar)
-npm run preview:portal
-
-# Preview with default settings
+# Default preview
 npm run preview
 
-# Production portal build
+# Build the standalone runtime
+npm run standalone:build
+
+# Build the legacy verification path
 npm run build
 
-# Production smoke test
-npm run smoke:operations:prod
+# Workspace stale-spec check for sibling service repos
+npm run check:external-openapi
+
+# Full local validation before publish
+npm run verify:workspace
+
 ```
 
-The preview server runs on http://127.0.0.1:4000 by default.
+The legacy Redocly preview runs on port `4000` by default. The standalone bespoke runtime runs on `http://127.0.0.1:4010`.
 
-`npm run preview`, `npm run lint`, and `npm run build` all resync the vendored REST specs before they run. The source of truth for those lives in sibling repos under `../fn/*/openapi`, not in `apis/<service>/`.
+Important local-policy note:
+
+- Run Redocly preview from the `mike-docs` repo root only.
+- Do not use `.claude/worktrees/*` as a local Redocly project.
+- If preview reports broken-link diagnostics referencing `.claude/worktrees/...`, that is a stale nested agent worktree, not the current portal config.
+
+## Running Locally
+
+### Generation and verification in this repo
+
+```bash
+npm install
+npm run sync:apis
+npm run lint
+npm run standalone:build
+REDOCLY_LOCAL_PLAN=enterprise npm run build
+```
+
+### Local runtime previews
+
+```bash
+# standalone bespoke runtime
+npm run standalone:dev
+
+# legacy Redocly runtime
+npm run preview
+```
+
+### Public docs UI
+
+For the full local experience, run `builder-docs` separately:
+
+```bash
+cd /Users/mikepurvis/near/fn/builder-docs
+yarn install
+yarn start
+```
+
+Then open `http://localhost:3000`.
+
+`npm run preview` enforces that policy. It prints the effective project directory/config, and it fails fast if nested `.claude/worktrees/*` Redocly configs are present so a stale agent worktree cannot masquerade as the real portal.
+
+Useful local validation commands:
+
+- `npm run smoke:operations`
+- `REDOCLY_LOCAL_PLAN=enterprise npm run build`
+- `npm run standalone:build`
+- `node scripts/test-operations.js http://127.0.0.1:4000`
+
+`npm run preview`, `npm run lint`, and `npm run build` all resync the vendored REST specs before they run. The source of truth for those lives in sibling repos under `../fn/*/openapi/openapi.yaml`, not in `apis/<service>/`.
+
+`npm run lint` and `npm run build` also print the authoritative Redocly project/config they are validating. If nested `.claude/worktrees/*` Redocly files are present, those commands warn but continue because the root repo is still the supported validation target.
+
+Those commands also regenerate `shared/generatedEnhancements.ts` from the portal-owned manifests under `enhancements/<service>/manifest.yaml`.
+
+`npm run lint` and `npm run build` also run `npm run check:external-openapi` first. In a multi-repo workspace, that executes `cargo run --features openapi --bin generate-openapi -- --check` in each converted service repo so stale aggregate specs fail before the portal syncs and splits them. In a standalone `mike-docs` checkout, the check skips missing sibling repos and the portal falls back to the committed vendored copies under `apis/<service>/`.
 
 `npm run build` prefers a real `PLAN_GATES` JWT for a production-equivalent Reunite build. The repo looks for it in either the shell environment or a local `.env.redocly.local` file.
 
 ```bash
-cp .env.redocly.local.example .env.redocly.local
-# then fill in PLAN_GATES=... for a full build
+cat > .env.redocly.local <<'EOF'
+PLAN_GATES=replace_with_real_plan_gates_jwt
+REDOCLY_AUTHORIZATION=replace_with_redocly_api_key
+REDOCLY_LOCAL_PLAN=enterprise
+EOF
 ```
 
 If you do not have a `PLAN_GATES` JWT yet, you can still do a local static build by setting `REDOCLY_LOCAL_PLAN=enterprise` (or `pro`) in `.env.redocly.local`. That uses the same local plan fallback Redocly already exposes in `preview`, and is intended for developer validation rather than CI/deploy parity.
 
 `REDOCLY_AUTHORIZATION` is a separate personal API key. It can be useful for Redocly CLI/API calls, but it does not satisfy `realm build` on its own.
 
-Start with [`PORTAL_WORKFLOW.md`](/Users/mikepurvis/near/mike-docs/PORTAL_WORKFLOW.md) if you want the full day-to-day workflow, validation sequence, and deployment caveats in one place.
+Start with [PORTAL_WORKFLOW.md](PORTAL_WORKFLOW.md) if you want the full day-to-day workflow, validation sequence, and deployment caveats in one place.
+
+If you are onboarding another REST API service, use [SERVICE_ONBOARDING_CHECKLIST.md](SERVICE_ONBOARDING_CHECKLIST.md) as the canonical rollout checklist.
+
+## Production Validation
+
+For production-oriented validation in this repo:
+
+```bash
+npm run lint
+PLAN_GATES=... npm run build
+```
+
+If you do not have a `PLAN_GATES` JWT locally, use:
+
+```bash
+REDOCLY_LOCAL_PLAN=enterprise npm run build
+```
+
+That is good for local static-build validation, but it is not a substitute for the real entitlement-backed production build path.
+
+Important production caveat:
+
+- this repo validates generation and the legacy Redocly portal, but the public docs host now ships from `builder-docs`
+- if `docs.fastnear.com` is stale after the local checks are green, the missing step is usually a `builder-docs` publish, not a `mike-docs` change
+
+## Docs Enhancement Layer
+
+For pages that need more interaction polish than raw OpenAPI can provide, the portal supports a docs-enhancement layer:
+
+- `mike-docs` owns the enhancement manifests under `enhancements/<service>/manifest.yaml`.
+- `scripts/sync-external-apis.js` compiles those manifests into `shared/generatedEnhancements.ts`.
+- `@theme/ext/configure.ts` reads that data and can seed `requestValues.path`, `requestValues.query`, and `requestValues.body` before Redocly renders Try-It.
+- the generated page-model runtime in `builder-docs` consumes those defaults directly for native pages
+- `configure.ts` still consumes them on the legacy Redocly path
+
+Current supported request-shaping inputs in this repo:
+
+- `preset`: chooses a named manifest preset for the current operation.
+- `network`: selects network-scoped preset values like mainnet/testnet block heights.
+- `server`: forwards a server hint into the portal environment variables on canonical `/apis/...` routes.
+- `body`: forwards a full request-body override as URL-encoded JSON.
+- `path.<name>` / `query.<name>` / `header.<name>`: explicit override values that win over preset defaults.
+
+Priority order is:
+
+1. explicit URL overrides
+2. selected preset values
+3. manifest defaults
+4. raw OpenAPI examples
+
+Legacy Redocly behavior:
+
+- the legacy verification path still relies on `configure.ts` for auth and request shaping
+- canonical `/rpcs/...` and `/apis/...` routes are the only supported public route families
 
 ## Generating RPC Specs from nearcore
 
@@ -126,24 +246,15 @@ Some operations are `custom` type (not derived from nearcore), such as `metrics`
 
 ## Relationship with builder-docs
 
-This repo is a **headless documentation backend**. The [builder-docs](https://github.com/fastnear/builder-docs) Docusaurus site embeds individual operation pages via iframes:
+`builder-docs` is now the public presentation runtime. This repo feeds it generated artifacts and optional local backends:
 
-```
-mike-docs (Redocly)                    builder-docs (Docusaurus)
-┌────────────────────┐                 ┌────────────────────┐
-│ rpcs/account/       │    iframe       │ docs/rpc-api/       │
-│   view_account.yaml │ ◄──────────── │   view-account.mdx  │
-│                     │                 │   (RpcRedoc component)│
-│ @theme/ext/         │                 │                     │
-│   configure.ts      │                 │ ApiKeyManager       │
-│   (reads URL params │                 │   (localStorage →   │
-│    → requestValues) │                 │    iframe URL params)│
-└────────────────────┘                 └────────────────────┘
-```
+1. `mike-docs` syncs aggregate REST specs and generates per-operation leaf files.
+2. `mike-docs` compiles portal-owned enhancements and page models.
+3. Generated page models are vendored into `builder-docs/src/data/generatedFastnearPageModels.json`.
+4. `builder-docs` renders `/docs/rpc-api/**` natively with `FastnearDirectOperation`.
+5. `builder-docs` also generates canonical hosted `/rpcs/**` and `/apis/**` pages from the same models.
 
-**Headless mode** (used for embedding): hides sidebar, navbar, breadcrumbs, and navigation buttons via `redocly.yaml` settings. Toggle with `npm run preview:headless` / `npm run preview:portal`.
-
-The iframe URL is the full communication channel between the two sites. builder-docs constructs it with auth credentials and (optionally) a pre-populated request body, then mike-docs' `configure.ts` extension reads those params and feeds them to Redocly's Try-It console via `requestValues`.
+The Redocly runtime is now legacy scaffolding for validation and parity checks.
 
 ## REST API Rollout Model
 
@@ -155,7 +266,10 @@ The non-RPC APIs now follow the same per-operation pattern as the RPC docs, but 
 - `/apis/kv-fastdata/...`
 - `/apis/neardata/...`
 
-Each service owns its own `openapi/` directory in its own repo. This repo vendors those specs locally for Redocly rendering and exposes pretty routes that builder-docs can embed.
+Each service owns its own `openapi/` directory in its own repo. This repo vendors those specs locally, splits them into canonical `/apis/...` leaf pages, and generates the shared page-model data consumed by `builder-docs`.
+
+Canonical public docs data lives under `/apis/<service>/...`.
+The old single-network Redocly verification route family has been retired.
 
 Do not edit the vendored copies under `apis/<service>/` by hand unless you are intentionally making a temporary experiment; the sync step overwrites them.
 
@@ -170,15 +284,14 @@ Do not edit the vendored copies under `apis/<service>/` by hand unless you are i
 | `?apiKey=KEY` | string | Injected as `?apiKey=` query param, `x-api-key` header, security scheme values, and `{{API_KEY}}` code sample variable |
 | `?token=TOKEN` | string | Injected as `Authorization: Bearer TOKEN` header, security scheme values, and `{{ACCESS_TOKEN}}` code sample variable |
 | `?body=JSON` | URL-encoded JSON | Passed as `requestValues.body` — pre-populates the Try-It request body |
-| `?colorSchema=dark\|light` | string | Sets color scheme (handled by `scripts/dark-mode.js`, not configure.ts) |
-| `?darkMode` | flag | Legacy alias for `?colorSchema=dark` |
+| `?colorSchema=dark\|light` | string | Used by hosted pages in `builder-docs`; the local legacy Redocly path no longer has dedicated theme-sync glue |
 
 ### Auth resolution order
 
-1. **API key**: URL param `?apiKey=` > localStorage `fastnear:apiKey` > localStorage `fastnear_api_key`
+1. **API key**: URL param `?apiKey=` > localStorage `fastnear:apiKey` > legacy localStorage `fastnear_api_key`
 2. **Bearer token**: URL param `?token=` > localStorage `fastnear:bearer`
 
-When embedded in builder-docs, the `RpcRedoc` component reads keys from localStorage and passes them as URL params to the iframe, where `configure.ts` picks them up.
+When you use the legacy Redocly runtime, `configure.ts` still reads auth and request-shaping state from the URL and localStorage. The public direct-render runtime in `builder-docs` reads those values itself instead.
 
 ### Request body injection
 
@@ -193,14 +306,9 @@ Example URL:
 
 When `?body=` is absent, the YAML-defined named examples render as normal — fully backward compatible.
 
-## Curl Sample Post-Processing
+## Legacy Redocly Presentation
 
-Redocly hardcodes `curl -i` in generated code samples with no config option to change it. `scripts/curl-postprocess.js` (loaded via `redocly.yaml` `scripts.head`) applies two fixes:
-
-- **DOM**: Replaces `-i` with `-s` (silent mode) and appends `| jq` in the rendered code blocks. A `MutationObserver` re-applies these transforms when samples re-render (e.g., switching servers/examples).
-- **Clipboard**: Intercepts the `copy` event to apply the same transforms when users click the copy button or Cmd+C selected curl text.
-
-The clipboard interception uses a **capture-phase** event listener because Redocly's copy button uses the `copy-to-clipboard` package, which calls `stopPropagation()` on its internal copy handler — blocking standard bubbling listeners. The capture phase fires before the package's handler can suppress the event.
+The local Redocly verification path is intentionally no longer polished to match the public docs runtime. The shipped request, curl, copy, and theme behavior now lives in `builder-docs`.
 
 ## URL Patterns
 
@@ -208,7 +316,7 @@ Operations are accessible at two URL formats:
 - **Pretty routes**: `/rpcs/account/view_account` (file-based, matches the YAML file path)
 - **Operation routes**: `/reference/operation/view_account` (generated by `reference.page.yaml` pagination)
 
-Builder-docs currently uses the pretty route format for iframe embedding.
+Builder-docs now renders the public docs pages directly from the generated page models and also hosts the canonical `/rpcs/...` and `/apis/...` routes itself.
 
 ## Server Endpoints
 
@@ -218,24 +326,27 @@ Four RPC server URLs are configured in `rpcs/openapi.yaml`:
 
 ## Testing
 
-- `test-embed.html` — Local HTML harness for testing iframe embedding behavior
-- `INTEGRATION_GUIDE.md` — Reference doc for embedding operations in builder-docs
+- `INTEGRATION_GUIDE.md` — Current contract between generation in `mike-docs` and rendering in `builder-docs`
+- `npm run check:external-openapi` — Run `cargo run --features openapi --bin generate-openapi -- --check` across sibling service repos when they are present
 - `npm run smoke:operations` — Smoke test representative local pretty routes
-- `npm run smoke:operations:prod` — Smoke test representative production pretty routes
 
 ## Known Limitations
 
 - This repo validates and builds the portal, but it does not encode the Redocly publish target. If production is stale after a push, the missing step is in the Redocly deployment side, not in the generated `public/` output.
-- `npm run preview` and local builds refresh current-chain example values in several `rpcs/*.yaml` files. Those diffs are expected.
-- `scripts/toggle-headless.js` edits `redocly.yaml` in place.
+- This repo validates and builds the legacy verification surfaces, but it does not publish the public docs site. If `docs.fastnear.com` is stale after a push, the missing step is usually a `builder-docs` deployment, not anything in the generated `mike-docs` output.
+- Workspace stale-spec enforcement depends on the sibling service repos being present. In a standalone `mike-docs` checkout, `npm run check:external-openapi` skips those checks and CI validates the committed vendored `apis/<service>/` trees instead.
+- `npm run preview:fresh-examples`, `npm run refresh-examples`, and `npm run build:fresh-examples` update current-chain example values in several `rpcs/*.yaml` files. Those diffs are expected.
 - `REDOCLY_AUTHORIZATION` is not a substitute for `PLAN_GATES` on the production-equivalent build path.
-- `fastdata-indexer` is architecture-only in this phase, not an OpenAPI surface.
+- Docs-only or ingestion-only repos without a public HTTP surface are out of scope for the OpenAPI/Redocly flow.
 
 ## Other Commands
 
 ```bash
+npm run check:external-openapi  # Verify sibling service specs are not stale
 npm run build                  # Build with PLAN_GATES or local-plan fallback
+npm run build:fresh-examples   # Build after refreshing tracked RPC example values
 npm run lint                   # Validate OpenAPI specs
+npm run preview:fresh-examples # Preview after refreshing tracked RPC example values
+npm run verify:workspace       # Stale-spec checks + portal lint + local build
 npm run smoke:operations       # Smoke test representative local pretty routes
-npm run smoke:operations:prod  # Smoke test representative production pretty routes
 ```

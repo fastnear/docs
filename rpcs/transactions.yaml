@@ -25,9 +25,9 @@ info:
 
     | Operation | Description | Documentation |
     |-----------|-------------|---------------|
-    | Broadcast Transaction (Async) | Submit a transaction without awaiting execution confirmation | [View Documentation](/rpcs/transaction/broadcast_tx_async.yaml) |
-    | Broadcast Transaction (Commit) | Submit a transaction and wait for full blockchain commitment | [View Documentation](/rpcs/transaction/broadcast_tx_commit.yaml) |
-    | Transaction Status | Query execution details and outcome of a submitted transaction | [View Documentation](/rpcs/transaction/tx_status.yaml) |
+    | Broadcast Transaction (Async) | Submit a transaction without awaiting execution confirmation | `/rpcs/transaction/broadcast_tx_async` |
+    | Broadcast Transaction (Commit) | Submit a transaction and wait for full blockchain commitment | `/rpcs/transaction/broadcast_tx_commit` |
+    | Transaction Status | Query execution details and outcome of a submitted transaction | `/rpcs/transaction/tx_status` |
   version: "1.0.0"
 servers:
   - url: "https://rpc.mainnet.fastnear.com"

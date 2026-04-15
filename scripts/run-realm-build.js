@@ -16,6 +16,9 @@ const SERVER_CACHE_DIR = path.join(
   "server"
 );
 const VALID_LOCAL_PLANS = new Set(["pro", "enterprise"]);
+const SHOULD_REFRESH_EXAMPLES =
+  process.argv.includes("--refresh-examples") ||
+  process.env.REFRESH_RPC_EXAMPLES === "true";
 
 function parseEnvFile(filePath) {
   const env = {};
@@ -122,7 +125,7 @@ function mirrorServerCacheEntriesToMjs(serverOutDir) {
 function printPlanGatesError(status, loadedLocalEnv) {
   const envHint = loadedLocalEnv
     ? `The file ${LOCAL_ENV_PATH} was loaded, but it does not provide a valid PLAN_GATES value.`
-    : `Create ${LOCAL_ENV_PATH} from .env.redocly.local.example or export PLAN_GATES in your shell.`;
+    : `Create ${LOCAL_ENV_PATH} with PLAN_GATES=... or export PLAN_GATES in your shell.`;
 
   if (status.kind === "missing") {
     console.error("Missing PLAN_GATES for Redocly Reunite build.");
@@ -289,7 +292,9 @@ async function main() {
   const planGatesStatus = getPlanGatesStatus(process.env.PLAN_GATES);
   const localPlan = process.env.REDOCLY_LOCAL_PLAN;
 
-  run("node", ["scripts/refresh-examples.js"]);
+  if (SHOULD_REFRESH_EXAMPLES) {
+    run("node", ["scripts/refresh-examples.js"]);
+  }
 
   if (planGatesStatus.valid) {
     await runInternalRealmBuild();

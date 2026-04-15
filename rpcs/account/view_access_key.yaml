@@ -14,6 +14,9 @@ paths:
       operationId: view_access_key
       summary: View account access key
       description: Retrieves information about a specific access key for a NEAR account
+      x-fastnear-interaction:
+        kind: rpc-view-access-key
+      x-hideReplay: true
       requestBody:
         required: true
         content:
@@ -45,32 +48,32 @@ paths:
                       enum: [view_access_key]
                     finality:
                       type: string
-                      enum: [final, optimistic]
+                      enum: [final, near-final, optimistic]
                       description: Block finality
                   required: [request_type, account_id, public_key, finality]
             examples:
               mainnet:
-                summary: View Mainnet Account Access Key
+                summary: View access key (Mainnet)
                 value:
                   jsonrpc: "2.0"
                   id: fastnear
                   method: query
                   params:
+                    account_id: root.near
+                    public_key: "ed25519:CByX7HPjgSGFi5G26zwgZGDFCFyBHvSv1fe7AFzmVe3"
                     request_type: view_access_key
                     finality: final
-                    account_id: mike.near
-                    public_key: "ed25519:6666666666666666666666666666666666666666666"
               testnet:
-                summary: View Testnet Account Access Key
+                summary: View access key (Testnet)
                 value:
                   jsonrpc: "2.0"
                   id: fastnear
                   method: query
                   params:
+                    account_id: root.testnet
+                    public_key: "ed25519:4eUPQ64CXPrKd3CBVzpjDHkvZeDmPZtoU5U6nTZozz1A"
                     request_type: view_access_key
                     finality: final
-                    account_id: mike.testnet
-                    public_key: "ed25519:Bt6gx87fRm99KkkN1Q9UEA8vY9DBLkRSntqcLDuZt3S"
       responses:
         200:
           description: Successful response

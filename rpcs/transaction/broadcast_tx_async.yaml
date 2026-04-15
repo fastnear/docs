@@ -13,7 +13,7 @@ paths:
     post:
       operationId: broadcast_tx_async
       summary: Send transaction asynchronously
-      description: Submits a transaction to the network without waiting for its execution
+      description: Submits a transaction to the network without waiting for its execution. Requires a freshly signed transaction; the default example is illustrative and is not part of the live audit.
       requestBody:
         required: true
         content:
@@ -36,7 +36,7 @@ paths:
                   properties:
                     signed_tx_base64:
                       type: string
-                      description: Base64-encoded signed transaction
+                      description: Base64-encoded signed transaction. This must be generated for the signing account just before submission.
                     wait_until:
                       type: string
                       enum:

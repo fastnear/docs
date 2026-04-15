@@ -46,7 +46,7 @@ paths:
                   id: fastnear
                   method: EXPERIMENTAL_receipt
                   params:
-                    receipt_id: 7kq1LtV8dnjU5GcHBjApmSW2ekQK4Q3rtyTMVcLWfwrN
+                    receipt_id: 5QtWzoy2VpKZEvUbe9aUjpwnXTqHzv4gehuox8g3DA4y
               testnet:
                 summary: Get receipt by ID (Testnet)
                 value:
@@ -54,7 +54,7 @@ paths:
                   id: fastnear
                   method: EXPERIMENTAL_receipt
                   params:
-                    receipt_id: HYaymC3Du3U64XBYeCdu7fMLDr2TgECyfH7Q2xaXKQzu
+                    receipt_id: CKajpdRe5MnwjySR6MKKbp6Dr5oEiM5XFcYmu77mvnne
       responses:
         200:
           description: Successful response
