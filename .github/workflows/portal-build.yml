@@ -1,4 +1,4 @@
-name: Portal Build
+name: Docs Pipeline Build
 
 on:
   pull_request:
@@ -36,5 +36,5 @@ jobs:
       - name: Upload portal artifact
         uses: actions/upload-artifact@v4
         with:
-          name: mike-docs-public
+          name: docs-pipeline-public
           path: public

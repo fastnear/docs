@@ -1,7 +1,7 @@
 {
-  "name": "redoc-starter",
+  "name": "docs-pipeline",
   "version": "1.0.0",
-  "description": "A starter project for working with Redoc",
+  "description": "FastNEAR docs pipeline for Redocly-based RPC and API docs",
   "main": " ",
   "scripts": {
     "sync:apis": "node scripts/sync-external-apis.js",
@@ -18,7 +18,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Redocly/apidocs-starter.git"
+    "url": "git+https://github.com/fastnear/docs-pipeline.git"
   },
   "keywords": [
     "openapi",
@@ -26,12 +26,12 @@
     "asyncapi",
     "documentation"
   ],
-  "author": "team@redocly.com",
+  "author": "FastNEAR",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Redocly/apidocs-starter/issues"
+    "url": "https://github.com/fastnear/docs-pipeline/issues"
   },
-  "homepage": "https://github.com/Redocly/apidocs-starter#readme",
+  "homepage": "https://github.com/fastnear/docs-pipeline#readme",
   "dependencies": {
       "@redocly/realm": "0.119.1"
   }

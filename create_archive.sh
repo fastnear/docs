@@ -3,7 +3,7 @@ set -euo pipefail
 
 cd "$(dirname "$0")"
 
-ARCHIVE="mike-docs-archive.tar.gz"
+ARCHIVE="docs-pipeline-archive.tar.gz"
 
 tar czf "$ARCHIVE" \
   --exclude='node_modules' \
