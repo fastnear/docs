@@ -5,6 +5,7 @@ const path = require("path");
 const YAML = require("yaml");
 const { auditPageModels } = require("./audit-page-model-routes");
 const { buildGeneratedStructuredGraph, auditGeneratedStructuredGraph } = require("./structured-graph-common");
+const { readGeneratedNearcoreSourceJson } = require("./nearcore-source-metadata");
 
 const ROOT = path.resolve(__dirname, "..");
 const ENHANCEMENTS_ROOT = path.resolve(ROOT, "enhancements");
@@ -1263,7 +1264,10 @@ function writeGeneratedFastnearStructuredGraphJson(graph) {
 function writeGeneratedPageModelArtifacts() {
   const models = buildPageModels();
   auditPageModels(models);
-  const structuredGraph = buildGeneratedStructuredGraph(models);
+  const nearcoreSource = readGeneratedNearcoreSourceJson();
+  const structuredGraph = buildGeneratedStructuredGraph(models, {
+    metadata: nearcoreSource ? { nearcoreSource } : undefined,
+  });
   auditGeneratedStructuredGraph(structuredGraph, models);
   writeGeneratedFastnearPageModelsModule(models);
   writeGeneratedFastnearPageModelsJson(models);
