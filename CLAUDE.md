@@ -6,20 +6,16 @@ This file is the front door for repo continuity. Keep it short, high-signal, and
 
 FastNEAR docs backend and generation repo. Public docs now render in `builder-docs` at `docs.fastnear.com`; this repo owns spec sync, enhancement manifests, page-model generation, and the local verification runtimes that support the shipped experience.
 
-As of April 13, 2026, there are two important local verification tracks to keep in mind:
-
-- The standalone bespoke runtime, which is now a local verification surface for the shared bespoke page model/runtime.
-- The Redocly portal, which remains for legacy verification and parity checks.
+The local verification surface is the standalone bespoke runtime in this repo; the Redocly runtime has been removed.
 
 ## Quick Start
 
 ```bash
-npm run preview               # Main Redocly preview
 npm run standalone:dev        # Standalone bespoke runtime on canonical /rpcs/... and /apis/... paths
 npm run standalone:build      # Static build for the standalone runtime
-npm run lint                  # Workspace-aware sync + Redocly validation
-npm run verify:workspace      # Broad repo verification
-npm run smoke:operations      # Smoke-check representative operation routes
+npm run lint                  # Workspace-aware sync (check:external-openapi + sync:apis)
+npm run verify:workspace      # Broad repo verification (lint + standalone:build + 12 audits)
+npm run smoke:operations      # Smoke-check representative canonical routes against standalone:dev
 ```
 
 ## Current State Snapshot
@@ -30,10 +26,8 @@ npm run smoke:operations      # Smoke-check representative operation routes
   - REST spec sync and leaf splitting
   - portal-owned enhancement manifests
   - generated page models vendored into `builder-docs`
-  - the local standalone runtime
-  - the legacy Redocly verification path
+  - the local standalone verification runtime
 - The public canonical host is `https://docs.fastnear.com`.
-- The legacy Redocly host is no longer the target architecture.
 - Auth precedence remains `?apiKey=` first, then `fastnear:apiKey`, with `fastnear_api_key` migrated away automatically.
 - The shared runtime uses `Authorization: Bearer ...` when the page model calls for bearer transport, while preserving the public `?apiKey=` input contract.
 
@@ -69,33 +63,24 @@ npm run smoke:operations      # Smoke-check representative operation routes
 3. [03 Browser Automation And Verification](md-CLAUDE-chapters/03-browser-automation-and-verification.md)  
    The working pattern for Playwright/browser-assisted validation, including auth flows, screenshots, clipboard checks, and route comparisons.
 
-4. [04 Custom Interactions And Redocly Overrides](md-CLAUDE-chapters/04-custom-interactions-and-redocly-overrides.md)  
-   How the `view_account` pilot is wired into Redocly, why the request-row portal exists, and how to generalize the interaction model to more RPC endpoints.
+4. [06 REST Enhancements And Preset Injection](md-CLAUDE-chapters/06-rest-enhancements-and-preset-injection.md)  
+   How portal-owned enhancement manifests shape REST request defaults without changing upstream OpenAPI contracts.
 
-5. [05 Standalone No-Redocly Spike](md-CLAUDE-chapters/05-standalone-no-redocly-spike.md)  
-   Historical context for the standalone spike that evolved into today's local verification runtime.
-
-6. [06 REST Enhancements And Preset Injection](md-CLAUDE-chapters/06-rest-enhancements-and-preset-injection.md)  
-   How portal-owned enhancement manifests shape REST Try-It behavior without changing upstream OpenAPI contracts.
-
-7. [07 Build, Publish, And Troubleshooting](md-CLAUDE-chapters/07-build-publish-and-troubleshooting.md)  
-   The practical rules for preview, build, external spec sync, Redocly entitlement quirks, and “why is production still 404ing?” debugging.
+5. [07 Build, Publish, And Troubleshooting](md-CLAUDE-chapters/07-build-publish-and-troubleshooting.md)  
+   The practical rules for lint/build, external spec sync, and "why is production still 404ing?" debugging.
 
 ## Companion Docs
 
-- [PORTAL_WORKFLOW.md](PORTAL_WORKFLOW.md): operational checklist for sync, preview, build, and publication.
+- [PORTAL_WORKFLOW.md](PORTAL_WORKFLOW.md): operational checklist for sync, lint, standalone build, and publication.
 - [INTEGRATION_GUIDE.md](INTEGRATION_GUIDE.md): current contract between generation in `mike-docs` and rendering in `builder-docs`.
 - [API_DOCS_ROLLOUT.md](API_DOCS_ROLLOUT.md): rollout tracker for service-by-service API onboarding.
 - [SERVICE_ONBOARDING_CHECKLIST.md](SERVICE_ONBOARDING_CHECKLIST.md): canonical checklist for onboarding a new REST API service into the docs stack.
-- [docs/no-redocly-view-account-spike.md](docs/no-redocly-view-account-spike.md): concise narrative summary of the standalone spike.
 
 ## Continuity Rules
 
 - If auth precedence, storage keys, or hosted-page query params change, update Chapter 02.
 - If the preferred browser-verification workflow changes, update Chapter 03.
-- If the Redocly pilot wiring changes, update Chapter 04.
-- If the standalone runtime architecture or generated hosted routes change materially, update Chapter 05.
 - If REST preset behavior changes, update Chapter 06.
-- If preview/build/publish expectations change, update Chapter 07.
+- If lint/build/publish expectations change, update Chapter 07.
 - If the cross-repo feature branch workflow changes, update this file and the `builder-docs` continuity docs together.
 - Keep this file concise; move detail into the chapters rather than letting `CLAUDE.md` turn into a second operations manual.

@@ -12,7 +12,7 @@ That is what the enhancements layer is for.
 
 - `enhancements/<service>/manifest.yaml`
 - generated output: `shared/generatedEnhancements.ts`
-- consumer: `@theme/ext/configure.ts`
+- consumers: `scripts/generate-page-models.js` (builds the generated page-model registry that `builder-docs` and the standalone runtime consume)
 
 ## What Enhancements Can Do
 
@@ -28,28 +28,10 @@ Enhancement manifests currently drive interaction-only behavior such as:
 
 This lets the portal express docs and Try-It defaults without forking the actual API contract.
 
-As of April 12, 2026, the bespoke REST page-model generator also consumes these manifests for custom pages, so network-aware path and query defaults stay aligned between:
+The bespoke page-model generator consumes these manifests for custom pages, so network-aware path and query defaults flow through to:
 
-- Redocly `configure()`-driven request seeding
-- bespoke custom operation pages
-- the standalone no-Redocly runtime
-
-This is now exercised in two live service slices:
-
-- `fastnear-api-server-rs` for `v1 public key lookup`
-- `neardata-server` for `system/health` and the full block-family route set
-
-## How `configure.ts` Uses Them
-
-`configure.ts` combines several inputs:
-
-- current pathname
-- URL params such as `preset`, `network`, and explicit overrides
-- service capabilities
-- enhancement manifests
-- portal auth state
-
-It then returns Redocly `requestValues` for the active page.
+- the direct-render runtime in `builder-docs`
+- the standalone verification runtime in this repo
 
 ## Important URL Inputs
 
@@ -61,16 +43,9 @@ It then returns Redocly `requestValues` for the active page.
 
 These are especially important because the `builder-docs` to `mike-docs` integration is URL-only.
 
-## `requestValues.body` Gotcha
+## Request Body Gotcha
 
-When `configure.ts` sets `requestValues.body`, Redocly treats that as the active body example for the current MIME type. It does not merge recursively with existing named examples.
-
-In practice:
-
-- passing a partial JSON-RPC body is not enough
-- the caller must supply the full request envelope
-
-This is easy to forget and worth preserving in continuity docs.
+When a manifest or URL override supplies a full request body, the runtime treats it as the active body example for the current MIME type — it does not merge recursively with existing named examples. In practice, callers must supply the full JSON-RPC envelope (or the complete REST body), not just the params or the fields they want to override.
 
 ## When To Use Enhancements Vs OpenAPI
 
@@ -88,6 +63,3 @@ Use OpenAPI when the behavior is part of the actual API contract:
 - security definitions
 - response models
 
-## Future Continuity Need
-
-If the repo moves farther toward custom interactions or standalone rendering, this chapter should likely grow into a cross-runtime request-shaping chapter rather than staying Redocly-specific.

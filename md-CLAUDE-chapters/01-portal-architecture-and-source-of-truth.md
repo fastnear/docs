@@ -10,9 +10,9 @@ There are three distinct layers:
 2. `mike-docs` is the generation pipeline plus local verification backends for API/RPC reference pages.
 3. Upstream service repos and nearcore remain the contract source of truth for most OpenAPI content.
 
-The main production experience now runs through `builder-docs` and its hosted canonical `/rpcs/...` and `/apis/...` routes. Redocly remains available here as legacy infrastructure and verification scaffolding.
+The main production experience runs through `builder-docs` and its hosted canonical `/rpcs/...` and `/apis/...` routes. The Redocly runtime has been removed; the local standalone runtime is the only in-repo verification surface.
 
-The bespoke UI styling source of truth is now `builder-docs/src/css/custom.css`. `mike-docs` stylesheets remain only as verification-oriented scaffolding for legacy Redocly preview and the standalone local runtime.
+The bespoke UI styling source of truth is `builder-docs/src/css/custom.css`. `mike-docs` stylesheets remain only as verification-oriented scaffolding for the standalone local runtime.
 
 ## Ownership Boundaries
 
@@ -40,47 +40,26 @@ The bespoke UI styling source of truth is now `builder-docs/src/css/custom.css`.
 
 ## Runtime Surfaces
 
-### Redocly pretty routes
+### Canonical pretty routes
 
-- Example: `/rpcs/account/view_account`
-- File-oriented and still useful for Redocly parity checks.
+- Example: `/rpcs/account/view_account`, `/apis/fastnear/v1/account_full`
+- File-oriented; the only route family served by the standalone runtime and the public `builder-docs` host.
 
-### Redocly operation routes
+### Standalone runtime
 
-- Example: `/reference/operation/view_account`
-- Generated through `reference.page.yaml` and operation-route helpers.
-
-### Standalone runtime routes
-
-- `npm run standalone:dev`
-- Example: `http://127.0.0.1:4010/rpcs/account/view_account`
-- Separate app and server, intentionally not powered by Redocly runtime code.
+- `npm run standalone:dev` — dev server at `http://127.0.0.1:4010/<route>`
+- `npm run standalone:build` — static bundle at `standalone-dist/`
+- Intentionally bespoke, no Redocly runtime code; `scripts/standalone-common.js` enforces that with a source and bundle scan.
 
 ## Current Architectural Split
 
-### Still handled by Redocly
-
-- Legacy portal shell and operation pages
-- Verification of `configure.ts` behavior
-- Legacy `/reference/operation/...` routes
-
-### Now handled by the bespoke runtime
-
-- Full public RPC docs surface
-- Full public FastNEAR, NEAR Data, Transfers, KV FastData, and Transactions API surfaces
-- Shared browser auth behavior
-- Request/response docs rendering through generated page models
-- Canonical `/rpcs/...` and `/apis/...` hosted routes in `builder-docs`
+All docs pages are handled by the bespoke direct-render runtime in `builder-docs`, fed by the page models generated here. There is no Redocly-served slice left.
 
 ## High-Value Files
 
-- `redocly.yaml`: portal configuration and redirects
-- `reference.page.yaml`: operation-page pagination behavior
-- `@theme/ext/configure.ts`: Try-It request shaping for the Redocly runtime
 - `shared/portalAuth.ts`: canonical browser auth reader/writer logic
 - `shared/FastnearOperationPage.tsx`: primary bespoke interaction + reference runtime
 - `builder-docs/src/css/custom.css`: canonical bespoke UI styling
-- `@theme/components/OpenApiDocs/hooks/BeforeOpenApiOperation.tsx`: Redocly operation-page injection point
 - `scripts/generate-page-models.js`: shared page-model generator
 - `scripts/standalone-common.js`: standalone dev/build runtime
 
@@ -90,4 +69,4 @@ The bespoke UI styling source of truth is now `builder-docs/src/css/custom.css`.
 - If the work changes REST request defaults without changing OpenAPI, start with `enhancements/` and the page-model generation path.
 - If the work changes the blockchain-native pilot UI, start with `shared/FastnearOperationPage.tsx`.
 - If the work is visual polish, spacing, sizing, or layout tuning for the public docs, start with `builder-docs/src/css/custom.css` and do not mirror that work into `mike-docs` unless a verification surface becomes unreadable.
-- If the work changes no-Redocly experimentation, start with `standalone/` and the standalone scripts.
+- If the work changes the standalone verification runtime, start with `standalone/` and the standalone scripts.

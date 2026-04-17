@@ -11,10 +11,9 @@ This document describes the current contract between generation in `mike-docs` a
 - REST spec sync and per-operation leaf splitting
 - portal-owned enhancement manifests
 - generated page-model artifacts
-- the local standalone runtime
-- the legacy Redocly verification path
+- the local standalone verification runtime
 
-Public docs pages are no longer iframe embeds. They render directly in `builder-docs` from generated page models.
+Public docs pages are not iframe embeds. They render directly in `builder-docs` from the generated page models. The Redocly runtime has been removed from `mike-docs`.
 
 ## Shared Contract
 
@@ -52,7 +51,7 @@ The direct runtime supports these user-facing inputs:
 | `localStorage.fastnear_api_key` | Legacy fallback; migrated away automatically |
 | `localStorage.fastnear:bearer` | Stored bearer token when relevant |
 
-The public direct runtime does not depend on the old iframe-only controls like `?redoclyLocal`, `?preset=`, or `?path.*=` / `?query.*=` / `?header.*=`. Those remain relevant only when validating the legacy Redocly path in `mike-docs`.
+The direct runtime also honors the REST enhancement URL inputs (`?preset=`, `?path.<name>=`, `?query.<name>=`, `?header.<name>=`) for pages that opt into them through enhancement manifests; see `md-CLAUDE-chapters/06-rest-enhancements-and-preset-injection.md`.
 
 ## Local Workflow
 
@@ -85,27 +84,14 @@ Then open `http://localhost:3000`.
 cd /Users/mikepurvis/near/mike-docs
 npm run lint
 npm run standalone:build
-REDOCLY_LOCAL_PLAN=enterprise npm run build
+npm run verify:workspace
 ```
 
-Optional previews:
+Optional local runtime:
 
 ```bash
-# standalone bespoke runtime
-npm run standalone:dev
-
-# legacy Redocly runtime
-npm run preview
+npm run standalone:dev     # http://127.0.0.1:4010
 ```
-
-## Legacy Redocly Path
-
-The Redocly path still exists in `mike-docs` for parity checks and migration cleanup. On that path:
-
-- `@theme/ext/configure.ts` still handles auth injection and request shaping
-- URL inputs like `preset`, `body`, `path.*`, `query.*`, and `header.*` are still relevant
-
-That path is no longer the primary public delivery model.
 
 ## Embedded Hosted Pages
 

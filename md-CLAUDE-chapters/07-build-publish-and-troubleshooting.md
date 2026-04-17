@@ -1,23 +1,14 @@
 # 07 Build, Publish, And Troubleshooting
 
-This chapter keeps the practical “how do I run this safely?” knowledge in one place.
+This chapter keeps the practical "how do I run this safely?" knowledge in one place.
 
 ## Main Commands
 
-- `npm run preview`
-- `npm run preview:fresh-examples`
 - `npm run lint`
-- `npm run build`
-- `npm run verify:workspace`
-- `npm run smoke:operations`
 - `npm run standalone:dev`
 - `npm run standalone:build`
-
-## Redocly Project Rules
-
-- Run preview and build commands from the `mike-docs` repo root.
-- Do not use nested `.claude/worktrees/*` directories as Redocly project roots.
-- `scripts/redocly-root-guard.js` exists to make this fail fast instead of failing mysteriously later.
+- `npm run verify:workspace`
+- `npm run smoke:operations`
 
 ## Sync And Validation Expectations
 
@@ -25,24 +16,19 @@ This chapter keeps the practical “how do I run this safely?” knowledge in on
 
 - checks external aggregate OpenAPI freshness in sibling repos when available
 - syncs vendored REST specs into `apis/<service>/`
-- regenerates enhancement bundles and operation-route helpers
-- validates the Redocly project
+- regenerates enhancement bundles, page-model artifacts, and the structured graph
 
 This means `lint` can modify generated files. That is expected.
 
-## Preview Mode
+OpenAPI validation itself now lives in each owning service repo (`cargo run --features openapi --bin generate-openapi -- --check`) rather than a separate portal-side lint step. That check is exercised by `scripts/check-external-openapi.js` when the sibling workspace is present.
 
-`npm run preview` is now the single legacy Redocly verification entrypoint. Use it when you need to sanity-check route generation, config wiring, or parity against the public bespoke runtime.
+## Verify Gate
 
-## Build Credentials
-
-- `PLAN_GATES` is the production-equivalent entitlement for `realm build`
-- `REDOCLY_AUTHORIZATION` is not a substitute for `PLAN_GATES`
-- local fallback can use `REDOCLY_LOCAL_PLAN=enterprise` or `pro`
+`npm run verify:workspace` runs `lint`, `standalone:build`, and 12 audits. Prefer it as the single CI gate; every other audit script exists so you can iterate on one slice without running the whole chain.
 
 ## Production 404 Rule
 
-If production still 404s after the code is merged or pushed, do not assume the repo is wrong. A common missing step is that the deployed `builder-docs` site has not published the revision yet.
+If production still 404s after the code is merged or pushed, do not assume this repo is wrong. The common missing step is that the deployed `builder-docs` site has not published the revision yet.
 
 Useful mental model:
 
@@ -52,8 +38,9 @@ Useful mental model:
 
 ### Route exists locally but not in production
 
-- confirm the route locally with preview
-- confirm the route is represented in config and generated route helpers
+- confirm the route locally with `npm run standalone:dev` and a browser at `http://127.0.0.1:4010/<route>`
+- confirm the page model exists in `shared/generatedFastnearPageModels.json`
+- confirm the vendored copy in `builder-docs/src/data/generatedFastnearPageModels.json` matches
 - confirm the deployed `builder-docs` site has actually published the revision
 
 ### REST leaf files look wrong after editing
@@ -67,9 +54,8 @@ Useful mental model:
 
 ### Browser behavior differs from lint/build
 
-- run a real browser pass
+- run a real browser pass against `npm run standalone:dev`
 - inspect network, localStorage, and console output
-- compare both the Redocly route and the standalone route if the behavior is shared
 
 ## Suggested Maintenance Habit
 

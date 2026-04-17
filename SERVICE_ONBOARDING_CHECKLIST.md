@@ -64,38 +64,25 @@ Before moving on, confirm:
 In `mike-docs`:
 
 - add the service repo aggregate source to `scripts/sync-external-apis.js`
-- add the Redocly API definition to `redocly.yaml`
 - let the normal sync pipeline generate:
   - `apis/<service>/openapi.yaml`
   - `apis/<service>/**/*.yaml`
-  - generated route maps for pretty-route parity
+  - page-model entries consumed by `builder-docs` and the standalone runtime
 
-If the service needs Try-It presets or path/query defaults:
+If the service needs request presets or path/query defaults:
 
 - add `enhancements/<service>/manifest.yaml`
 
 ## 5. Decide The Service Capability Profile
 
-Update `@theme/ext/configure.ts` only if the new service needs a new capability profile.
+Service capability profiles (which auth transports apply, which presets are available) are expressed in `enhancements/<service>/manifest.yaml` and consumed by the bespoke page-model generator. Current patterns are:
 
-Current patterns are:
-
-- `rpc`
-  - API key
-  - bearer token
-  - per-server request values
-- `fastnear`
-  - API key
-  - presets
-- `neardata`
-  - API key
-  - presets
-- `kv-fastdata`
-  - presets
-- `transactions`
-  - presets
-- `transfers`
-  - presets
+- `rpc` — API key, bearer token, per-server request values
+- `fastnear` — API key, presets
+- `neardata` — API key, presets
+- `kv-fastdata` — presets
+- `transactions` — presets
+- `transfers` — presets
 
 Default rule:
 
@@ -119,9 +106,10 @@ npm run sync:apis
 npm run lint
 npm run audit:description-quality:strict    # R1–R8 / S / W operation-description quality rules
 npm run audit:parameter-descriptions:strict # F1/F2/F3 parameter-description rules (present, ≥10 chars, not a name echo)
-REDOCLY_LOCAL_PLAN=enterprise npm run build
-npm run preview
-node scripts/test-operations.js http://127.0.0.1:4000
+npm run standalone:build
+npm run verify:workspace                    # full 14-step gate (lint + standalone:build + 12 audits)
+npm run standalone:dev &                    # in another terminal, then:
+npm run smoke:operations
 ```
 
 In `builder-docs`:
