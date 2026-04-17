@@ -72,7 +72,7 @@ Supported variables:
 - `npm run build:fresh-examples`
   Syncs REST specs, refreshes tracked RPC examples, then runs the wrapped Reunite build.
 - `npm run verify:workspace`
-  Run the stale-spec check, portal lint, and a local static build in one command.
+  Run `lint`, `build`, and the 12 audits as a single gate: `page-model-routes`, `structured-graph`, `rpc-example-placeholders`, `rpc-examples:all`, the five service-default audits (`fastnear`, `transfers`, `kv-fastdata`, `neardata`, `transactions`), `description-quality:strict`, `description-drift`, and `parameter-descriptions:strict`.
 - `npm run audit:rpc-examples`
   Run the fast curated subset of live RPC example checks.
 - `npm run audit:rpc-examples:all`
@@ -89,6 +89,22 @@ Supported variables:
   Run the live Near Data default audit using the effective per-network load defaults.
 - `npm run audit:transactions-defaults`
   Run the live Transactions API default audit using fresh block, receipt, and transaction IDs derived from recent account activity.
+- `npm run audit:page-model-routes`
+  Fail if the generated page-model routes diverge from the on-disk `rpcs/**` and `apis/**` leaves.
+- `npm run audit:structured-graph`
+  Fail if the generated structured-graph artifact drops nodes or edges that the page-model set still references.
+- `npm run audit:description-quality`
+  Warnings-only report against every page-model description using the R1–R8 / S / W rule set in `scripts/audit-description-quality.js`.
+- `npm run audit:description-quality:report`
+  Same rule set, emitted as a Markdown triage report for upstream/override/allowlist sorting.
+- `npm run audit:description-quality:strict`
+  Same rule set, exits non-zero on any R* failure — the CI gate.
+- `npm run audit:description-drift`
+  Verify every `docs/api/**` and `docs/rpc/**` MDX page in `builder-docs` resolves to `UPSTREAM_DIRECT` — no `MDX_ONLY` authored descriptions, no uncovered `UPSTREAM_ONLY` pages.
+- `npm run audit:parameter-descriptions`
+  Warnings-only audit of every page model's `interaction.fields[].description` using rules F1 (present), F2 (≥10 chars), F3 (not a name echo).
+- `npm run audit:parameter-descriptions:strict`
+  Same rules, exits non-zero on any F* failure — the CI gate.
 - `npm run discover:fastnear-context`
   Print the live FastNEAR API context used for account, token, and public-key defaults.
 - `npm run discover:transfers-context`
@@ -143,6 +159,8 @@ The vendored copy at `../fn/builder-docs/src/data/generatedFastnearPageModels.js
 
 - `metrics` on mainnet and testnet is modeled as HTTP `GET /metrics`, not JSON-RPC.
   It requires `FASTNEAR_API_KEY` for live validation, so unauthenticated audit runs will continue to report it as a tracked skip.
+- `light_client_proof` and `EXPERIMENTAL_light_client_proof` examples pin `type: receipt`.
+  Nearcore narrowed the enum to `[receipt]`; the generator, `scripts/refresh-examples.js`, `scripts/rpc-example-config.js`, and `MANUAL_RPC_EXAMPLE_OVERRIDES` are all aligned on `receipt` so a refresh does not regress. If nearcore ever widens the enum, these overrides need to be revisited in lockstep.
 - `view_global_contract_code` and `view_global_contract_code_by_account_id` on mainnet still need a curated account/hash pair.
   Testnet examples are verified; mainnet remains intentionally tracked until we confirm a real example that succeeds on load.
 - `scripts/rpc-example-config.js` is the shared source for curated static RPC params, manual per-network overrides, tracked follow-ups, and the small allowlist of known placeholder gaps that still need real curation.

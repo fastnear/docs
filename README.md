@@ -357,7 +357,10 @@ npm run build                  # Build with PLAN_GATES or local-plan fallback
 npm run build:fresh-examples   # Build after refreshing tracked RPC example values
 npm run lint                   # Validate OpenAPI specs
 npm run audit:rpc-example-placeholders # Fail if generic RPC placeholders slip back into tracked examples
+npm run audit:description-quality:strict    # Fail on R1–R8 / S / W description-quality rules
+npm run audit:description-drift             # Fail if docs/api/** or docs/rpc/** MDX drifts from page-model descriptions
+npm run audit:parameter-descriptions:strict # Fail on F1–F3 field-level parameter-description rules
 npm run preview:fresh-examples # Preview after refreshing tracked RPC example values
-npm run verify:workspace       # Stale-spec checks + portal lint + local build
+npm run verify:workspace       # lint + build + 12 audits (stale-spec, page-model, structured-graph, RPC examples, 5 service-default audits, description-quality, description-drift, parameter-descriptions)
 npm run smoke:operations       # Smoke test representative local pretty routes
 ```
