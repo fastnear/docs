@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: "NEAR Protocol RPC: Send transaction and wait"
-  description: "Submit a signed transaction and wait for its commit — the legacy synchronous send, superseded by `send_tx`."
+  description: "Submit a Base64-encoded signed transaction and wait for its commit — the legacy synchronous send, superseded by `send_tx`."
   version: 1.0.0
 servers:
   - url: "https://rpc.mainnet.fastnear.com"
@@ -13,7 +13,7 @@ paths:
     post:
       operationId: broadcast_tx_commit
       summary: Send transaction and wait
-      description: "Submit a signed transaction and wait for its commit — the legacy synchronous send, superseded by `send_tx`."
+      description: "Submit a Base64-encoded signed transaction and wait for its commit — the legacy synchronous send, superseded by `send_tx`."
       requestBody:
         required: true
         content:

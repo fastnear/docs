@@ -471,7 +471,7 @@ const OPERATIONS = [
     category: 'transaction',
     operationId: 'broadcast_tx_commit',
     summary: 'Send transaction and wait',
-    description: "Submit a signed transaction and wait for its commit — the legacy synchronous send, superseded by `send_tx`.",
+    description: "Submit a Base64-encoded signed transaction and wait for its commit — the legacy synchronous send, superseded by `send_tx`.",
   },
   {
     type: 'simple',
@@ -495,7 +495,7 @@ const OPERATIONS = [
     category: 'transaction',
     operationId: 'send_tx',
     summary: 'Send transaction',
-    description: "Submit a signed transaction and wait for its final execution outcome — the current synchronous send.",
+    description: "Submit a Base64-encoded signed transaction and wait for its final execution outcome — the current synchronous send.",
   },
 
   // === Validator operations ===
@@ -515,7 +515,7 @@ const OPERATIONS = [
     category: 'validators',
     operationId: 'validators_by_epoch',
     summary: 'Get validators by epoch',
-    description: "Fetch the validator set for a chosen past epoch, selected by epoch-start block height or hash.",
+    description: "Fetch the validator set for a chosen past epoch, selected by epoch-start block height or Base58 epoch-id hash.",
   },
 
   // === EXPERIMENTAL operations (active, non-deprecated) ===
@@ -542,7 +542,7 @@ const OPERATIONS = [
     category: 'transaction',
     operationId: 'EXPERIMENTAL_receipt',
     summary: 'Get receipt by ID',
-    description: "Fetch a single receipt by ID — the cross-shard execution unit a transaction produces.",
+    description: "Fetch a single receipt by Base58 ID — the cross-shard execution unit a transaction produces.",
     exampleParamsByNetwork: {
       mainnet: {
         receipt_id: 'FcFKrKQziMPCgYMFiLMZwecBtA7vqxdkatkhc1j3GYj8',
