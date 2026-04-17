@@ -137,6 +137,14 @@ const MANUAL_RPC_EXAMPLE_OVERRIDES = {
     mainnet: { finality: 'optimistic' },
     testnet: { finality: 'optimistic' },
   },
+  light_client_proof: {
+    mainnet: { type: 'receipt' },
+    testnet: { type: 'receipt' },
+  },
+  EXPERIMENTAL_light_client_proof: {
+    mainnet: { type: 'receipt' },
+    testnet: { type: 'receipt' },
+  },
   view_code: {
     mainnet: { account_id: 'intents.near' },
     testnet: { account_id: 'guest-book.testnet' },

@@ -4,6 +4,20 @@
  *
  * This config is the single source of truth for how nearcore methods
  * decompose into individual mike-docs operation files.
+ *
+ * Description precedence (see scripts/generate-from-nearcore.js → resolveDescription):
+ *   - type === 'simple':  operation-map `description` (curated override) if present,
+ *                         otherwise schemars-authored description from the nearcore
+ *                         OpenAPI at `nearcorePath`, otherwise existing YAML.
+ *                         Drop `description` from an entry to defer to upstream.
+ *   - decomposed types:   operation-map `description` (one schemars description
+ *                         covers all variants, so upstream is too generic to use).
+ *   - type === 'custom':  operation-map `description` only (no nearcore source).
+ *
+ * The generator emits warnings for:
+ *   - dead-override: curated description matches schemars byte-for-byte
+ *   - gap: no description from any source
+ *   - schemars-missing: simple op with no schemars description at `nearcorePath`
  */
 
 // ---------------------------------------------------------------------------
@@ -26,6 +40,18 @@ const LEAF_TYPE_MAP = {
   SignedTransaction: { type: 'string', description: 'Base64-encoded signed transaction' },
   NearGas: { type: 'string', description: 'Gas amount' },
   ShardUId: { type: 'string', description: 'Shard unique identifier' },
+};
+
+// Portal-curated descriptions for parameter fields whose nearcore schemars
+// annotations are missing or empty. Keyed by field name; applied only when
+// the upstream description is empty. Add entries here rather than patching
+// individual request schemas — see extractQueryVariant for the application.
+const PARAM_DESCRIPTIONS = {
+  method_name: 'Name of the contract view method to invoke.',
+  include_proof: 'Include a Merkle proof for the queried state alongside the values.',
+  // light_client_proof `type`: nearcore narrowed the enum to `[receipt]` and
+  // dropped its schemars description; this restates the intent for readers.
+  type: 'Proof subject — `receipt` proves inclusion of a specific receipt produced during execution.',
 };
 
 // BlockId is special: oneOf integer (height) or string (hash)
@@ -360,6 +386,9 @@ const OPERATIONS = [
     summary: 'Get node metrics',
     description: "Scrape a node's operational counters and gauges in Prometheus text-exposition format.",
     note: 'HTTP endpoint, not JSON-RPC. Not in nearcore OpenAPI spec.',
+    // metrics.yaml exposes GET /metrics, not the JSON-RPC `/` root. The
+    // aggregate $ref must point at the real path for Redocly to resolve.
+    aggregateRefPath: '/metrics',
   },
   {
     type: 'simple',
@@ -605,4 +634,5 @@ module.exports = {
   QUERY_RESPONSE_MAP,
   OPERATIONS,
   DEPRECATED_METHODS,
+  PARAM_DESCRIPTIONS,
 };

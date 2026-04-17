@@ -42,6 +42,7 @@ paths:
                       description: Base64-encoded method arguments
                     method_name:
                       type: string
+                      description: Name of the contract view method to invoke.
                     request_type:
                       type: string
                       enum: [call_function]

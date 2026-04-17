@@ -39,6 +39,7 @@ paths:
                       description: NEAR account ID
                     include_proof:
                       type: boolean
+                      description: Include a Merkle proof for the queried state alongside the values.
                     prefix_base64:
                       type: string
                       description: Base64-encoded storage key

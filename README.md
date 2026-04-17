@@ -184,6 +184,13 @@ For pages that need more interaction polish than raw OpenAPI can provide, the po
 - the generated page-model runtime in `builder-docs` consumes those defaults directly for native pages
 - `configure.ts` still consumes them on the legacy Redocly path
 
+Compatibility note:
+
+- `canonicalPath` and `pageModelId` are treated as stable contract data for existing generated operations.
+- `request.examples[].id` in generated page models is a public contract, not throwaway metadata.
+- `builder-docs` uses those ids in shareable example URLs via `requestExample=<id>`.
+- `scripts/generate-page-models.js` now fails if an existing canonical page disappears or changes `pageModelId`, and it preserves prior example ids across safe regenerations while failing when an old example id would be lost ambiguously or silently repurposed.
+
 Current supported request-shaping inputs in this repo:
 
 - `preset`: chooses a named manifest preset for the current operation.

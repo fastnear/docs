@@ -45,8 +45,8 @@ paths:
                       description: Base58-encoded hash
                     type:
                       type: string
-                      enum: [transaction, receipt]
-                      description: Proof subject — `transaction` proves inclusion of the top-level transaction, `receipt` proves inclusion of a specific receipt produced during execution.
+                      enum: [receipt]
+                      description: "Proof subject — `receipt` proves inclusion of a specific receipt produced during execution."
                     receipt_id:
                       type: string
                       description: Base58-encoded hash
@@ -65,7 +65,7 @@ paths:
                     light_client_head: 9XN7MtDywZvfGx6TKy1MT2iCZkKuHikJXmNazxdZ4x6T
                     sender_id: escrow.ai.near
                     transaction_hash: 34E7weKCDqXh3xPKdBgSWRqo44yTWjbka9deMK8JbAxx
-                    type: transaction
+                    type: receipt
               testnet:
                 summary: Get light client execution proof (Testnet)
                 value:
@@ -76,7 +76,7 @@ paths:
                     light_client_head: 6JYj6i1FaUCzdoqy41CqUcZJxa5n9EmLEENRDH2gLm5u
                     sender_id: near-mpc-staking4all-01.testnet
                     transaction_hash: 9LPbkwJ26HYgda7KHrURc6jozBcpdA1kUMSEzwm81JPx
-                    type: transaction
+                    type: receipt
       responses:
         200:
           description: Successful response

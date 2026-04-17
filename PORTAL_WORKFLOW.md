@@ -104,6 +104,41 @@ Supported variables:
 - `npm run smoke:operations`
   Smoke-tests representative local pretty routes.
 
+## Description Precedence
+
+Operation descriptions resolve as follows:
+
+- **REST services** (`apis/<service>/...`): upstream Rust in `src/openapi.rs` of each owning service repo is the single source of truth. `scripts/generate-page-models.js` uses `operation.description || document.info?.description` when building page models — enhancement manifests do not override descriptions today.
+- **RPC methods** (`rpcs/...`): `scripts/generate-from-nearcore.js` resolves descriptions in this order (see `resolveDescription`):
+  - `type: 'simple'` — `op.description` in `scripts/nearcore-operation-map.js` wins by presence (curated override); otherwise the schemars-authored `paths.<nearcorePath>.post.description` from `../nearcore/chain/jsonrpc/openapi/openapi.json` is used; existing YAML is the final fallback.
+  - Decomposed variants (`query`, `block_variant`, `chunk_variant`, `gas_variant`, `validators_variant`) — `op.description` only; schemars covers many variants with a single generic line, so upstream is too coarse to use.
+  - `type: 'custom'` (e.g. `latest_block`, `metrics`) — `op.description` only; nearcore has no source.
+- To defer a simple-type RPC description back to nearcore upstream, delete its `description` field from the operation-map entry. The generator will pick up the schemars text and warn if schemars is missing.
+- The generator emits three classes of warning at the end of a run: `dead-override` (curated byte-equal to schemars), `gap` (no source produced a description), and `schemars-missing` (simple op with no upstream description — likely a nearcore regression or newly-added path).
+
+## Changing a Description Upstream (E2E Recipe)
+
+Works for any of the 5 Rust service repos (`fastnear-api-server-rs`, `explorer-api`, `transfers-api`, `kv-fastdata-server`, `neardata-server`):
+
+```bash
+# 1. Edit the inline description string in the owning repo:
+#    ../fn/<service>/src/openapi.rs
+
+# 2. Regenerate the upstream openapi.yaml:
+cd ../fn/<service> && cargo run --features openapi --bin generate-openapi
+
+# 3. Back in mike-docs: sync and regenerate page models.
+cd -
+npm run sync:apis
+
+# 4. Confirm the new text flowed through:
+node -e "const m=require('./shared/generatedFastnearPageModels.json');\
+ const op=m.find(x=>x.info?.operationId==='<operationId>');\
+ console.log(op.info.description);"
+```
+
+The vendored copy at `../fn/builder-docs/src/data/generatedFastnearPageModels.json` is updated by the same `npm run sync:apis` run. Commit upstream and mike-docs as a coordinated pair per the feature-branch workflow in `CLAUDE.md`.
+
 ## Tracked RPC Example Follow-Ups
 
 - `metrics` on mainnet and testnet is modeled as HTTP `GET /metrics`, not JSON-RPC.

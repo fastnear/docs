@@ -79,6 +79,7 @@ components:
           description: Include receipt and signer metadata in each entry.
           type: boolean
         limit:
+          description: Maximum number of entries to return in one page (1–200, default 50).
           format: int32
           maximum: 200
           minimum: 1
@@ -112,6 +113,7 @@ components:
           description: Exact key name to match across all accounts and predecessors.
           type: string
         limit:
+          description: Maximum number of entries to return in one page (1–200, default 50).
           format: int32
           maximum: 200
           minimum: 1
@@ -181,6 +183,7 @@ components:
           nullable: true
           type: string
         limit:
+          description: Maximum number of entries to return in one page (1–200, default 50).
           format: int32
           maximum: 200
           minimum: 1
@@ -293,6 +296,7 @@ components:
           nullable: true
           type: string
         limit:
+          description: Maximum number of entries to return in one page (1–200, default 50).
           format: int32
           maximum: 200
           minimum: 1

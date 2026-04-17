@@ -20,6 +20,7 @@ const {
   QUERY_RESPONSE_MAP,
   OPERATIONS,
   DEPRECATED_METHODS,
+  PARAM_DESCRIPTIONS,
 } = require('./nearcore-operation-map');
 const {
   getRpcExampleParamOverride,
@@ -288,6 +289,22 @@ function extractQueryVariant(spec, requestType) {
   return params;
 }
 
+/**
+ * Backfill portal-curated field descriptions on a params schema for fields
+ * that nearcore schemars doesn't annotate. Only applied when the upstream
+ * description is empty, so nearcore improvements flow through unchanged when
+ * they land.
+ */
+function applyParamDescriptions(paramsSchema) {
+  if (!paramsSchema?.properties) return paramsSchema;
+  for (const [key, val] of Object.entries(paramsSchema.properties)) {
+    if (val && (!val.description || String(val.description).trim() === '') && PARAM_DESCRIPTIONS[key]) {
+      val.description = PARAM_DESCRIPTIONS[key];
+    }
+  }
+  return paramsSchema;
+}
+
 // ---------------------------------------------------------------------------
 // Per-operation YAML generation
 // ---------------------------------------------------------------------------
@@ -297,18 +314,138 @@ const DEFAULT_SERVERS = [
   { url: 'https://rpc.testnet.fastnear.com', description: 'Testnet' },
 ];
 
+// Collects description-source warnings during a generation run.
+// Consumed by main() for the end-of-run report.
+const DESCRIPTION_WARNINGS = [];
+
+/**
+ * Map an operation to the nearcore OpenAPI path we should consult for its
+ * schemars-authored description. Returns null for types that have no
+ * meaningful parent path (custom).
+ */
+function getNearcorePathForOp(op) {
+  if (op.type === 'simple') return op.nearcorePath || null;
+  if (op.type === 'query') return '/query';
+  if (op.type === 'block_variant') return '/block';
+  if (op.type === 'chunk_variant') return '/chunk';
+  if (op.type === 'gas_variant') return '/gas_price';
+  if (op.type === 'validators_variant') return '/validators';
+  return null;
+}
+
+/**
+ * Return the trimmed schemars-authored description for the nearcore path
+ * an operation maps to, or null if absent.
+ */
+function getSchemarsDescription(spec, op) {
+  const nearcorePath = getNearcorePathForOp(op);
+  if (!nearcorePath) return null;
+  const pathObj = spec?.paths?.[nearcorePath];
+  if (!pathObj) return null;
+  const raw = pathObj.post?.description || pathObj.get?.description || null;
+  if (!raw) return null;
+  const trimmed = String(raw).trim();
+  return trimmed || null;
+}
+
+/**
+ * Resolve the final description for an operation under schemars-aware
+ * precedence, and emit warnings for dead overrides or coverage gaps.
+ *
+ * Precedence:
+ *   - type === 'simple'     → curated (op.description) if set; else schemars;
+ *                             else existingYaml. Curated presence counts as
+ *                             an explicit override of the upstream text.
+ *   - decomposed variants   → curated first (one schemars description covers
+ *                             many variants, so upstream is too generic);
+ *                             else existingYaml; schemars is diagnostic only.
+ *   - type === 'custom'     → curated only (no nearcore source).
+ *
+ * Warnings:
+ *   - dead-override: curated matches schemars byte-for-byte (the override
+ *     adds no value; drop op.description to defer to upstream).
+ *   - gap: no source produced a description at all.
+ */
+function resolveDescription(spec, op, existingYaml) {
+  const curated = typeof op.description === 'string' ? op.description.trim() : '';
+  const schemars = getSchemarsDescription(spec, op);
+  const existing =
+    (existingYaml?.paths?.['/']?.post?.description || existingYaml?.info?.description || '')
+      .toString()
+      .trim();
+
+  let description;
+  let source;
+
+  if (op.type === 'simple') {
+    if (curated) {
+      description = curated;
+      source = 'operation-map (override)';
+    } else if (schemars) {
+      description = schemars;
+      source = 'schemars (nearcore)';
+    } else if (existing) {
+      description = existing;
+      source = 'existing YAML (fallback)';
+    } else {
+      description = undefined;
+      source = 'none';
+    }
+  } else {
+    // decomposed and custom: curated first, existing YAML as fallback
+    if (curated) {
+      description = curated;
+      source = 'operation-map';
+    } else if (existing) {
+      description = existing;
+      source = 'existing YAML (fallback)';
+    } else {
+      description = undefined;
+      source = 'none';
+    }
+  }
+
+  if (op.type === 'simple' && curated && schemars && curated === schemars) {
+    DESCRIPTION_WARNINGS.push({
+      kind: 'dead-override',
+      operationId: op.operationId,
+      file: op.file,
+      message: 'operation-map description is byte-identical to schemars; drop op.description to defer to upstream',
+    });
+  }
+  if (!description) {
+    DESCRIPTION_WARNINGS.push({
+      kind: 'gap',
+      operationId: op.operationId,
+      file: op.file,
+      message: `no description from any source (type=${op.type})`,
+    });
+  }
+  if (op.type === 'simple' && !curated && !schemars) {
+    DESCRIPTION_WARNINGS.push({
+      kind: 'schemars-missing',
+      operationId: op.operationId,
+      file: op.file,
+      message: `no schemars description at ${getNearcorePathForOp(op)}; upstream nearcore regression or missing annotation`,
+    });
+  }
+
+  return { description, source };
+}
+
 /**
  * Build the full operation YAML structure for a given operation config entry.
  */
 function buildOperationYaml(spec, op, existingYaml) {
   const method = getMethodName(spec, op);
-  const paramsSchema = getParamsSchema(spec, op);
+  const paramsSchema = applyParamDescriptions(getParamsSchema(spec, op));
   const responseResult = getResponseResult(spec, op);
   const postExtensions = op.extensions ? clone(op.extensions) : {};
+  const { description: resolvedDescription } = resolveDescription(spec, op, existingYaml);
   const postOperation = {
     operationId: op.operationId,
     summary: op.summary || existingYaml?.paths?.['\/']?.post?.summary,
-    description: op.description || existingYaml?.paths?.['\/']?.post?.description,
+    description: resolvedDescription,
     ...postExtensions,
     requestBody: {
       required: true,
@@ -335,7 +472,7 @@ function buildOperationYaml(spec, op, existingYaml) {
     openapi: '3.1.0',
     info: {
       title: `NEAR Protocol RPC: ${op.summary}`,
-      description: op.description || existingYaml?.info?.description,
+      description: resolvedDescription || existingYaml?.info?.description,
       version: existingYaml?.info?.version || '1.0.0',
     },
     servers: DEFAULT_SERVERS,
@@ -768,7 +905,7 @@ function getExampleValue(key, schema, op) {
     signed_tx_base64: 'ExampleBase64EncodedTransaction',
     wait_until: 'EXECUTED_OPTIMISTIC',
     code_hash: 'ExampleCodeHash',
-    type: 'transaction',
+    type: 'receipt',
   };
 
   if (examples[key] !== undefined) return examples[key];
@@ -1142,7 +1279,9 @@ function generateAggregateYaml(operations) {
 
     lines.push(`  # ${categoryLabels[cat] || cat}`);
     for (const op of ops) {
-      const refPath = `./${op.file}#/paths/~1`;
+      const innerPath = op.aggregateRefPath || '/';
+      const innerPathEncoded = innerPath.replace(/~/g, '~0').replace(/\//g, '~1');
+      const refPath = `./${op.file}#/paths/${innerPathEncoded}`;
       lines.push(`  /${op.operationId}:`);
       lines.push(`    $ref: '${refPath}'`);
     }
@@ -1283,6 +1422,22 @@ function main() {
   console.log(`  Updated:   ${updated}`);
   console.log(`  Unchanged: ${unchanged}`);
   console.log(`  Skipped:   ${skipped} (custom, not in nearcore)`);
+
+  // Description-source warnings (Track A instrumentation)
+  if (DESCRIPTION_WARNINGS.length > 0) {
+    console.log();
+    console.log('Description-source warnings:');
+    const byKind = DESCRIPTION_WARNINGS.reduce((acc, w) => {
+      (acc[w.kind] = acc[w.kind] || []).push(w);
+      return acc;
+    }, {});
+    for (const [kind, items] of Object.entries(byKind)) {
+      console.log(`  [${kind}] ${items.length}`);
+      for (const w of items) {
+        console.log(`    - ${w.operationId} (${w.file}): ${w.message}`);
+      }
+    }
+  }
 }
 
 main();
