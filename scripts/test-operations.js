@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 /**
- * Test script to verify representative operation pages are accessible.
- * Run while preview server is active.
+ * Smoke-test representative canonical bespoke routes against the
+ * standalone verification runtime. Start it first with `npm run standalone:dev`.
  */
 
 const http = require('http');
@@ -15,13 +15,10 @@ const OPERATIONS = [
   '/rpcs/block/block_by_height',
   '/rpcs/transaction/tx_status',
   '/apis/fastnear/v1/account_full',
-  '/apis/fastnear/openapi/accounts/account_full_v1',
   '/apis/fastnear/v1/account_full?preset=ecosystem-account',
   '/apis/transactions/v0/transactions',
-  '/apis/transactions/openapi/account/get_account',
   '/apis/transactions/v0/account?preset=recent-account-history',
   '/apis/transfers/v0/transfers',
-  '/apis/transfers/openapi/transfers/get_transfers_by_account',
   '/apis/transfers/v0/transfers?preset=recent-near-transfers',
   '/apis/kv-fastdata/v0/multi',
   '/apis/neardata/v0/block',
@@ -62,7 +59,7 @@ const BODY_TESTS = [
 
 const cliBaseUrl = process.argv[2];
 const envBaseUrl = process.env.BASE_URL;
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 4010;
 const BASE_URL = cliBaseUrl || envBaseUrl || `http://127.0.0.1:${PORT}`;
 const TRANSPORT = BASE_URL.startsWith('https://') ? https : http;
 
@@ -116,7 +113,7 @@ async function testUrl(path, redirects = 0) {
 }
 
 async function runTests() {
-  console.log(`Testing legacy verification routes at ${BASE_URL}\n`);
+  console.log(`Testing canonical bespoke routes at ${BASE_URL}\n`);
   
   let results = {
     passed: 0,
@@ -152,14 +149,6 @@ async function runTests() {
 
   console.log('\n' + '='.repeat(50));
   console.log(`Results: ${results.passed} passed, ${results.failed} failed`);
-  
-  if (results.failed > 0) {
-    console.log('\nNote: Operation pages (/reference/operation/*) require:');
-    console.log('1. reference.page.yaml with pagination:item');
-    console.log('2. Restart of preview server');
-    console.log('3. Correct operationId in OpenAPI specs');
-
-  }
 }
 
 // Check if server is running first
@@ -168,8 +157,8 @@ TRANSPORT.get(BASE_URL, (res) => {
 }).on('error', () => {
   console.error(`❌ Endpoint not reachable at ${BASE_URL}`);
   if (!cliBaseUrl && !envBaseUrl) {
-    console.log('\nStart the preview server first:');
-    console.log('  npm run preview');
+    console.log('\nStart the standalone runtime first:');
+    console.log('  npm run standalone:dev');
   }
   process.exit(1);
 });
