@@ -2,7 +2,6 @@ const fs = require("fs");
 const path = require("path");
 const YAML = require("yaml");
 const { splitAggregateSpec } = require("./split-aggregate-openapi");
-const { writeGeneratedFiles: writeGeneratedOperationRouteFiles } = require("./generate-operation-routes");
 const { writeGeneratedPageModelArtifacts } = require("./generate-page-models");
 
 const ROOT = path.resolve(__dirname, "..");
@@ -109,5 +108,4 @@ for (const source of OPENAPI_SOURCES) {
 }
 
 writeEnhancementsModule();
-writeGeneratedOperationRouteFiles();
 writeGeneratedPageModelArtifacts();

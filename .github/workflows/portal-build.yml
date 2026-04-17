@@ -1,4 +1,4 @@
-name: Portal Build
+name: Workspace Verify
 
 on:
   pull_request:
@@ -8,12 +8,10 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  verify:
     runs-on: ubuntu-latest
     env:
       CI: true
-      PLAN_GATES: ${{ secrets.PLAN_GATES }}
-      REDOCLY_LOCAL_PLAN: enterprise
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -30,11 +28,11 @@ jobs:
       - name: Lint OpenAPI definitions
         run: npm run lint
 
-      - name: Build portal
-        run: npm run build
+      - name: Build standalone verification runtime
+        run: npm run standalone:build
 
-      - name: Upload portal artifact
+      - name: Upload standalone artifact
         uses: actions/upload-artifact@v4
         with:
-          name: mike-docs-public
-          path: public
+          name: mike-docs-standalone
+          path: standalone-dist
