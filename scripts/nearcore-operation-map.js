@@ -205,7 +205,7 @@ const OPERATIONS = [
     category: 'block',
     operationId: 'block_by_id',
     summary: 'Get block by hash',
-    description: "Fetch a block's header and chunk summaries by its SHA-256 hash.",
+    description: "Fetch a block's header and chunk summaries by its Base58-encoded SHA-256 hash.",
     exampleParamsByNetwork: {
       mainnet: {
         block_id: 'EPnLgE7iEq9s7yTkos96M3cWymH5avBAPm3qx3NXqR8H',
@@ -283,7 +283,7 @@ const OPERATIONS = [
     category: 'contract',
     operationId: 'view_global_contract_code',
     summary: 'View global contract code',
-    description: "Look up a global contract's WebAssembly bytes by its SHA-256 code hash.",
+    description: "Look up a global contract's WebAssembly bytes by its Base58-encoded SHA-256 code hash.",
   },
   {
     type: 'query',
@@ -303,7 +303,7 @@ const OPERATIONS = [
     category: 'protocol',
     operationId: 'chunk_by_hash',
     summary: 'Get chunk by hash',
-    description: "Fetch a single chunk's transactions and receipts by its content hash.",
+    description: "Fetch a single chunk's transactions and receipts by its Base58 content hash.",
     exampleParamsByNetwork: {
       mainnet: {
         chunk_id: 'CUc7UcYGcXwu5Y6UqEkkS6UbffHN4NNHhh5XLRHV8kLu',
@@ -368,7 +368,7 @@ const OPERATIONS = [
     category: 'protocol',
     operationId: 'light_client_proof',
     summary: 'Get light client proof',
-    description: "Fetch a Merkle proof that a transaction or receipt was included and executed, suitable for light-client verification.",
+    description: "Fetch a Merkle proof — by Base58 transaction or receipt ID — that the item was included and executed, suitable for light-client verification.",
     exampleParamsByNetwork: {
       mainnet: {
         type: 'transaction',
@@ -451,7 +451,7 @@ const OPERATIONS = [
     category: 'protocol',
     operationId: 'next_light_client_block',
     summary: 'Get next light client block',
-    description: "Advance a light client's verified chain by fetching the next block header after a known head.",
+    description: "Advance a light client's verified chain by fetching the next block header after a known Base58 head hash.",
   },
 
   // === Transaction operations ===
@@ -462,7 +462,7 @@ const OPERATIONS = [
     category: 'transaction',
     operationId: 'broadcast_tx_async',
     summary: 'Send transaction asynchronously',
-    description: "Submit a signed transaction and immediately get its hash — no wait for execution.",
+    description: "Submit a Base64-encoded signed transaction and immediately get its hash — no wait for execution.",
   },
   {
     type: 'simple',
@@ -471,7 +471,7 @@ const OPERATIONS = [
     category: 'transaction',
     operationId: 'broadcast_tx_commit',
     summary: 'Send transaction and wait',
-    description: "Submit a signed transaction and wait for its commit — the legacy synchronous send, superseded by `send_tx`.",
+    description: "Submit a Base64-encoded signed transaction and wait for its commit — the legacy synchronous send, superseded by `send_tx`.",
   },
   {
     type: 'simple',
@@ -480,7 +480,7 @@ const OPERATIONS = [
     category: 'transaction',
     operationId: 'tx_status',
     summary: 'Get transaction status',
-    description: "Check a transaction's final outcome by hash — succeeded, failed, or still unresolved.",
+    description: "Check a transaction's final outcome by Base58 hash — succeeded, failed, or still unresolved.",
     exampleParamsByNetwork: {
       mainnet: {
         tx_hash: 'ESShk21GZb6cgFRoJyEJqdJXuoP72fuCmCn6pNMhXFC7',
@@ -495,7 +495,7 @@ const OPERATIONS = [
     category: 'transaction',
     operationId: 'send_tx',
     summary: 'Send transaction',
-    description: "Submit a signed transaction and wait for its final execution outcome — the current synchronous send.",
+    description: "Submit a Base64-encoded signed transaction and wait for its final execution outcome — the current synchronous send.",
   },
 
   // === Validator operations ===
@@ -515,7 +515,7 @@ const OPERATIONS = [
     category: 'validators',
     operationId: 'validators_by_epoch',
     summary: 'Get validators by epoch',
-    description: "Fetch the validator set for a chosen past epoch, selected by epoch-start block height or hash.",
+    description: "Fetch the validator set for a chosen past epoch, selected by epoch-start block height or Base58 epoch-id hash.",
   },
 
   // === EXPERIMENTAL operations (active, non-deprecated) ===
@@ -526,7 +526,7 @@ const OPERATIONS = [
     category: 'transaction',
     operationId: 'EXPERIMENTAL_tx_status',
     summary: 'Get detailed transaction status',
-    description: "Fetch a transaction's full receipt tree and per-receipt outcomes — richer than `tx_status`.",
+    description: "Fetch a transaction's full receipt tree and per-receipt outcomes by Base58 hash — richer than `tx_status`.",
     exampleParamsByNetwork: {
       mainnet: {
         tx_hash: 'ESShk21GZb6cgFRoJyEJqdJXuoP72fuCmCn6pNMhXFC7',
@@ -542,7 +542,7 @@ const OPERATIONS = [
     category: 'transaction',
     operationId: 'EXPERIMENTAL_receipt',
     summary: 'Get receipt by ID',
-    description: "Fetch a single receipt by ID — the cross-shard execution unit a transaction produces.",
+    description: "Fetch a single receipt by Base58 ID — the cross-shard execution unit a transaction produces.",
     exampleParamsByNetwork: {
       mainnet: {
         receipt_id: 'FcFKrKQziMPCgYMFiLMZwecBtA7vqxdkatkhc1j3GYj8',
@@ -580,7 +580,7 @@ const OPERATIONS = [
     category: 'protocol',
     operationId: 'EXPERIMENTAL_light_client_block_proof',
     summary: 'Get light client block proof',
-    description: "Fetch a Merkle proof that a block is included in the light client's verified chain.",
+    description: "Fetch a Merkle proof — by Base58 block and light-client-head hashes — that the block is included in the light client's verified chain.",
   },
   {
     type: 'simple',
@@ -607,7 +607,7 @@ const OPERATIONS = [
     category: 'protocol',
     operationId: 'EXPERIMENTAL_light_client_proof',
     summary: 'Get light client execution proof',
-    description: "Fetch a Merkle proof of transaction or receipt inclusion — the EXPERIMENTAL alias of `light_client_proof`.",
+    description: "Fetch a Merkle proof of transaction or receipt inclusion by Base58 ID — the EXPERIMENTAL alias of `light_client_proof`.",
     exampleParamsByNetwork: {
       mainnet: {
         type: 'transaction',

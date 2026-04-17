@@ -25,6 +25,9 @@ const {
 const {
   getRpcExampleParamOverride,
 } = require('./rpc-example-config');
+const {
+  writeGeneratedNearcoreSourceJson,
+} = require('./nearcore-source-metadata');
 
 // ---------------------------------------------------------------------------
 // Paths
@@ -1415,6 +1418,13 @@ function main() {
   const aggregatePath = path.join(RPCS_DIR, 'openapi.yaml');
   fs.writeFileSync(aggregatePath, aggregateContent + '\n', 'utf-8');
   console.log('Regenerated rpcs/openapi.yaml');
+
+  const nearcoreSource = writeGeneratedNearcoreSourceJson(specPath);
+  console.log('Regenerated shared/generatedNearcoreSource.json');
+  if (nearcoreSource.tag) {
+    const tagNote = nearcoreSource.tagSource === 'nearest' ? ' (nearest reachable tag)' : '';
+    console.log(`  nearcore tag: ${nearcoreSource.tag}${tagNote}`);
+  }
 
   console.log();
   console.log('Summary:');
