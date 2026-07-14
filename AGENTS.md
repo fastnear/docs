@@ -125,7 +125,8 @@ rpcs/openapi.yaml                              (aggregate spec)
 ### Description resolution
 
 - `resolveDescription` in `scripts/generate-from-nearcore.js` picks the operation description: `simple` types use the curated `op.description` in `scripts/nearcore-operation-map.js` by presence (override), falling through to the schemars-authored description in `../nearcore/chain/jsonrpc/openapi/openapi.json` and then to the existing leaf YAML; `decomposed` (`query`, `block_variant`, `chunk_variant`, `gas_variant`, `validators_variant`) and `custom` ops stay curated because schemars is too generic or absent.
-- `PARAM_DESCRIPTIONS` + `applyParamDescriptions` backfill parameter-field descriptions nearcore does not annotate (`method_name`, `include_proof`, light-client-proof `type`).
+- `PARAM_DESCRIPTIONS` + `applyParamDescriptions` backfill parameter-field descriptions nearcore does not annotate (`method_name`, `include_proof`, light-client-proof `type`) — global, request-only, applied only where the field is still empty.
+- `op.fieldDescriptions.{request,response}` + `applyFieldDescriptions` are per-operation field overrides that win by presence — the only local layer that reaches a field already filled by a `LEAF_TYPE_MAP` type description, or a **response** field (`PARAM_DESCRIPTIONS` touches neither). Used to curate the `view_state` pagination fields (`after_key_base64`, `limit`, `last_key`) nearcore 2.13.0 shipped without `///` docs; delete an entry to defer back to nearcore once it annotates the field upstream.
 - The generator emits `dead-override`, `gap`, and `schemars-missing` warnings so stale overrides and silent regressions surface at build time.
 - Full rules and the upstream E2E edit recipe live in `PORTAL_WORKFLOW.md` → Description Precedence.
 

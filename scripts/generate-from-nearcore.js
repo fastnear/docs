@@ -308,6 +308,27 @@ function applyParamDescriptions(paramsSchema) {
   return paramsSchema;
 }
 
+/**
+ * Apply per-operation curated field descriptions to a flattened schema's
+ * top-level properties. Unlike applyParamDescriptions (a global map that only
+ * backfills empty fields by name), these are explicit per-op overrides that
+ * win by presence — used where nearcore leaves a field undocumented and the
+ * generic leaf-type description (e.g. StoreKey → "Base64-encoded storage key")
+ * would otherwise show through, or where the field is on the response side that
+ * PARAM_DESCRIPTIONS never reaches. Scoped to one operation so a field name
+ * means the same thing everywhere it is applied. Delete an entry to defer back
+ * to nearcore once upstream annotations land.
+ */
+function applyFieldDescriptions(schema, overrides) {
+  if (!schema || !overrides || !schema.properties) return schema;
+  for (const [key, description] of Object.entries(overrides)) {
+    if (schema.properties[key]) {
+      schema.properties[key].description = description;
+    }
+  }
+  return schema;
+}
+
 // ---------------------------------------------------------------------------
 // Per-operation YAML generation
 // ---------------------------------------------------------------------------
@@ -441,8 +462,14 @@ function resolveDescription(spec, op, existingYaml) {
  */
 function buildOperationYaml(spec, op, existingYaml) {
   const method = getMethodName(spec, op);
-  const paramsSchema = applyParamDescriptions(getParamsSchema(spec, op));
-  const responseResult = getResponseResult(spec, op);
+  const paramsSchema = applyFieldDescriptions(
+    applyParamDescriptions(getParamsSchema(spec, op)),
+    op.fieldDescriptions?.request
+  );
+  const responseResult = applyFieldDescriptions(
+    getResponseResult(spec, op),
+    op.fieldDescriptions?.response
+  );
   const postExtensions = op.extensions ? clone(op.extensions) : {};
   const { description: resolvedDescription } = resolveDescription(spec, op, existingYaml);
   const postOperation = {
