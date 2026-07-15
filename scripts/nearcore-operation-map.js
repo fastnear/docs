@@ -580,6 +580,28 @@ const OPERATIONS = [
   },
   {
     type: 'simple',
+    nearcorePath: '/EXPERIMENTAL_receipt_to_tx',
+    file: 'transaction/EXPERIMENTAL_receipt_to_tx.yaml',
+    category: 'transaction',
+    operationId: 'EXPERIMENTAL_receipt_to_tx',
+    summary: 'Resolve receipt to transaction',
+    description: "Resolve a receipt ID to the transaction hash and signer that produced it. Requires a node with `save_receipt_to_tx` enabled; unindexed receipts return `UNKNOWN_RECEIPT`.",
+    fieldDescriptions: {
+      request: {
+        receipt_id: 'Base58-encoded receipt ID to resolve to its originating transaction.',
+        block_height: 'Optional hint: block height near where the receipt was created, to bound the fallback scan.',
+        shard_id: 'Optional hint: shard to scan at the hint height; omit to scan all tracked shards.',
+        window: 'Optional hint: ± block-height window scanned around the hint before walking ancestor blocks.',
+      },
+    },
+    exampleParamsByNetwork: {
+      mainnet: {
+        receipt_id: 'FcFKrKQziMPCgYMFiLMZwecBtA7vqxdkatkhc1j3GYj8',
+      },
+    },
+  },
+  {
+    type: 'simple',
     nearcorePath: '/EXPERIMENTAL_protocol_config',
     file: 'protocol/EXPERIMENTAL_protocol_config.yaml',
     category: 'protocol',
