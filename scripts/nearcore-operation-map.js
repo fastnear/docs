@@ -266,6 +266,20 @@ const OPERATIONS = [
     operationId: 'view_state',
     summary: 'View contract state',
     description: "Fetch the raw key-value state a contract has written, optionally filtered by key prefix.",
+    // nearcore ships the 2.13.0 pagination fields with no `///` docs, so they
+    // fall back to the generic StoreKey leaf description ("Base64-encoded
+    // storage key") or render blank. Curate their pagination role here until
+    // the upstream annotations land (see drafts/nearcore-openapi-field-descriptions-issue.md).
+    fieldDescriptions: {
+      request: {
+        prefix_base64: 'Base64-encoded key prefix; returns only trie entries whose key begins with these bytes. Empty string (`""`) removes the filter and returns the entire contract state — expensive on large contracts.',
+        after_key_base64: "Exclusive start cursor: returns only keys greater than this one. Set to the prior response's `last_key` to page forward; omit to scan from the start of the prefix range.",
+        limit: 'Maximum key/value entries per response (≥ 1). Omit for no client-set bound (subject to node limits).',
+      },
+      response: {
+        last_key: 'Continuation cursor — the last key returned. Pass as `after_key_base64` to fetch the next page; absent when the result set is exhausted.',
+      },
+    },
   },
   {
     type: 'query',

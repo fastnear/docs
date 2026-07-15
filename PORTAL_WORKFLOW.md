@@ -132,6 +132,12 @@ Operation descriptions resolve as follows:
 - To defer a simple-type RPC description back to nearcore upstream, delete its `description` field from the operation-map entry. The generator will pick up the schemars text and warn if schemars is missing.
 - The generator emits three classes of warning at the end of a run: `dead-override` (curated byte-equal to schemars), `gap` (no source produced a description), and `schemars-missing` (simple op with no upstream description — likely a nearcore regression or newly-added path).
 
+Field-level (parameter and response) descriptions resolve on a separate axis from the operation description:
+
+- `LEAF_TYPE_MAP` gives leaf types a concise type-level description (e.g. `StoreKey` → "Base64-encoded storage key"), so a field nearcore leaves undocumented falls back to its *type's* wire-format text rather than its role.
+- `PARAM_DESCRIPTIONS` + `applyParamDescriptions` backfill **request** fields by global field name, but only where the field description is still empty.
+- `op.fieldDescriptions.{request,response}` + `applyFieldDescriptions` are explicit **per-operation** overrides that win by presence. This is the only local layer that can override a leaf-type-filled field or annotate a **response** field (`PARAM_DESCRIPTIONS` reaches neither). First use: the `view_state` pagination fields (`after_key_base64`, `limit`, `last_key`) that nearcore 2.13.0 shipped without `///` docs. Delete an entry to defer back to upstream once nearcore annotates the field. Draft upstream ask: `drafts/nearcore-openapi-field-descriptions-issue.md`.
+
 ## Changing a Description Upstream (E2E Recipe)
 
 Works for any of the 5 Rust service repos (`fastnear-api-server-rs`, `explorer-api`, `transfers-api`, `kv-fastdata-server`, `neardata-server`):
