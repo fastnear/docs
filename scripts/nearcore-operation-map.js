@@ -257,6 +257,11 @@ const OPERATIONS = [
     operationId: 'call_function',
     summary: 'Call contract function',
     description: "Invoke a contract view method without gas or state changes — reads computed values from contract logic.",
+    fieldDescriptions: {
+      request: {
+        args_base64: 'Base64-encoded argument byte array passed to the method. JSON contracts expect the UTF-8 bytes of the JSON payload (`e30=` decodes to `{}`).',
+      },
+    },
   },
   {
     type: 'query',
@@ -476,7 +481,7 @@ const OPERATIONS = [
     category: 'transaction',
     operationId: 'broadcast_tx_async',
     summary: 'Send transaction asynchronously',
-    description: "Submit a Base64-encoded signed transaction and immediately get its hash — no wait for execution.",
+    description: "Broadcast a base64-encoded `SignedTransaction`; returns the transaction hash without awaiting inclusion or execution. Example payloads are placeholders and cannot be replayed.",
   },
   {
     type: 'simple',
@@ -485,7 +490,7 @@ const OPERATIONS = [
     category: 'transaction',
     operationId: 'broadcast_tx_commit',
     summary: 'Send transaction and wait',
-    description: "Submit a Base64-encoded signed transaction and wait for its commit — the legacy synchronous send, superseded by `send_tx`.",
+    description: "Broadcast a base64-encoded `SignedTransaction`; blocks until execution completes or a 10-second timeout elapses. Deprecated — use `send_tx`. Example payloads are placeholders and cannot be replayed.",
   },
   {
     type: 'simple',
@@ -495,6 +500,11 @@ const OPERATIONS = [
     operationId: 'tx_status',
     summary: 'Get transaction status',
     description: "Check a transaction's final outcome by Base58 hash — succeeded, failed, or still unresolved.",
+    fieldDescriptions: {
+      request: {
+        signed_tx_base64: "Base64-encoded Borsh serialization of a `SignedTransaction`; must be freshly signed (nonce above the access key's current value).",
+      },
+    },
     exampleParamsByNetwork: {
       mainnet: {
         tx_hash: 'ESShk21GZb6cgFRoJyEJqdJXuoP72fuCmCn6pNMhXFC7',
@@ -509,7 +519,7 @@ const OPERATIONS = [
     category: 'transaction',
     operationId: 'send_tx',
     summary: 'Send transaction',
-    description: "Submit a Base64-encoded signed transaction and wait for its final execution outcome — the current synchronous send.",
+    description: "Broadcast a base64-encoded `SignedTransaction`; blocks until the execution outcome specified by `wait_until`. Example payloads are placeholders and cannot be replayed.",
   },
 
   // === Validator operations ===
@@ -541,6 +551,11 @@ const OPERATIONS = [
     operationId: 'EXPERIMENTAL_tx_status',
     summary: 'Get detailed transaction status',
     description: "Fetch a transaction's full receipt tree and per-receipt outcomes by Base58 hash — richer than `tx_status`.",
+    fieldDescriptions: {
+      request: {
+        signed_tx_base64: "Base64-encoded Borsh serialization of a `SignedTransaction`; must be freshly signed (nonce above the access key's current value).",
+      },
+    },
     exampleParamsByNetwork: {
       mainnet: {
         tx_hash: 'ESShk21GZb6cgFRoJyEJqdJXuoP72fuCmCn6pNMhXFC7',

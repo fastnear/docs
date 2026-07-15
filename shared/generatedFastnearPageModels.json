@@ -1814,14 +1814,14 @@
           }
         },
         {
-          "description": "Base64-encoded method arguments",
+          "description": "Base64-encoded argument byte array passed to the method. JSON contracts expect the UTF-8 bytes of the JSON payload (`e30=` decodes to `{}`).",
           "label": "Args Base64",
           "location": "body",
           "name": "args_base64",
           "required": true,
           "schema": {
             "type": "string",
-            "description": "Base64-encoded method arguments"
+            "description": "Base64-encoded argument byte array passed to the method. JSON contracts expect the UTF-8 bytes of the JSON payload (`e30=` decodes to `{}`)."
           }
         },
         {
@@ -1930,7 +1930,7 @@
                   "required": true,
                   "schema": {
                     "type": "string",
-                    "description": "Base64-encoded method arguments"
+                    "description": "Base64-encoded argument byte array passed to the method. JSON contracts expect the UTF-8 bytes of the JSON payload (`e30=` decodes to `{}`)."
                   }
                 },
                 {
@@ -11917,14 +11917,14 @@
           }
         },
         {
-          "description": "Base64-encoded signed transaction",
+          "description": "Base64-encoded Borsh serialization of a `SignedTransaction`; must be freshly signed (nonce above the access key's current value).",
           "label": "Signed Tx Base64",
           "location": "body",
           "name": "signed_tx_base64",
           "required": false,
           "schema": {
             "type": "string",
-            "description": "Base64-encoded signed transaction"
+            "description": "Base64-encoded Borsh serialization of a `SignedTransaction`; must be freshly signed (nonce above the access key's current value)."
           }
         },
         {
@@ -12045,7 +12045,7 @@
                   "required": false,
                   "schema": {
                     "type": "string",
-                    "description": "Base64-encoded signed transaction"
+                    "description": "Base64-encoded Borsh serialization of a `SignedTransaction`; must be freshly signed (nonce above the access key's current value)."
                   }
                 },
                 {
@@ -12287,7 +12287,7 @@
   {
     "canonicalPath": "/rpcs/transaction/broadcast_tx_async",
     "info": {
-      "description": "Submit a Base64-encoded signed transaction and immediately get its hash — no wait for execution.",
+      "description": "Broadcast a base64-encoded `SignedTransaction`; returns the transaction hash without awaiting inclusion or execution. Example payloads are placeholders and cannot be replayed.",
       "operationId": "broadcast_tx_async",
       "summary": "Send transaction asynchronously",
       "title": "NEAR Protocol RPC: Send transaction asynchronously",
@@ -12579,7 +12579,7 @@
   {
     "canonicalPath": "/rpcs/transaction/broadcast_tx_commit",
     "info": {
-      "description": "Submit a Base64-encoded signed transaction and wait for its commit — the legacy synchronous send, superseded by `send_tx`.",
+      "description": "Broadcast a base64-encoded `SignedTransaction`; blocks until execution completes or a 10-second timeout elapses. Deprecated — use `send_tx`. Example payloads are placeholders and cannot be replayed.",
       "operationId": "broadcast_tx_commit",
       "summary": "Send transaction and wait",
       "title": "NEAR Protocol RPC: Send transaction and wait",
@@ -12937,7 +12937,7 @@
   {
     "canonicalPath": "/rpcs/transaction/send_tx",
     "info": {
-      "description": "Submit a Base64-encoded signed transaction and wait for its final execution outcome — the current synchronous send.",
+      "description": "Broadcast a base64-encoded `SignedTransaction`; blocks until the execution outcome specified by `wait_until`. Example payloads are placeholders and cannot be replayed.",
       "operationId": "send_tx",
       "summary": "Send transaction",
       "title": "NEAR Protocol RPC: Send transaction",
@@ -13330,14 +13330,14 @@
           }
         },
         {
-          "description": "Base64-encoded signed transaction",
+          "description": "Base64-encoded Borsh serialization of a `SignedTransaction`; must be freshly signed (nonce above the access key's current value).",
           "label": "Signed Tx Base64",
           "location": "body",
           "name": "signed_tx_base64",
           "required": false,
           "schema": {
             "type": "string",
-            "description": "Base64-encoded signed transaction"
+            "description": "Base64-encoded Borsh serialization of a `SignedTransaction`; must be freshly signed (nonce above the access key's current value)."
           }
         },
         {
@@ -13456,7 +13456,7 @@
                   "required": false,
                   "schema": {
                     "type": "string",
-                    "description": "Base64-encoded signed transaction"
+                    "description": "Base64-encoded Borsh serialization of a `SignedTransaction`; must be freshly signed (nonce above the access key's current value)."
                   }
                 },
                 {

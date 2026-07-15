@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: "NEAR Protocol RPC: Send transaction asynchronously"
-  description: Submit a Base64-encoded signed transaction and immediately get its hash — no wait for execution.
+  description: "Broadcast a base64-encoded `SignedTransaction`; returns the transaction hash without awaiting inclusion or execution. Example payloads are placeholders and cannot be replayed."
   version: 1.0.0
 servers:
   - url: "https://rpc.mainnet.fastnear.com"
@@ -13,7 +13,7 @@ paths:
     post:
       operationId: broadcast_tx_async
       summary: Send transaction asynchronously
-      description: Submit a Base64-encoded signed transaction and immediately get its hash — no wait for execution.
+      description: "Broadcast a base64-encoded `SignedTransaction`; returns the transaction hash without awaiting inclusion or execution. Example payloads are placeholders and cannot be replayed."
       requestBody:
         required: true
         content:

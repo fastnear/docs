@@ -47,7 +47,7 @@ paths:
                       default: EXECUTED_OPTIMISTIC
                     signed_tx_base64:
                       type: string
-                      description: Base64-encoded signed transaction
+                      description: "Base64-encoded Borsh serialization of a `SignedTransaction`; must be freshly signed (nonce above the access key's current value)."
                     sender_account_id:
                       type: string
                       description: NEAR account ID
