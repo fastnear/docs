@@ -131,7 +131,7 @@ const EXPECTED_FAMILY_OPERATION_COUNTS = {
   "rpc-block": 3,
   "rpc-contract": 5,
   "rpc-protocol": 20,
-  "rpc-transaction": 6,
+  "rpc-transaction": 7,
   "rpc-validators": 3,
 };
 

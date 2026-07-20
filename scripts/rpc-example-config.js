@@ -114,7 +114,19 @@ const CURATED_RPC_EXAMPLE_PARAMS = {
   },
 };
 
-const ALLOWED_RPC_PLACEHOLDERS = {};
+const ALLOWED_RPC_PLACEHOLDERS = {
+  // No curated testnet receipt yet; mainnet uses a real receipt id. Allow the
+  // generated placeholder on testnet until a real, index-resolvable testnet
+  // example is curated.
+  EXPERIMENTAL_receipt_to_tx: {
+    testnet: {
+      receipt_id: {
+        value: 'ExampleReceiptId',
+        reason: 'No curated testnet receipt yet; mainnet uses a real receipt id.',
+      },
+    },
+  },
+};
 
 const MANUAL_RPC_EXAMPLE_OVERRIDES = {
   EXPERIMENTAL_protocol_config: {
@@ -159,7 +171,21 @@ const MANUAL_RPC_EXAMPLE_OVERRIDES = {
   },
 };
 
-const AUDIT_SKIPS = {};
+const AUDIT_SKIPS = {
+  // receipt→tx resolution needs a save_receipt_to_tx-enabled node with the
+  // receipt still indexed; the public RPC returns UNKNOWN_RECEIPT otherwise, so
+  // the example is representative-only and excluded from the live audit.
+  EXPERIMENTAL_receipt_to_tx: {
+    mainnet: {
+      skip: true,
+      reason: 'Requires a save_receipt_to_tx-enabled node with the receipt indexed; returns UNKNOWN_RECEIPT otherwise.',
+    },
+    testnet: {
+      skip: true,
+      reason: 'Requires a save_receipt_to_tx-enabled node with the receipt indexed; returns UNKNOWN_RECEIPT otherwise.',
+    },
+  },
+};
 
 function cloneJson(value) {
   if (value === undefined) {
