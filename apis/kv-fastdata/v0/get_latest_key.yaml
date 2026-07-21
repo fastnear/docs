@@ -56,7 +56,7 @@ paths:
               example:
                 error: internal server error
               schema:
-                $ref: "#/components/schemas/ApiError"
+                $ref: "#/components/schemas/ErrorResponse"
           description: Scylla query failure
       summary: Fetch the latest row for one exact key under one predecessor and contract
       tags:
@@ -87,14 +87,6 @@ components:
           nullable: true
           type: string
       type: object
-    ApiError:
-      additionalProperties: false
-      properties:
-        error:
-          type: string
-      required:
-        - error
-      type: object
     ByKeyRequest:
       additionalProperties: false
       properties:
@@ -122,6 +114,14 @@ components:
           type: string
       required:
         - key
+      type: object
+    ErrorResponse:
+      additionalProperties: false
+      properties:
+        error:
+          type: string
+      required:
+        - error
       type: object
     KvEntry:
       additionalProperties: false

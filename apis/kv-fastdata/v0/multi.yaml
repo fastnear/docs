@@ -45,7 +45,7 @@ paths:
               example:
                 error: invalid page token
               schema:
-                $ref: "#/components/schemas/ApiError"
+                $ref: "#/components/schemas/ErrorResponse"
           description: Invalid key filter or page token
         "500":
           content:
@@ -53,7 +53,7 @@ paths:
               example:
                 error: internal server error
               schema:
-                $ref: "#/components/schemas/ApiError"
+                $ref: "#/components/schemas/ErrorResponse"
           description: Scylla query failure
       summary: Fetch the latest rows for multiple fully qualified keys
       tags:
@@ -84,14 +84,6 @@ components:
           nullable: true
           type: string
       type: object
-    ApiError:
-      additionalProperties: false
-      properties:
-        error:
-          type: string
-      required:
-        - error
-      type: object
     ByKeyRequest:
       additionalProperties: false
       properties:
@@ -119,6 +111,14 @@ components:
           type: string
       required:
         - key
+      type: object
+    ErrorResponse:
+      additionalProperties: false
+      properties:
+        error:
+          type: string
+      required:
+        - error
       type: object
     KvEntry:
       additionalProperties: false
