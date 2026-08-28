@@ -648,12 +648,14 @@ function normalizeSecuritySchemes(document, operation, parameters) {
     const scheme = definitions[id] || {};
     return {
       description:
-        scheme.type === "apiKey" && scheme.in === "query"
+        scheme.description ||
+        (scheme.type === "apiKey" && scheme.in === "query"
           ? "The OpenAPI contract describes the FastNEAR API key as a query parameter named apiKey."
-          : scheme.description,
+          : undefined),
       id,
       in: scheme.in,
       name: scheme.name,
+      scheme: scheme.scheme,
       type: scheme.type,
     };
   });
