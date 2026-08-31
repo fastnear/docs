@@ -193,7 +193,7 @@ Redocly/Realm is now treated as the legacy delivery backend. `builder-docs` is t
 - April 10, 2026: FastNEAR embeds now forward an optional `apiKey` query param through `builder-docs` and `mike-docs`, while bearer-token and RPC-only header injection remain scoped to RPC pages.
 - April 11, 2026: `neardata-server` now generates its OpenAPI from typed stable DTOs plus minimal repo-local raw-schema helpers; `components.yaml` has been removed and redirect/auth behavior is documented explicitly in the generated output.
 - `npm run lint` is green in `/Users/mikepurvis/near/mike-docs`.
-- `REDOCLY_LOCAL_PLAN=enterprise npm run build` is green in `/Users/mikepurvis/near/mike-docs`; the local static build now completes end-to-end.
+- April 11, 2026 (historical): `REDOCLY_LOCAL_PLAN=enterprise npm run build` was green locally and the Redocly static build completed end-to-end. That build path was retired with the Redocly runtime removal.
 - `yarn build` is green in `/Users/mikepurvis/near/fn/builder-docs`.
 - Preview smoke coverage now lives in `npm run smoke:operations` for representative RPC and API pretty routes.
 - Live route verification now belongs to the deployed `builder-docs` site at [docs.fastnear.com](https://docs.fastnear.com), not the retired Redocly production path.
@@ -202,8 +202,8 @@ Redocly/Realm is now treated as the legacy delivery backend. `builder-docs` is t
 - April 11, 2026: `fastnear-openapi-generator` v0.2.0 is published on crates.io and the converted service repos consume it as a normal versioned dependency instead of a sibling path dependency.
 - April 11, 2026: the generalized docs-enhancement layer is portal-owned. `enhancements/<service>/manifest.yaml` now lives in `mike-docs`, and `@theme/ext/configure.ts` seeds preset-driven path/query/body values via `preset`, `network`, and explicit `path.*` / `query.*` / `header.*` URL overrides.
 - April 11, 2026: the external service repos are now aggregate-first and Rust-first. Each API repo owns only `openapi/openapi.yaml` plus its Rust registry/types, while `mike-docs` owns splitting into `apis/<service>/...` leaf files and, at that stage, still owned the old single-network verification variants that were later retired.
-- `npm run build` in `mike-docs` now prefers `PLAN_GATES` from the shell environment or `.env.redocly.local`, with a local-only fallback via `REDOCLY_LOCAL_PLAN=enterprise|pro` for developer validation.
-- GitHub Actions parity now lives in `.github/workflows/portal-build.yml` and runs `npm ci`, `npm run lint`, and `npm run build` on pull requests, pushes to `main`, and manual dispatches.
+- April 11, 2026 (historical): the Redocly-era `npm run build` preferred `PLAN_GATES` from the shell environment or `.env.redocly.local`, with a local-only `REDOCLY_LOCAL_PLAN=enterprise|pro` fallback. Both the script and the gating were removed with the Redocly runtime.
+- GitHub Actions parity lives in `.github/workflows/portal-build.yml` (workflow name `Workspace Verify`) and runs `npm ci`, `npm run lint`, and `npm run standalone:build` on pull requests, pushes to `main`, and manual dispatches.
 - April 11, 2026: local smoke is green with `20 passed, 0 failed`, covering canonical `/apis/...` routes plus the then-current single-network legacy verification variants from preview.
 - April 11, 2026: the old Redocly production host still lagged canonical `/apis/...` route publication during the migration, which is one of the reasons production ownership moved fully to `builder-docs`.
 - April 12, 2026: the full `neardata-server` public surface is now on the bespoke REST-read page path, with portal-owned manifest metadata, generated shared page models, standalone parity, and aligned mainnet/testnet preset defaults.
