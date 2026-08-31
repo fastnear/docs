@@ -106,23 +106,42 @@ const CURATED_RPC_EXAMPLE_PARAMS = {
       request_type: 'view_state',
     },
     testnet: {
-      account_id: 'v1.signer-prod.testnet',
+      // v1.signer-prod.testnet returns TOO_LARGE_CONTRACT_STATE; counter.testnet
+      // has a single small key that an empty prefix returns in full.
+      account_id: 'counter.testnet',
       finality: 'final',
-      prefix_base64: 'U1RBVEU=',
+      prefix_base64: '',
       request_type: 'view_state',
+    },
+  },
+  EXPERIMENTAL_receipt_to_tx: {
+    // Resolves only on the archival endpoint (servers set to archival-rpc) with a
+    // block_height anchor near the receipt; without block_height the node returns
+    // UNKNOWN_RECEIPT.
+    mainnet: {
+      receipt_id: 'ETMK9HmPsAYcNxfSXBejMWQs57W4Ph5HDYoYhDMpotQn',
+      block_height: 194263442,
+    },
+    testnet: {
+      receipt_id: '9uJmhNCLRgsFncH3anffPLE1YsZCPTyAZrBdekc3vTaZ',
+      block_height: 246016180,
     },
   },
 };
 
 const ALLOWED_RPC_PLACEHOLDERS = {
-  // No curated testnet receipt yet; mainnet uses a real receipt id. Allow the
-  // generated placeholder on testnet until a real, index-resolvable testnet
-  // example is curated.
-  EXPERIMENTAL_receipt_to_tx: {
+  // The EXPERIMENTAL_receipt_to_tx testnet allowance is gone on purpose: that
+  // example now carries a real, index-resolvable receipt id plus a block_height
+  // anchor, so there is no longer a placeholder to excuse.
+  view_state: {
     testnet: {
-      receipt_id: {
-        value: 'ExampleReceiptId',
-        reason: 'No curated testnet receipt yet; mainnet uses a real receipt id.',
+      prefix_base64: {
+        value: '',
+        reason:
+          'Empty prefix is meaningful rather than unresolved: it reads the contract\'s full ' +
+          'key set. counter.testnet holds a single small key, so an unfiltered read stays ' +
+          'inside the response limit, whereas the previous v1.signer-prod.testnet example ' +
+          'returned TOO_LARGE_CONTRACT_STATE.',
       },
     },
   },
@@ -149,13 +168,25 @@ const MANUAL_RPC_EXAMPLE_OVERRIDES = {
     mainnet: { finality: 'optimistic' },
     testnet: { finality: 'optimistic' },
   },
+  block_effects: {
+    // Evergreen: query the latest block's effects instead of a pinned block_id
+    // that ages out of the non-archival RPC's retention window.
+    mainnet: { finality: 'final' },
+    testnet: { finality: 'final' },
+  },
+  validators_by_epoch: {
+    // Testnet is periodically reset, so pin a recent archival-resolvable epoch.
+    testnet: { epoch_id: 'BARiarhzfSL7G737ik4AukX9sFYH1iR3dYU3KNUAvF3e' },
+  },
   light_client_proof: {
-    mainnet: { type: 'receipt' },
-    testnet: { type: 'receipt' },
+    // The example fields are transaction_hash + sender_id, which correspond to
+    // type: transaction. type: receipt would require receipt_id + receiver_id.
+    mainnet: { type: 'transaction' },
+    testnet: { type: 'transaction' },
   },
   EXPERIMENTAL_light_client_proof: {
-    mainnet: { type: 'receipt' },
-    testnet: { type: 'receipt' },
+    mainnet: { type: 'transaction' },
+    testnet: { type: 'transaction' },
   },
   view_code: {
     mainnet: { account_id: 'intents.near' },
@@ -172,17 +203,18 @@ const MANUAL_RPC_EXAMPLE_OVERRIDES = {
 };
 
 const AUDIT_SKIPS = {
-  // receipt→tx resolution needs a save_receipt_to_tx-enabled node with the
-  // receipt still indexed; the public RPC returns UNKNOWN_RECEIPT otherwise, so
-  // the example is representative-only and excluded from the live audit.
+  // The docs example resolves on the archival endpoint (servers point at
+  // archival-rpc) with a block_height anchor near the receipt. The live audit
+  // path targets the non-archival RPC, where receipt→tx returns UNKNOWN_RECEIPT,
+  // so it stays excluded from that audit.
   EXPERIMENTAL_receipt_to_tx: {
     mainnet: {
       skip: true,
-      reason: 'Requires a save_receipt_to_tx-enabled node with the receipt indexed; returns UNKNOWN_RECEIPT otherwise.',
+      reason: 'Live audit uses the non-archival RPC; receipt→tx resolves only on archival-rpc with a block_height anchor (as configured in the example).',
     },
     testnet: {
       skip: true,
-      reason: 'Requires a save_receipt_to_tx-enabled node with the receipt indexed; returns UNKNOWN_RECEIPT otherwise.',
+      reason: 'Live audit uses the non-archival RPC; receipt→tx resolves only on archival-rpc with a block_height anchor (as configured in the example).',
     },
   },
 };
