@@ -511,13 +511,21 @@ function buildOperationYaml(spec, op, existingYaml) {
         post: postOperation,
       },
     },
-    security: [{ ApiKeyAuth: [] }],
+    security: [{ BearerAuth: [] }, { ApiKeyAuth: [] }],
     components: {
       securitySchemes: {
+        BearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          description:
+            'FastNEAR API key sent as an `Authorization: Bearer` header; recommended when you control the client.',
+        },
         ApiKeyAuth: {
           type: 'apiKey',
           in: 'query',
           name: 'apiKey',
+          description:
+            'FastNEAR API key as the `apiKey` query parameter; convenient for browsers, but the key appears in URLs and logs.',
         },
       },
       schemas: {
