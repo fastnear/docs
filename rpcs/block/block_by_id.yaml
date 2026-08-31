@@ -4,10 +4,14 @@ info:
   description: "Fetch a block's header and chunk summaries by its Base58-encoded SHA-256 hash."
   version: 1.0.0
 servers:
-  - url: "https://archival-rpc.mainnet.fastnear.com"
+  - url: "https://rpc.mainnet.fastnear.com"
     description: Mainnet
-  - url: "https://archival-rpc.testnet.fastnear.com"
+  - url: "https://rpc.testnet.fastnear.com"
     description: Testnet
+  - url: "https://archival-rpc.mainnet.fastnear.com"
+    description: Mainnet Archival
+  - url: "https://archival-rpc.testnet.fastnear.com"
+    description: Testnet Archival
 paths:
   /:
     post:

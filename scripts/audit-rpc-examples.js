@@ -16,6 +16,7 @@ const {
   MUTATING_RPC_METHODS,
   SUBSET_OPERATION_IDS,
   TRACKED_RPC_EXAMPLE_FOLLOWUPS,
+  getArchivalExample,
   getAuditSkip,
 } = require('./rpc-example-config');
 
@@ -81,10 +82,34 @@ function inferNetworkForServer(server) {
   return null;
 }
 
-function getServerUrlForNetwork(document, network) {
+function isArchivalServerUrl(url) {
+  return /^https?:\/\/archival-rpc\./.test(String(url || ''));
+}
+
+/**
+ * Resolves the endpoint this example must be sent to.
+ *
+ * Leaf specs declare BOTH the standard and the archival host per network, so a
+ * naive first-match would always pick the standard one and silently send the
+ * pinned historical examples somewhere that has garbage-collected them (they
+ * fail as UNKNOWN_* or time out rather than erroring loudly here). Operations
+ * flagged in ARCHIVAL_EXAMPLES therefore resolve to the archival host, keeping
+ * this audit in lockstep with the endpoint generate-page-models.js writes into
+ * networks[].url for the docs widget.
+ */
+function getServerUrlForNetwork(document, network, operationId) {
   const servers = Array.isArray(document?.servers) ? document.servers : [];
-  const directMatch = servers.find((server) => inferNetworkForServer(server) === network);
-  return directMatch?.url || null;
+  const matches = servers.filter((server) => inferNetworkForServer(server) === network);
+  if (matches.length === 0) {
+    return null;
+  }
+
+  const wantsArchival = Boolean(operationId && getArchivalExample(operationId, network));
+  const preferred = wantsArchival
+    ? matches.find((server) => isArchivalServerUrl(server.url))
+    : matches.find((server) => !isArchivalServerUrl(server.url));
+
+  return (preferred || matches[0]).url || null;
 }
 
 function getNetworksForDocument(document) {
@@ -236,7 +261,7 @@ async function auditOperation(filePath, options) {
       continue;
     }
 
-    const url = getServerUrlForNetwork(document, network);
+    const url = getServerUrlForNetwork(document, network, operationId);
     if (!url) {
       results.push({
         network,

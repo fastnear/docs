@@ -4,10 +4,14 @@ info:
   description: "Resolve a receipt ID to the transaction hash and signer that produced it. Requires a node with `save_receipt_to_tx` enabled; unindexed receipts return `UNKNOWN_RECEIPT`."
   version: 1.0.0
 servers:
-  - url: "https://archival-rpc.mainnet.fastnear.com"
+  - url: "https://rpc.mainnet.fastnear.com"
     description: Mainnet
-  - url: "https://archival-rpc.testnet.fastnear.com"
+  - url: "https://rpc.testnet.fastnear.com"
     description: Testnet
+  - url: "https://archival-rpc.mainnet.fastnear.com"
+    description: Mainnet Archival
+  - url: "https://archival-rpc.testnet.fastnear.com"
+    description: Testnet Archival
 paths:
   /:
     post:

@@ -21,6 +21,7 @@ const {
   OPERATIONS,
   DEPRECATED_METHODS,
   PARAM_DESCRIPTIONS,
+  PARAM_ENUM_OVERRIDES,
 } = require('./nearcore-operation-map');
 const {
   getRpcExampleParamOverride,
@@ -309,6 +310,25 @@ function applyParamDescriptions(paramsSchema) {
 }
 
 /**
+ * Widen portal-curated enums that nearcore's schemars annotation states more
+ * narrowly than the running node accepts. Applied by name, like
+ * applyParamDescriptions, but wins by presence rather than backfilling: the
+ * whole point is to correct a value that IS present and is wrong. Keep entries
+ * strictly additive to what nearcore declares, and delete them once upstream
+ * widens. See PARAM_ENUM_OVERRIDES in nearcore-operation-map.js.
+ */
+function applyParamEnums(paramsSchema) {
+  if (!paramsSchema?.properties) return paramsSchema;
+  for (const [key, val] of Object.entries(paramsSchema.properties)) {
+    const override = PARAM_ENUM_OVERRIDES[key];
+    if (val && Array.isArray(val.enum) && override) {
+      val.enum = [...override];
+    }
+  }
+  return paramsSchema;
+}
+
+/**
  * Apply per-operation curated field descriptions to a flattened schema's
  * top-level properties. Unlike applyParamDescriptions (a global map that only
  * backfills empty fields by name), these are explicit per-op overrides that
@@ -333,9 +353,19 @@ function applyFieldDescriptions(schema, overrides) {
 // Per-operation YAML generation
 // ---------------------------------------------------------------------------
 
+// The single source of truth for RPC server declarations, used for both the
+// per-operation leaf specs and the aggregate rpcs/openapi.yaml below.
+//
+// All four endpoints are declared because all four genuinely serve these
+// methods. Archival is an ADDITIONAL endpoint, needed only to reach records
+// older than the standard RPC's retention window — never a replacement. Which
+// endpoint a given docs example executes against is portal-owned metadata and
+// lives in scripts/rpc-example-config.js (ARCHIVAL_EXAMPLES), not here.
 const DEFAULT_SERVERS = [
   { url: 'https://rpc.mainnet.fastnear.com', description: 'Mainnet' },
   { url: 'https://rpc.testnet.fastnear.com', description: 'Testnet' },
+  { url: 'https://archival-rpc.mainnet.fastnear.com', description: 'Mainnet Archival' },
+  { url: 'https://archival-rpc.testnet.fastnear.com', description: 'Testnet Archival' },
 ];
 
 // Collects description-source warnings during a generation run.
@@ -463,7 +493,7 @@ function resolveDescription(spec, op, existingYaml) {
 function buildOperationYaml(spec, op, existingYaml) {
   const method = getMethodName(spec, op);
   const paramsSchema = applyFieldDescriptions(
-    applyParamDescriptions(getParamsSchema(spec, op)),
+    applyParamEnums(applyParamDescriptions(getParamsSchema(spec, op))),
     op.fieldDescriptions?.request
   );
   const responseResult = applyFieldDescriptions(
@@ -1288,14 +1318,10 @@ function generateAggregateYaml(operations) {
     '    For exhaustive list of endpoints, refer to the [NEAR documentation](https://docs.near.org/api/rpc/transactions).',
     '  version: "1.0.0"',
     'servers:',
-    '  - url: "https://rpc.mainnet.fastnear.com"',
-    '    description: "Mainnet"',
-    '  - url: "https://rpc.testnet.fastnear.com"',
-    '    description: "Testnet"',
-    '  - url: "https://archival-rpc.mainnet.fastnear.com"',
-    '    description: "Mainnet Archival"',
-    '  - url: "https://archival-rpc.testnet.fastnear.com"',
-    '    description: "Testnet Archival"',
+    ...DEFAULT_SERVERS.flatMap((server) => [
+      `  - url: "${server.url}"`,
+      `    description: "${server.description}"`,
+    ]),
     '',
     'paths:',
   ];

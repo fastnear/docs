@@ -1035,7 +1035,9 @@
           },
           "key": "mainnet",
           "label": "Mainnet",
-          "url": "https://archival-rpc.mainnet.fastnear.com"
+          "url": "https://archival-rpc.mainnet.fastnear.com",
+          "archival": true,
+          "archivalReason": "Pinned block height, older than standard RPC retention."
         },
         {
           "defaultFields": {
@@ -1043,7 +1045,9 @@
           },
           "key": "testnet",
           "label": "Testnet",
-          "url": "https://archival-rpc.testnet.fastnear.com"
+          "url": "https://archival-rpc.testnet.fastnear.com",
+          "archival": true,
+          "archivalReason": "Pinned block height, older than standard RPC retention."
         }
       ],
       "requestMethod": "block",
@@ -1295,7 +1299,9 @@
           },
           "key": "mainnet",
           "label": "Mainnet",
-          "url": "https://archival-rpc.mainnet.fastnear.com"
+          "url": "https://archival-rpc.mainnet.fastnear.com",
+          "archival": true,
+          "archivalReason": "Pinned block hash, older than standard RPC retention."
         },
         {
           "defaultFields": {
@@ -1303,7 +1309,9 @@
           },
           "key": "testnet",
           "label": "Testnet",
-          "url": "https://archival-rpc.testnet.fastnear.com"
+          "url": "https://archival-rpc.testnet.fastnear.com",
+          "archival": true,
+          "archivalReason": "Pinned block hash, older than standard RPC retention."
         }
       ],
       "requestMethod": "block",
@@ -1540,7 +1548,7 @@
           "label": "Block ID",
           "location": "body",
           "name": "block_id",
-          "required": true,
+          "required": false,
           "schema": {
             "description": "Block height (integer) or block hash (string)",
             "oneOf": [
@@ -1572,7 +1580,7 @@
         }
       ],
       "requestMethod": "block_effects",
-      "supportsFinality": false,
+      "supportsFinality": true,
       "transport": "json-rpc"
     },
     "pageModelId": "rpc-block-effects",
@@ -1620,13 +1628,10 @@
             "required": true,
             "schema": {
               "type": "object",
-              "required": [
-                "block_id"
-              ],
               "properties": [
                 {
                   "name": "block_id",
-                  "required": true,
+                  "required": false,
                   "schema": {
                     "description": "Block height (integer) or block hash (string)",
                     "oneOf": [
@@ -1638,6 +1643,19 @@
                         "type": "string",
                         "description": "Base58-encoded block hash"
                       }
+                    ]
+                  }
+                },
+                {
+                  "name": "finality",
+                  "required": false,
+                  "schema": {
+                    "type": "string",
+                    "description": "Block finality",
+                    "enum": [
+                      "final",
+                      "near-final",
+                      "optimistic"
                     ]
                   }
                 }
@@ -3590,7 +3608,9 @@
           },
           "key": "mainnet",
           "label": "Mainnet",
-          "url": "https://archival-rpc.mainnet.fastnear.com"
+          "url": "https://archival-rpc.mainnet.fastnear.com",
+          "archival": true,
+          "archivalReason": "Pinned block, older than standard RPC retention."
         },
         {
           "defaultFields": {
@@ -3599,7 +3619,9 @@
           },
           "key": "testnet",
           "label": "Testnet",
-          "url": "https://archival-rpc.testnet.fastnear.com"
+          "url": "https://archival-rpc.testnet.fastnear.com",
+          "archival": true,
+          "archivalReason": "Pinned block, older than standard RPC retention."
         }
       ],
       "requestMethod": "EXPERIMENTAL_congestion_level",
@@ -3897,7 +3919,9 @@
           },
           "key": "mainnet",
           "label": "Mainnet",
-          "url": "https://archival-rpc.mainnet.fastnear.com"
+          "url": "https://archival-rpc.mainnet.fastnear.com",
+          "archival": true,
+          "archivalReason": "Pinned block, older than standard RPC retention."
         },
         {
           "defaultFields": {
@@ -3906,7 +3930,9 @@
           },
           "key": "testnet",
           "label": "Testnet",
-          "url": "https://archival-rpc.testnet.fastnear.com"
+          "url": "https://archival-rpc.testnet.fastnear.com",
+          "archival": true,
+          "archivalReason": "Pinned block, older than standard RPC retention."
         }
       ],
       "requestMethod": "EXPERIMENTAL_light_client_block_proof",
@@ -4285,7 +4311,9 @@
           },
           "key": "mainnet",
           "label": "Mainnet",
-          "url": "https://archival-rpc.mainnet.fastnear.com"
+          "url": "https://archival-rpc.mainnet.fastnear.com",
+          "archival": true,
+          "archivalReason": "Pinned transaction, older than standard RPC retention."
         },
         {
           "defaultFields": {
@@ -4296,7 +4324,9 @@
           },
           "key": "testnet",
           "label": "Testnet",
-          "url": "https://archival-rpc.testnet.fastnear.com"
+          "url": "https://archival-rpc.testnet.fastnear.com",
+          "archival": true,
+          "archivalReason": "Pinned transaction, older than standard RPC retention."
         }
       ],
       "requestMethod": "EXPERIMENTAL_light_client_proof",
@@ -5893,7 +5923,9 @@
           },
           "key": "mainnet",
           "label": "Mainnet",
-          "url": "https://archival-rpc.mainnet.fastnear.com"
+          "url": "https://archival-rpc.mainnet.fastnear.com",
+          "archival": true,
+          "archivalReason": "Pinned parent block, older than standard RPC retention."
         },
         {
           "defaultFields": {
@@ -5902,7 +5934,9 @@
           },
           "key": "testnet",
           "label": "Testnet",
-          "url": "https://archival-rpc.testnet.fastnear.com"
+          "url": "https://archival-rpc.testnet.fastnear.com",
+          "archival": true,
+          "archivalReason": "Pinned parent block, older than standard RPC retention."
         }
       ],
       "requestMethod": "chunk",
@@ -6404,7 +6438,9 @@
           },
           "key": "mainnet",
           "label": "Mainnet",
-          "url": "https://archival-rpc.mainnet.fastnear.com"
+          "url": "https://archival-rpc.mainnet.fastnear.com",
+          "archival": true,
+          "archivalReason": "Pinned chunk hash, older than standard RPC retention."
         },
         {
           "defaultFields": {
@@ -6412,7 +6448,9 @@
           },
           "key": "testnet",
           "label": "Testnet",
-          "url": "https://archival-rpc.testnet.fastnear.com"
+          "url": "https://archival-rpc.testnet.fastnear.com",
+          "archival": true,
+          "archivalReason": "Pinned chunk hash, older than standard RPC retention."
         }
       ],
       "requestMethod": "chunk",
@@ -8266,7 +8304,9 @@
           },
           "key": "mainnet",
           "label": "Mainnet",
-          "url": "https://archival-rpc.mainnet.fastnear.com"
+          "url": "https://archival-rpc.mainnet.fastnear.com",
+          "archival": true,
+          "archivalReason": "Pinned block, older than standard RPC retention."
         },
         {
           "defaultFields": {
@@ -8274,7 +8314,9 @@
           },
           "key": "testnet",
           "label": "Testnet",
-          "url": "https://archival-rpc.testnet.fastnear.com"
+          "url": "https://archival-rpc.testnet.fastnear.com",
+          "archival": true,
+          "archivalReason": "Pinned block, older than standard RPC retention."
         }
       ],
       "requestMethod": "gas_price",
@@ -9420,18 +9462,6 @@
           "key": "testnet",
           "label": "Testnet RPC",
           "url": "https://rpc.testnet.fastnear.com"
-        },
-        {
-          "defaultFields": {},
-          "key": "mainnet",
-          "label": "Mainnet Archival RPC",
-          "url": "https://archival-rpc.mainnet.fastnear.com"
-        },
-        {
-          "defaultFields": {},
-          "key": "testnet",
-          "label": "Testnet Archival RPC",
-          "url": "https://archival-rpc.testnet.fastnear.com"
         }
       ],
       "requestMethod": "block",
@@ -9750,7 +9780,9 @@
           },
           "key": "mainnet",
           "label": "Mainnet",
-          "url": "https://archival-rpc.mainnet.fastnear.com"
+          "url": "https://archival-rpc.mainnet.fastnear.com",
+          "archival": true,
+          "archivalReason": "Pinned transaction, older than standard RPC retention."
         },
         {
           "defaultFields": {
@@ -9761,7 +9793,9 @@
           },
           "key": "testnet",
           "label": "Testnet",
-          "url": "https://archival-rpc.testnet.fastnear.com"
+          "url": "https://archival-rpc.testnet.fastnear.com",
+          "archival": true,
+          "archivalReason": "Pinned transaction, older than standard RPC retention."
         }
       ],
       "requestMethod": "light_client_proof",
@@ -10846,7 +10880,9 @@
           },
           "key": "mainnet",
           "label": "Mainnet",
-          "url": "https://archival-rpc.mainnet.fastnear.com"
+          "url": "https://archival-rpc.mainnet.fastnear.com",
+          "archival": true,
+          "archivalReason": "Pinned light-client head, older than standard RPC retention."
         },
         {
           "defaultFields": {
@@ -10854,7 +10890,9 @@
           },
           "key": "testnet",
           "label": "Testnet",
-          "url": "https://archival-rpc.testnet.fastnear.com"
+          "url": "https://archival-rpc.testnet.fastnear.com",
+          "archival": true,
+          "archivalReason": "Pinned light-client head, older than standard RPC retention."
         }
       ],
       "requestMethod": "next_light_client_block",
@@ -11798,7 +11836,9 @@
           },
           "key": "mainnet",
           "label": "Mainnet",
-          "url": "https://archival-rpc.mainnet.fastnear.com"
+          "url": "https://archival-rpc.mainnet.fastnear.com",
+          "archival": true,
+          "archivalReason": "Pinned receipt, older than standard RPC retention."
         },
         {
           "defaultFields": {
@@ -11806,7 +11846,9 @@
           },
           "key": "testnet",
           "label": "Testnet",
-          "url": "https://archival-rpc.testnet.fastnear.com"
+          "url": "https://archival-rpc.testnet.fastnear.com",
+          "archival": true,
+          "archivalReason": "Pinned receipt, older than standard RPC retention."
         }
       ],
       "requestMethod": "EXPERIMENTAL_receipt",
@@ -12147,7 +12189,9 @@
           },
           "key": "mainnet",
           "label": "Mainnet",
-          "url": "https://archival-rpc.mainnet.fastnear.com"
+          "url": "https://archival-rpc.mainnet.fastnear.com",
+          "archival": true,
+          "archivalReason": "Pinned receipt plus block_height anchor, older than standard RPC retention."
         },
         {
           "defaultFields": {
@@ -12156,7 +12200,9 @@
           },
           "key": "testnet",
           "label": "Testnet",
-          "url": "https://archival-rpc.testnet.fastnear.com"
+          "url": "https://archival-rpc.testnet.fastnear.com",
+          "archival": true,
+          "archivalReason": "Pinned receipt plus block_height anchor, older than standard RPC retention."
         }
       ],
       "requestMethod": "EXPERIMENTAL_receipt_to_tx",
@@ -12505,7 +12551,9 @@
           },
           "key": "mainnet",
           "label": "Mainnet",
-          "url": "https://archival-rpc.mainnet.fastnear.com"
+          "url": "https://archival-rpc.mainnet.fastnear.com",
+          "archival": true,
+          "archivalReason": "Pinned transaction, older than standard RPC retention."
         },
         {
           "defaultFields": {
@@ -12515,7 +12563,9 @@
           },
           "key": "testnet",
           "label": "Testnet",
-          "url": "https://archival-rpc.testnet.fastnear.com"
+          "url": "https://archival-rpc.testnet.fastnear.com",
+          "archival": true,
+          "archivalReason": "Pinned transaction, older than standard RPC retention."
         }
       ],
       "requestMethod": "EXPERIMENTAL_tx_status",
@@ -13941,7 +13991,9 @@
           },
           "key": "mainnet",
           "label": "Mainnet",
-          "url": "https://archival-rpc.mainnet.fastnear.com"
+          "url": "https://archival-rpc.mainnet.fastnear.com",
+          "archival": true,
+          "archivalReason": "Pinned transaction, older than standard RPC retention."
         },
         {
           "defaultFields": {
@@ -13950,7 +14002,9 @@
           },
           "key": "testnet",
           "label": "Testnet",
-          "url": "https://archival-rpc.testnet.fastnear.com"
+          "url": "https://archival-rpc.testnet.fastnear.com",
+          "archival": true,
+          "archivalReason": "Pinned transaction, older than standard RPC retention."
         }
       ],
       "requestMethod": "tx",
@@ -14313,7 +14367,9 @@
           },
           "key": "mainnet",
           "label": "Mainnet",
-          "url": "https://archival-rpc.mainnet.fastnear.com"
+          "url": "https://archival-rpc.mainnet.fastnear.com",
+          "archival": true,
+          "archivalReason": "Pinned epoch, older than standard RPC retention."
         },
         {
           "defaultFields": {
@@ -14321,7 +14377,9 @@
           },
           "key": "testnet",
           "label": "Testnet",
-          "url": "https://archival-rpc.testnet.fastnear.com"
+          "url": "https://archival-rpc.testnet.fastnear.com",
+          "archival": true,
+          "archivalReason": "Pinned epoch, older than standard RPC retention."
         }
       ],
       "requestMethod": "EXPERIMENTAL_validators_ordered",
@@ -14586,7 +14644,9 @@
           },
           "key": "mainnet",
           "label": "Mainnet",
-          "url": "https://archival-rpc.mainnet.fastnear.com"
+          "url": "https://archival-rpc.mainnet.fastnear.com",
+          "archival": true,
+          "archivalReason": "Pinned epoch, older than standard RPC retention."
         },
         {
           "defaultFields": {
@@ -14594,7 +14654,9 @@
           },
           "key": "testnet",
           "label": "Testnet",
-          "url": "https://archival-rpc.testnet.fastnear.com"
+          "url": "https://archival-rpc.testnet.fastnear.com",
+          "archival": true,
+          "archivalReason": "Pinned epoch, older than standard RPC retention."
         }
       ],
       "requestMethod": "validators",
