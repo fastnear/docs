@@ -82,12 +82,15 @@ The bespoke UI styling source of truth is now `builder-docs/src/css/custom.css`.
 - `builder-docs/src/css/custom.css`: canonical bespoke UI styling
 - `@theme/components/OpenApiDocs/hooks/BeforeOpenApiOperation.tsx`: Redocly operation-page injection point
 - `scripts/generate-page-models.js`: shared page-model generator
+- `scripts/rpc-example-config.js`: portal-owned RPC interaction metadata — curated example params, per-network overrides, live-audit exclusions, placeholder allowlist, and archival example declarations
+- `scripts/nearcore-operation-map.js`: per-operation overrides for nearcore-derived specs (descriptions, example params, schema and enum corrections)
 - `scripts/standalone-common.js`: standalone dev/build runtime
 
 ## Decision Guide
 
 - If the work changes contract truth, start with OpenAPI or nearcore generation.
 - If the work changes REST request defaults without changing OpenAPI, start with `enhancements/` and the page-model generation path.
+- If the work changes RPC example values, the endpoint an example runs against, or a nearcore-derived schema that is wrong, start with `scripts/rpc-example-config.js` (portal-owned) or `scripts/nearcore-operation-map.js` (contract corrections). Never hand-edit a generated file under `rpcs/`; `npm run generate-rpc` rebuilds those from scratch.
 - If the work changes the blockchain-native pilot UI, start with `shared/FastnearOperationPage.tsx`.
 - If the work is visual polish, spacing, sizing, or layout tuning for the public docs, start with `builder-docs/src/css/custom.css` and do not mirror that work into `mike-docs` unless a verification surface becomes unreadable.
 - If the work changes no-Redocly experimentation, start with `standalone/` and the standalone scripts.

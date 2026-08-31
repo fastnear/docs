@@ -87,6 +87,21 @@ Use OpenAPI when the behavior is part of the actual API contract:
 - parameters
 - security definitions
 - response models
+- `servers` — which endpoints genuinely serve the operation
+
+The `servers` case is the one most easily got wrong, because it looks like a
+docs knob. It is not. `servers:` declares where an operation *lives*, so it must
+list every endpoint that genuinely serves it and nothing more. Which of those
+endpoints a given docs *example* executes against is a property of the example,
+not the API, and is therefore portal-owned: for RPC that is `ARCHIVAL_EXAMPLES`
+in `scripts/rpc-example-config.js`. Encoding it in `servers:` instead tells every
+spec consumer — SDK generators, MCP tools, agents — something false about the
+method, and does not survive regeneration. See PORTAL_WORKFLOW.md → Archival
+Examples.
+
+Note that RPC operations cannot use enhancement manifests at all today: the RPC
+and enhancement page-spec lists in `scripts/generate-page-models.js` are
+disjoint, so `scripts/rpc-example-config.js` is the RPC-side equivalent.
 
 ## Future Continuity Need
 
