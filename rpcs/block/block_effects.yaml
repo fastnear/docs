@@ -8,6 +8,10 @@ servers:
     description: Mainnet
   - url: "https://rpc.testnet.fastnear.com"
     description: Testnet
+  - url: "https://archival-rpc.mainnet.fastnear.com"
+    description: Mainnet Archival
+  - url: "https://archival-rpc.testnet.fastnear.com"
+    description: Testnet Archival
 paths:
   /:
     post:
@@ -36,7 +40,6 @@ paths:
                   enum: [block_effects]
                 params:
                   type: object
-                  required: [block_id]
                   properties:
                     block_id:
                       oneOf:
@@ -45,6 +48,10 @@ paths:
                         - type: string
                           description: Base58-encoded block hash
                       description: Block height (integer) or block hash (string)
+                    finality:
+                      type: string
+                      enum: [final, near-final, optimistic]
+                      description: Block finality
             examples:
               mainnet:
                 summary: Get block effects (Mainnet)
@@ -53,7 +60,7 @@ paths:
                   id: fastnear
                   method: block_effects
                   params:
-                    block_id: 9820210
+                    finality: final
               testnet:
                 summary: Get block effects (Testnet)
                 value:
@@ -61,7 +68,7 @@ paths:
                   id: fastnear
                   method: block_effects
                   params:
-                    block_id: 245254793
+                    finality: final
       responses:
         200:
           description: Successful response

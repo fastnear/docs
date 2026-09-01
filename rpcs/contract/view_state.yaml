@@ -8,6 +8,10 @@ servers:
     description: Mainnet
   - url: "https://rpc.testnet.fastnear.com"
     description: Testnet
+  - url: "https://archival-rpc.mainnet.fastnear.com"
+    description: Mainnet Archival
+  - url: "https://archival-rpc.testnet.fastnear.com"
+    description: Testnet Archival
 paths:
   /:
     post:
@@ -80,8 +84,8 @@ paths:
                   params:
                     request_type: view_state
                     finality: final
-                    account_id: v1.signer-prod.testnet
-                    prefix_base64: U1RBVEU=
+                    account_id: counter.testnet
+                    prefix_base64: ""
       responses:
         200:
           description: Successful response

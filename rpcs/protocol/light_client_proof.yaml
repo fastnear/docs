@@ -8,6 +8,10 @@ servers:
     description: Mainnet
   - url: "https://rpc.testnet.fastnear.com"
     description: Testnet
+  - url: "https://archival-rpc.mainnet.fastnear.com"
+    description: Mainnet Archival
+  - url: "https://archival-rpc.testnet.fastnear.com"
+    description: Testnet Archival
 paths:
   /:
     post:
@@ -45,8 +49,8 @@ paths:
                       description: Base58-encoded hash
                     type:
                       type: string
-                      enum: [receipt]
-                      description: "Proof subject — `receipt` proves inclusion of a specific receipt produced during execution."
+                      enum: [transaction, receipt]
+                      description: "Proof subject — `transaction` proves inclusion of the top-level transaction, `receipt` proves inclusion of a specific receipt produced during execution."
                     receipt_id:
                       type: string
                       description: Base58-encoded hash
@@ -62,7 +66,7 @@ paths:
                   id: fastnear
                   method: light_client_proof
                   params:
-                    type: receipt
+                    type: transaction
                     transaction_hash: 34E7weKCDqXh3xPKdBgSWRqo44yTWjbka9deMK8JbAxx
                     sender_id: escrow.ai.near
                     light_client_head: 9XN7MtDywZvfGx6TKy1MT2iCZkKuHikJXmNazxdZ4x6T
@@ -73,7 +77,7 @@ paths:
                   id: fastnear
                   method: light_client_proof
                   params:
-                    type: receipt
+                    type: transaction
                     transaction_hash: 9LPbkwJ26HYgda7KHrURc6jozBcpdA1kUMSEzwm81JPx
                     sender_id: near-mpc-staking4all-01.testnet
                     light_client_head: 6JYj6i1FaUCzdoqy41CqUcZJxa5n9EmLEENRDH2gLm5u

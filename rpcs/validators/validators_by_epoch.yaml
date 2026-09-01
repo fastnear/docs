@@ -8,6 +8,10 @@ servers:
     description: Mainnet
   - url: "https://rpc.testnet.fastnear.com"
     description: Testnet
+  - url: "https://archival-rpc.mainnet.fastnear.com"
+    description: Mainnet Archival
+  - url: "https://archival-rpc.testnet.fastnear.com"
+    description: Testnet Archival
 paths:
   /:
     post:
@@ -54,7 +58,7 @@ paths:
                   id: fastnear
                   method: validators
                   params:
-                    epoch_id: 3KWUtEFtzmmmc93EYpD3ehb4LE11YJ2jCFkqWhygkbaR
+                    epoch_id: BARiarhzfSL7G737ik4AukX9sFYH1iR3dYU3KNUAvF3e
       responses:
         200:
           description: Successful response

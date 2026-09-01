@@ -6,6 +6,7 @@ const YAML = require("yaml");
 const { auditPageModels } = require("./audit-page-model-routes");
 const { buildGeneratedStructuredGraph, auditGeneratedStructuredGraph } = require("./structured-graph-common");
 const { readGeneratedNearcoreSourceJson } = require("./nearcore-source-metadata");
+const { getArchivalExample } = require("./rpc-example-config");
 
 const ROOT = path.resolve(__dirname, "..");
 const ENHANCEMENTS_ROOT = path.resolve(ROOT, "enhancements");
@@ -783,11 +784,47 @@ function collectRpcDefaultFields(examples, fields) {
   return { defaultId, defaultsByNetwork };
 }
 
-function buildNetworks(document, defaultsByNetwork = {}, fields = []) {
+function isArchivalServerUrl(url) {
+  return /^https?:\/\/archival-rpc\./.test(`${url || ""}`);
+}
+
+/**
+ * Collapses `document.servers[]` into one entry per network.
+ *
+ * A spec may declare both the standard and the archival host for a network (see
+ * DEFAULT_SERVERS in generate-from-nearcore.js). Those are two endpoints for ONE
+ * network, not two networks, and they must be collapsed here: both renderers
+ * resolve the endpoint with `networks.find((n) => n.key === selectedNetwork)`,
+ * so emitting two entries with key "mainnet" makes the second unreachable and
+ * lights up both toggle buttons at once.
+ *
+ * Which endpoint an operation's example executes against is portal-owned and
+ * comes from ARCHIVAL_EXAMPLES in rpc-example-config.js — never from `servers:`,
+ * which stays a truthful declaration of where the operation lives.
+ */
+function buildNetworks(document, defaultsByNetwork = {}, fields = [], operationId = null) {
   const fieldNames = new Set(fields.map((field) => field.name));
 
-  return (document.servers || []).map((server) => {
+  const byKey = new Map();
+  for (const server of document.servers || []) {
     const key = getNetworkKey(server.description || server.url);
+    if (!byKey.has(key)) {
+      byKey.set(key, { standard: null, archival: null });
+    }
+    const group = byKey.get(key);
+    const slot = isArchivalServerUrl(server.url) ? "archival" : "standard";
+    if (!group[slot]) {
+      group[slot] = server;
+    }
+  }
+
+  const networks = [];
+  for (const [key, group] of byKey) {
+    const standard = group.standard || group.archival;
+    const archivalExample = operationId ? getArchivalExample(operationId, key) : null;
+    const useArchival = Boolean(archivalExample && group.archival);
+    const selected = useArchival ? group.archival : standard;
+
     const defaultFields = cloneJson(defaultsByNetwork[key]) || {};
 
     for (const [fieldName, fallbackValues] of Object.entries(NETWORK_FALLBACKS)) {
@@ -796,13 +833,24 @@ function buildNetworks(document, defaultsByNetwork = {}, fields = []) {
       }
     }
 
-    return {
+    const network = {
       defaultFields,
       key,
-      label: server.description || server.url,
-      url: server.url,
+      // Labelled from the standard server so the toggle stays "Mainnet"/"Testnet";
+      // an archival selection is surfaced by the flag below, not by the label.
+      label: standard.description || standard.url,
+      url: selected.url,
     };
-  });
+
+    if (useArchival) {
+      network.archival = true;
+      network.archivalReason = archivalExample.reason;
+    }
+
+    networks.push(network);
+  }
+
+  return networks;
 }
 
 function buildRpcSections(pageSpec, document, operation) {
@@ -819,7 +867,7 @@ function buildRpcSections(pageSpec, document, operation) {
       defaultId,
       fields,
       kind: pageSpec.kind || operation["x-fastnear-interaction"]?.kind || "rpc-view-account",
-      networks: buildNetworks(document, defaultsByNetwork, fields),
+      networks: buildNetworks(document, defaultsByNetwork, fields, operation.operationId),
       requestMethod:
         requestMediaType?.schema?.properties?.method?.enum?.[0] || operation.operationId,
       requestType: paramsProperties.request_type?.enum?.[0],

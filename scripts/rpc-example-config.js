@@ -106,23 +106,92 @@ const CURATED_RPC_EXAMPLE_PARAMS = {
       request_type: 'view_state',
     },
     testnet: {
-      account_id: 'v1.signer-prod.testnet',
+      // v1.signer-prod.testnet returns TOO_LARGE_CONTRACT_STATE; counter.testnet
+      // has a single small key that an empty prefix returns in full.
+      account_id: 'counter.testnet',
       finality: 'final',
-      prefix_base64: 'U1RBVEU=',
+      prefix_base64: '',
       request_type: 'view_state',
+    },
+  },
+  EXPERIMENTAL_receipt_to_tx: {
+    // Resolves only on the archival endpoint (servers set to archival-rpc) with a
+    // block_height anchor near the receipt; without block_height the node returns
+    // UNKNOWN_RECEIPT.
+    mainnet: {
+      receipt_id: 'ETMK9HmPsAYcNxfSXBejMWQs57W4Ph5HDYoYhDMpotQn',
+      block_height: 194263442,
+    },
+    testnet: {
+      receipt_id: '9uJmhNCLRgsFncH3anffPLE1YsZCPTyAZrBdekc3vTaZ',
+      block_height: 246016180,
     },
   },
 };
 
+// Portal-owned interaction metadata: which endpoint an example must EXECUTE
+// against. This is deliberately not expressed in the OpenAPI `servers:` key.
+//
+// `servers:` is contract data — it declares where an operation lives, and every
+// method below is served correctly by the regular RPC. What needs archival is
+// the example DATA: each of these pages documents a historical lookup and pins a
+// past block / chunk / tx / receipt / epoch. The regular RPC retains roughly
+// 113,750 blocks (~29 hours), after which those pins return UNKNOWN_* or hang.
+//
+// Putting the archival host in `servers:` would tell every spec consumer — SDK
+// generators, MCP tools, agents — that the method itself requires archival,
+// which is false. It also would not survive `npm run generate-rpc`, which
+// rebuilds each leaf spec from scratch.
+const ARCHIVAL_HOSTS = {
+  mainnet: 'https://archival-rpc.mainnet.fastnear.com',
+  testnet: 'https://archival-rpc.testnet.fastnear.com',
+};
+
+const HISTORICAL_PIN_REASON =
+  'This example pins a specific historical record, which the standard RPC drops ' +
+  'from its ~29 hour retention window. The method itself works on the standard RPC ' +
+  'for recent data.';
+
+// Applied to BOTH networks for every entry, on purpose. A few of these currently
+// resolve on the regular RPC for one network, but only incidentally:
+// block_by_height/block_by_id pin block 9820210, an early-mainnet block the
+// regular RPC still happens to serve, and validators_by_epoch pins a testnet
+// epoch that will age out. Per-network exceptions built on that would rot and
+// read as unexplained asymmetry.
+const ARCHIVAL_EXAMPLE_NETWORKS = ['mainnet', 'testnet'];
+
+const ARCHIVAL_EXAMPLES = {
+  block_by_height: { reason: 'Pinned block height, older than standard RPC retention.' },
+  block_by_id: { reason: 'Pinned block hash, older than standard RPC retention.' },
+  chunk_by_block_shard: { reason: 'Pinned parent block, older than standard RPC retention.' },
+  chunk_by_hash: { reason: 'Pinned chunk hash, older than standard RPC retention.' },
+  EXPERIMENTAL_congestion_level: { reason: 'Pinned block, older than standard RPC retention.' },
+  EXPERIMENTAL_light_client_block_proof: { reason: 'Pinned block, older than standard RPC retention.' },
+  EXPERIMENTAL_light_client_proof: { reason: 'Pinned transaction, older than standard RPC retention.' },
+  gas_price_by_block: { reason: 'Pinned block, older than standard RPC retention.' },
+  light_client_proof: { reason: 'Pinned transaction, older than standard RPC retention.' },
+  next_light_client_block: { reason: 'Pinned light-client head, older than standard RPC retention.' },
+  EXPERIMENTAL_receipt: { reason: 'Pinned receipt, older than standard RPC retention.' },
+  EXPERIMENTAL_receipt_to_tx: { reason: 'Pinned receipt plus block_height anchor, older than standard RPC retention.' },
+  EXPERIMENTAL_tx_status: { reason: 'Pinned transaction, older than standard RPC retention.' },
+  tx_status: { reason: 'Pinned transaction, older than standard RPC retention.' },
+  EXPERIMENTAL_validators_ordered: { reason: 'Pinned epoch, older than standard RPC retention.' },
+  validators_by_epoch: { reason: 'Pinned epoch, older than standard RPC retention.' },
+};
+
 const ALLOWED_RPC_PLACEHOLDERS = {
-  // No curated testnet receipt yet; mainnet uses a real receipt id. Allow the
-  // generated placeholder on testnet until a real, index-resolvable testnet
-  // example is curated.
-  EXPERIMENTAL_receipt_to_tx: {
+  // The EXPERIMENTAL_receipt_to_tx testnet allowance is gone on purpose: that
+  // example now carries a real, index-resolvable receipt id plus a block_height
+  // anchor, so there is no longer a placeholder to excuse.
+  view_state: {
     testnet: {
-      receipt_id: {
-        value: 'ExampleReceiptId',
-        reason: 'No curated testnet receipt yet; mainnet uses a real receipt id.',
+      prefix_base64: {
+        value: '',
+        reason:
+          'Empty prefix is meaningful rather than unresolved: it reads the contract\'s full ' +
+          'key set. counter.testnet holds a single small key, so an unfiltered read stays ' +
+          'inside the response limit, whereas the previous v1.signer-prod.testnet example ' +
+          'returned TOO_LARGE_CONTRACT_STATE.',
       },
     },
   },
@@ -149,13 +218,25 @@ const MANUAL_RPC_EXAMPLE_OVERRIDES = {
     mainnet: { finality: 'optimistic' },
     testnet: { finality: 'optimistic' },
   },
+  block_effects: {
+    // Evergreen: query the latest block's effects instead of a pinned block_id
+    // that ages out of the non-archival RPC's retention window.
+    mainnet: { finality: 'final' },
+    testnet: { finality: 'final' },
+  },
+  validators_by_epoch: {
+    // Testnet is periodically reset, so pin a recent archival-resolvable epoch.
+    testnet: { epoch_id: 'BARiarhzfSL7G737ik4AukX9sFYH1iR3dYU3KNUAvF3e' },
+  },
   light_client_proof: {
-    mainnet: { type: 'receipt' },
-    testnet: { type: 'receipt' },
+    // The example fields are transaction_hash + sender_id, which correspond to
+    // type: transaction. type: receipt would require receipt_id + receiver_id.
+    mainnet: { type: 'transaction' },
+    testnet: { type: 'transaction' },
   },
   EXPERIMENTAL_light_client_proof: {
-    mainnet: { type: 'receipt' },
-    testnet: { type: 'receipt' },
+    mainnet: { type: 'transaction' },
+    testnet: { type: 'transaction' },
   },
   view_code: {
     mainnet: { account_id: 'intents.near' },
@@ -172,17 +253,19 @@ const MANUAL_RPC_EXAMPLE_OVERRIDES = {
 };
 
 const AUDIT_SKIPS = {
-  // receipt→tx resolution needs a save_receipt_to_tx-enabled node with the
-  // receipt still indexed; the public RPC returns UNKNOWN_RECEIPT otherwise, so
-  // the example is representative-only and excluded from the live audit.
+  // receipt→tx resolution needs a save_receipt_to_tx-enabled node. The docs
+  // example resolves on the archival endpoint (this operation is flagged in
+  // ARCHIVAL_EXAMPLES) with a block_height anchor near the receipt, but the
+  // public nodes behind the audit do not expose the mapping reliably, so it
+  // stays excluded from the live audit.
   EXPERIMENTAL_receipt_to_tx: {
     mainnet: {
       skip: true,
-      reason: 'Requires a save_receipt_to_tx-enabled node with the receipt indexed; returns UNKNOWN_RECEIPT otherwise.',
+      reason: 'receipt→tx requires a save_receipt_to_tx-enabled node; the public endpoints do not resolve it reliably.',
     },
     testnet: {
       skip: true,
-      reason: 'Requires a save_receipt_to_tx-enabled node with the receipt indexed; returns UNKNOWN_RECEIPT otherwise.',
+      reason: 'receipt→tx requires a save_receipt_to_tx-enabled node; the public endpoints do not resolve it reliably.',
     },
   },
 };
@@ -223,6 +306,31 @@ function getAllowedRpcPlaceholders(operationId, network) {
   return cloneJson(ALLOWED_RPC_PLACEHOLDERS[operationId]?.[network]) || {};
 }
 
+/**
+ * Returns `{ url, reason }` when this operation's example for `network` must be
+ * executed against the archival endpoint, otherwise null. Consumed by
+ * generate-page-models.js (to pick networks[].url) and audit-rpc-examples.js
+ * (so the live audit resolves the same endpoint the docs widget uses).
+ */
+function getArchivalExample(operationId, network) {
+  const entry = ARCHIVAL_EXAMPLES[operationId];
+  if (!entry) {
+    return null;
+  }
+
+  const networks = entry.networks || ARCHIVAL_EXAMPLE_NETWORKS;
+  if (!networks.includes(network)) {
+    return null;
+  }
+
+  const url = ARCHIVAL_HOSTS[network];
+  if (!url) {
+    return null;
+  }
+
+  return { url, reason: entry.reason || HISTORICAL_PIN_REASON };
+}
+
 function getAuditSkip(operationId, network) {
   const auditSkip = AUDIT_SKIPS[operationId]?.[network];
   if (auditSkip) {
@@ -242,6 +350,8 @@ function getAuditSkip(operationId, network) {
 
 module.exports = {
   ALLOWED_RPC_PLACEHOLDERS,
+  ARCHIVAL_EXAMPLES,
+  ARCHIVAL_HOSTS,
   AUDIT_SKIPS,
   CURATED_RPC_EXAMPLE_PARAMS,
   DISCOVERY_NETWORKS,
@@ -252,6 +362,7 @@ module.exports = {
   MAINNET_GLOBAL_CONTRACT_EXAMPLES,
   TESTNET_GLOBAL_CONTRACT_EXAMPLES,
   TRACKED_RPC_EXAMPLE_FOLLOWUPS,
+  getArchivalExample,
   getAuditSkip,
   getAllowedRpcPlaceholders,
   getCuratedRpcExampleParams,

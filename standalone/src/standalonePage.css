@@ -1160,3 +1160,10 @@ pre {
     min-height: 240px;
   }
 }
+
+.fastnear-interaction__meta-note {
+  margin: 6px 0 0;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: rgba(238, 241, 255, 0.62);
+}

@@ -1671,6 +1671,20 @@ export function FastnearOperationPage({
   const selectedNetworkDetails =
     pageModel.interaction.networks.find((network) => network.key === selectedNetwork) ||
     pageModel.interaction.networks[0];
+
+  // Present only when generate-page-models.js resolved this network to the
+  // archival host, which it does when the operation's EXAMPLE pins a record
+  // older than the standard RPC's retention window. It is a property of the
+  // example, not of the method, so it is surfaced as a note rather than by
+  // relabelling the network.
+  // Kept to the flag, not the per-operation `archivalReason` string: that text is
+  // English config authored in rpc-example-config.js and belongs to the
+  // machine-facing surfaces. builder-docs renders the same sentence from its
+  // localized string table, so both runtimes stay in step.
+  const isArchivalEndpoint =
+    selectedNetworkDetails && "archival" in selectedNetworkDetails
+      ? Boolean((selectedNetworkDetails as { archival?: boolean }).archival)
+      : false;
   const selectedExample =
     pageModel.request.examples.find((example) => example.id === selectedExampleId) ||
     pageModel.request.examples.find((example) => example.network === selectedNetwork) ||
@@ -2386,6 +2400,13 @@ export function FastnearOperationPage({
                     ? selectedNetworkDetails?.url
                     : requestUrl?.origin || selectedNetworkDetails?.url}
                 </code>
+                {isArchivalEndpoint ? (
+                  <p className="fastnear-interaction__meta-note">
+                    Archival endpoint — this example references a record older than the
+                    standard RPC retention window. The method itself works on the standard
+                    RPC for recent data.
+                  </p>
+                ) : null}
               </div>
               {pageModel.interaction.supportsFinality ? (
                 <div className="fastnear-interaction__meta-item fastnear-interaction__meta-item--finality">

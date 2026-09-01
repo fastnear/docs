@@ -32,6 +32,7 @@ The contract between the repos is now:
 4. shared request/auth semantics encoded into those models and the direct runtime
 5. stable identifiers preserved across regenerations
    - `pageModelId`, `canonicalPath`, and `request.examples[].id` are treated as public contract data by `scripts/generate-page-models.js` (`auditPageModelCompatibility` + `reconcileRequestExampleIds`). `builder-docs` uses the example ids in shareable `requestExample=<id>` URLs, so the generator fails loudly on ambiguous rename/removal rather than silently repurposing them.
+   - `interaction.networks[]` carries `{ key, label, url, defaultFields }` plus optional `archival` / `archivalReason`. `key` is unique per model and is what `?network=` selects and what both renderers match on (`networks.find((n) => n.key === selectedNetwork)`), so exactly one entry exists per network even when the spec declares several endpoints for it. `url` is the endpoint the widget sends to, which for a historical-lookup example is the archival host; when it is, `archivalReason` explains why and is rendered as a note under the endpoint. See PORTAL_WORKFLOW.md → Archival Examples.
 
 `builder-docs` uses the vendored models in two places:
 
