@@ -97,7 +97,7 @@ Use this as the implementation checklist for the custom interaction/reference ro
 
 - [x] Ensure pretty routes, aggregate routes, and standalone routes are aligned for every bespoke page.
 - [x] Add smoke coverage for representative bespoke REST routes across `fastnear` and `neardata`.
-- [ ] Review whether server-side redirects in `redocly.yaml` are still the right mechanism for API pretty routes or whether client-side canonicalization is sufficient.
+- [x] Review whether server-side redirects are still the right mechanism for API pretty routes or whether client-side canonicalization is sufficient. Settled by the Redocly removal: `builder-docs` generates canonical `/rpcs/**` and `/apis/**` routes natively, so there is no server-side redirect layer left to reconsider.
 
 ### 4. First Body-Driven Bespoke API
 
@@ -158,31 +158,31 @@ Redocly/Realm is now treated as the legacy delivery backend. `builder-docs` is t
 
 ### Phase 5. Remove Realm/Redocly
 
-- [ ] Remove Redocly-only route glue once all consumed slices are served by the bespoke host.
-- [ ] Remove Realm/Redocly build and preview steps when no published routes still depend on them.
-- [ ] Simplify `mike-docs` into the generation pipeline and any remaining delivery glue only.
-- [ ] Reduce `mike-docs` bespoke CSS to a minimal verification baseline, with `builder-docs` CSS treated as the only polished source of truth.
+- [x] Remove Redocly-only route glue once all consumed slices are served by the bespoke host.
+- [x] Remove Realm/Redocly build and preview steps when no published routes still depend on them.
+- [x] Simplify `mike-docs` into the generation pipeline and remaining delivery glue only.
+- [x] Reduce `mike-docs` bespoke CSS to a minimal verification baseline, with `builder-docs` CSS treated as the only polished source of truth.
 
 #### Concrete Cleanup Checklist
 
-- [ ] Replace legacy Redocly verification in `npm run preview`, `npm run lint`, and `npm run build` with standalone-only or generator-only validation paths.
-- [ ] Rewrite `scripts/test-operations.js` so smoke coverage no longer assumes the legacy Redocly route family or `reference.page.yaml` pagination.
-- [ ] Remove browser-only Redocly route glue after the previous step:
+- [x] Replace legacy Redocly verification in `npm run preview`, `npm run lint`, and `npm run build` with standalone-only or generator-only validation paths.
+- [x] Rewrite `scripts/test-operations.js` so smoke coverage no longer assumes the legacy Redocly route family or `reference.page.yaml` pagination.
+- [x] Remove browser-only Redocly route glue:
   `scripts/generated-operation-routes.js`
   `scripts/api-operation-redirect.js`
-- [ ] Remove the legacy Redocly interaction and theme hooks once no local QA flow depends on them:
+- [x] Remove the legacy Redocly interaction and theme hooks:
   `@theme/ext/configure.ts`
   `@theme/styles.css`
   `@theme/components/OpenApiDocs/hooks/BeforeOpenApiOperation.tsx`
-- [ ] Remove the remaining Redocly config surface after no scripts invoke it:
+- [x] Remove the remaining Redocly config surface:
   `redocly.yaml`
   `reference.page.yaml`
   `sidebars.yaml`
   `scripts/redocly-root-guard.js`
   `scripts/run-realm-build.js`
-- [ ] Drop `@redocly/realm` from `package.json` after build/preview decommission is complete.
-- [ ] Remove local Plan Gates onboarding leftovers that only existed for the legacy build path.
-- [ ] Archive or delete historical Redocly migration notes once they stop informing active work:
+- [x] Drop `@redocly/realm` from `package.json`.
+- [x] Remove local Plan Gates onboarding leftovers that only existed for the legacy build path.
+- [x] Archive or delete historical Redocly migration notes:
   `docs/no-redocly-view-account-spike.md`
   `md-CLAUDE-chapters/04-custom-interactions-and-redocly-overrides.md`
   `md-CLAUDE-chapters/05-standalone-no-redocly-spike.md`
@@ -193,7 +193,7 @@ Redocly/Realm is now treated as the legacy delivery backend. `builder-docs` is t
 - April 10, 2026: FastNEAR embeds now forward an optional `apiKey` query param through `builder-docs` and `mike-docs`, while bearer-token and RPC-only header injection remain scoped to RPC pages.
 - April 11, 2026: `neardata-server` now generates its OpenAPI from typed stable DTOs plus minimal repo-local raw-schema helpers; `components.yaml` has been removed and redirect/auth behavior is documented explicitly in the generated output.
 - `npm run lint` is green in `/Users/mikepurvis/near/mike-docs`.
-- `REDOCLY_LOCAL_PLAN=enterprise npm run build` is green in `/Users/mikepurvis/near/mike-docs`; the local static build now completes end-to-end.
+- April 11, 2026 (historical): `REDOCLY_LOCAL_PLAN=enterprise npm run build` was green locally and the Redocly static build completed end-to-end. That build path was retired with the Redocly runtime removal.
 - `yarn build` is green in `/Users/mikepurvis/near/fn/builder-docs`.
 - Preview smoke coverage now lives in `npm run smoke:operations` for representative RPC and API pretty routes.
 - Live route verification now belongs to the deployed `builder-docs` site at [docs.fastnear.com](https://docs.fastnear.com), not the retired Redocly production path.
@@ -202,8 +202,8 @@ Redocly/Realm is now treated as the legacy delivery backend. `builder-docs` is t
 - April 11, 2026: `fastnear-openapi-generator` v0.2.0 is published on crates.io and the converted service repos consume it as a normal versioned dependency instead of a sibling path dependency.
 - April 11, 2026: the generalized docs-enhancement layer is portal-owned. `enhancements/<service>/manifest.yaml` now lives in `mike-docs`, and `@theme/ext/configure.ts` seeds preset-driven path/query/body values via `preset`, `network`, and explicit `path.*` / `query.*` / `header.*` URL overrides.
 - April 11, 2026: the external service repos are now aggregate-first and Rust-first. Each API repo owns only `openapi/openapi.yaml` plus its Rust registry/types, while `mike-docs` owns splitting into `apis/<service>/...` leaf files and, at that stage, still owned the old single-network verification variants that were later retired.
-- `npm run build` in `mike-docs` now prefers `PLAN_GATES` from the shell environment or `.env.redocly.local`, with a local-only fallback via `REDOCLY_LOCAL_PLAN=enterprise|pro` for developer validation.
-- GitHub Actions parity now lives in `.github/workflows/portal-build.yml` and runs `npm ci`, `npm run lint`, and `npm run build` on pull requests, pushes to `main`, and manual dispatches.
+- April 11, 2026 (historical): the Redocly-era `npm run build` preferred `PLAN_GATES` from the shell environment or `.env.redocly.local`, with a local-only `REDOCLY_LOCAL_PLAN=enterprise|pro` fallback. Both the script and the gating were removed with the Redocly runtime.
+- GitHub Actions parity lives in `.github/workflows/portal-build.yml` (workflow name `Workspace Verify`) and runs `npm ci`, `npm run lint`, and `npm run standalone:build` on pull requests, pushes to `main`, and manual dispatches.
 - April 11, 2026: local smoke is green with `20 passed, 0 failed`, covering canonical `/apis/...` routes plus the then-current single-network legacy verification variants from preview.
 - April 11, 2026: the old Redocly production host still lagged canonical `/apis/...` route publication during the migration, which is one of the reasons production ownership moved fully to `builder-docs`.
 - April 12, 2026: the full `neardata-server` public surface is now on the bespoke REST-read page path, with portal-owned manifest metadata, generated shared page models, standalone parity, and aligned mainnet/testnet preset defaults.
@@ -221,3 +221,4 @@ Redocly/Realm is now treated as the legacy delivery backend. `builder-docs` is t
 - April 12, 2026: local static verification is green for canonical hosted routes on `builder-docs` (`/rpcs/account/view_account`, `/apis/fastnear/v1/account_full`, `/apis/transactions/v0/account`). The current deployed `docs.fastnear.com` host still returns `404` for those canonical hosted routes until the next `builder-docs` publish.
 - April 13, 2026: `builder-docs/src/css/custom.css` is now explicitly treated as the polished bespoke UI source of truth. Response-pane stretch behavior is tuned there first, while `mike-docs` stylesheets are now labeled as verification-only and no longer expected to track routine visual polish.
 - April 16, 2026: the RPC description pipeline and the REST parameter-description pipeline are both gated. `scripts/generate-from-nearcore.js` now inverts the source of truth for RPC descriptions (schemars primary for `simple` ops, operation-map override by presence, decomposed/custom stay curated), and `npm run verify:workspace` now runs `audit:description-quality:strict`, `audit:description-drift`, and `audit:parameter-descriptions:strict` as CI gates. Current status at the time: 78/78 page models `UPSTREAM_DIRECT`, 158/158 parameter fields clean, 0 description-quality failures. (The registry has since grown to 79 page models.)
+- April 16, 2026: Phase 5 complete. The Redocly runtime has been removed from `mike-docs` — `@redocly/realm` dependency, all Redocly config (`redocly.yaml`, `reference.page.yaml`, `sidebars.yaml`), the `@theme/` directory, Redocly build/preview npm scripts, and the associated browser-script glue are all gone. `npm install` shed 634 transitive packages (57 Dependabot alerts → 1, the remaining being a standalone esbuild major bump). CI now runs `lint + standalone:build` and uploads `standalone-dist` as the workspace artifact. The local standalone runtime on `http://127.0.0.1:4010` is the only in-repo verification surface; `builder-docs` continues to be the public delivery target.

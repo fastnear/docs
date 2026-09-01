@@ -2,30 +2,16 @@
 
 Browser automation is now part of the normal working loop for this repo, especially for custom interactions, auth persistence, and layout work.
 
-Lint is necessary, but it is not enough. The important failures we have found recently were browser-runtime issues:
+Lint is necessary, but it is not enough. The important failures we have found in practice were browser-runtime issues:
 
-- narrow-column layout caused by mounting into the wrong Redocly region
-- misleading auth UX around the Security modal
 - CORS/preflight failures caused by query-param auth on live browser requests
 - hydration/state mismatches that only show up in a real browser
+- layout regressions that lint cannot catch
 
-## Recommended Targets
-
-### Redocly portal
-
-- `npm run preview`
-
-Default preview is `http://127.0.0.1:4000`, but if that port is occupied, use the actual URL printed at startup.
-
-Key routes to compare:
-
-- `/rpcs/account/view_account`
-- `/reference/operation/view_account`
-
-### Local verification runtime
+## Recommended Target
 
 - `npm run standalone:dev`
-- `http://127.0.0.1:4010/rpcs/account/view_account`
+- `http://127.0.0.1:4010/rpcs/account/view_account` (or any other canonical `/rpcs/...` or `/apis/...` route)
 
 ## Tooling Expectation
 
@@ -49,8 +35,6 @@ If Playwright is not already available in the environment, use an ad hoc `npx pl
 - Mobile widths stack cleanly.
 - Inputs remain legible in the active color scheme.
 
-For the Redocly pilot, the key regression to avoid is the interaction rendering in the narrow pre-title column instead of the full request row.
-
 ### Auth state
 
 - empty browser state
@@ -71,13 +55,6 @@ For the Redocly pilot, the key regression to avoid is the interaction rendering 
 - no `requestfailed` events
 - no CORS console errors
 
-### Redocly-vs-standalone parity
-
-- same auth precedence
-- same network switching behavior
-- same effective request payload
-- same cURL auth shape
-
 ## Good Browser Artifacts To Capture
 
 - one screenshot of the page in the problematic viewport
@@ -91,28 +68,23 @@ These artifacts make future continuity much better than prose-only notes.
 
 ## Suggested Working Recipe
 
-1. Start the target runtime.
+1. Start `npm run standalone:dev`.
 2. Open the exact route under test.
 3. Exercise the full auth matrix.
 4. Capture one screenshot and one request log.
-5. Compare Redocly and standalone when the change touches shared behavior.
-6. Run `npm run lint` after browser validation.
+5. Run `npm run lint` after browser validation.
 
 ## `view_account` Regression Matrix
 
-For the current pilot and local verification runtime, these cases are the minimum useful set:
+A minimum useful set against `http://127.0.0.1:4010`:
 
 - `/rpcs/account/view_account` with no auth
 - `/rpcs/account/view_account` with saved browser API key
 - `/rpcs/account/view_account?apiKey=...`
 - `/rpcs/account/view_account?apiKey=...&network=testnet`
-- `/reference/operation/view_account`
-- standalone `/rpcs/account/view_account`
 
 ## When To Write It Down
 
-If browser automation reveals a non-obvious rule, document it immediately. Recent examples worth preserving were:
+If browser automation reveals a non-obvious rule, document it immediately. An example worth preserving:
 
-- full-width Redocly injection required a request-row portal, not a simple pre-title hook render
-- the Security modal is docs-only, not an editable auth UI
-- `?apiKey=` can stay as the public contract even when the browser transport uses a different header shape such as `Authorization: Bearer`
+- `?apiKey=` stays as the public contract even when the browser transport uses a different header shape such as `Authorization: Bearer` (query-param auth caused CORS/preflight failures in practice).
