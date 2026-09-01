@@ -34,7 +34,8 @@ npm run smoke:operations      # Smoke-check representative canonical routes agai
 ## Ongoing Work
 
 - Use [API_DOCS_ROLLOUT.md](API_DOCS_ROLLOUT.md) as the tracker for remaining polish, host cutover cleanup, and post-Redocly simplification.
-- Keep portal-owned interaction metadata in `enhancements/<service>/manifest.yaml`, not in sibling service repos.
+- Keep portal-owned interaction metadata out of the upstream contract and out of sibling service repos. REST services use `enhancements/<service>/manifest.yaml`; RPC operations use `scripts/rpc-example-config.js` (RPC cannot use enhancement manifests today — the two page-spec lists are disjoint).
+- Endpoints are contract, but *which* endpoint a docs example executes against is portal-owned. Declare servers via `DEFAULT_SERVERS` in `scripts/generate-from-nearcore.js`; declare an example's archival requirement in `ARCHIVAL_EXAMPLES`. Never hand-edit `servers:` in a generated leaf spec — `npm run generate-rpc` rebuilds those files from scratch and will silently revert it.
 - Prefer upstream contract-quality improvements only: descriptions, examples, enum clarity, nullable semantics, and stable `operationId`s.
 - If a docs-quality improvement is common to multiple repos, prefer changing the shared OpenAPI generator once instead of hand-tuning each service repo.
 

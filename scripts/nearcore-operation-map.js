@@ -49,9 +49,23 @@ const LEAF_TYPE_MAP = {
 const PARAM_DESCRIPTIONS = {
   method_name: 'Name of the contract view method to invoke.',
   include_proof: 'Include a Merkle proof for the queried state alongside the values.',
-  // light_client_proof `type`: nearcore narrowed the enum to `[receipt]` and
-  // dropped its schemars description; this restates the intent for readers.
-  type: 'Proof subject — `receipt` proves inclusion of a specific receipt produced during execution.',
+  // light_client_proof `type`: nearcore dropped its schemars description; this
+  // restates the intent for readers. See PARAM_ENUM_OVERRIDES below for why the
+  // accompanying enum is widened.
+  type: 'Proof subject — `transaction` proves inclusion of the top-level transaction, `receipt` proves inclusion of a specific receipt produced during execution.',
+};
+
+// Portal-curated enum widening, applied by name like PARAM_DESCRIPTIONS.
+//
+// nearcore's schemars annotation narrows light_client_proof `type` to
+// [receipt], but the live RPC accepts `transaction` too — and the docs examples
+// use it, since they carry transaction_hash + sender_id (the `receipt` form
+// needs receipt_id + receiver_id). Without this the generated schema forbids the
+// value its own example sends. `type` appears only on light_client_proof and
+// EXPERIMENTAL_light_client_proof, so a by-name override is unambiguous.
+// Delete this entry once nearcore widens the enum upstream.
+const PARAM_ENUM_OVERRIDES = {
+  type: ['transaction', 'receipt'],
 };
 
 // BlockId is special: oneOf integer (height) or string (hash)
@@ -227,19 +241,24 @@ const OPERATIONS = [
     operationId: 'block_effects',
     summary: 'Get block effects',
     description: "Summarize every state change in a block — which accounts, keys, and contract-state entries were touched.",
+    // Evergreen on purpose: a pinned block_id ages out of the standard RPC's
+    // ~29h retention window, so the example would rot within a day. block_effects
+    // takes a BlockReference, so `finality` is equally valid and always resolves.
     exampleParamsByNetwork: {
       mainnet: {
-        block_id: 9820210,
+        finality: 'final',
       },
       testnet: {
-        block_id: 245254793,
+        finality: 'final',
       },
     },
+    // BlockReference accepts either a block_id or a finality selector; requiring
+    // block_id would forbid the value this operation's own example sends.
     paramsSchemaOverride: {
       type: 'object',
-      required: ['block_id'],
       properties: {
         block_id: BLOCK_ID_SCHEMA,
+        finality: LEAF_TYPE_MAP.Finality,
       },
     },
     extensions: {
@@ -686,4 +705,5 @@ module.exports = {
   OPERATIONS,
   DEPRECATED_METHODS,
   PARAM_DESCRIPTIONS,
+  PARAM_ENUM_OVERRIDES,
 };

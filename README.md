@@ -152,10 +152,7 @@ Priority order is:
 3. manifest defaults
 4. raw OpenAPI examples
 
-Legacy Redocly behavior:
-
-- the legacy verification path still relies on `configure.ts` for auth and request shaping
-- canonical `/rpcs/...` and `/apis/...` routes are the only supported public route families
+Canonical `/rpcs/...` and `/apis/...` routes are the only supported public route families.
 
 ## Generating RPC Specs from nearcore
 
@@ -191,9 +188,10 @@ The generator:
 ### Adding a new RPC operation
 
 1. Add an entry to the `OPERATIONS` array in `scripts/nearcore-operation-map.js`
-2. Run `npm run generate-rpc`
-3. Review the generated YAML under `rpcs/<category>/`
-4. Run `npm run standalone:dev` and load the canonical route in the browser to verify the page renders correctly.
+2. If the operation's example must pin a historical record (a past block, chunk, tx, receipt, or epoch), add it to `ARCHIVAL_EXAMPLES` in `scripts/rpc-example-config.js` with a one-line reason. Do not point `servers:` at `archival-rpc` — that is contract data and the generator overwrites it.
+3. Run `npm run generate-rpc`
+4. Review the generated YAML under `rpcs/<category>/`
+5. Run `npm run standalone:dev` and load the canonical route in the browser to verify the page renders correctly.
 
 Some operations are `custom` type (not derived from nearcore), such as `metrics` and `latest_block`. These have hand-written YAML files that the generator preserves.
 
@@ -246,9 +244,11 @@ Operations are accessible at canonical pretty routes that mirror the YAML file l
 
 ## Server Endpoints
 
-Four RPC server URLs are configured in `rpcs/openapi.yaml`:
+All four RPC server URLs are declared by `DEFAULT_SERVERS` in `scripts/generate-from-nearcore.js`, which feeds both the aggregate `rpcs/openapi.yaml` and every generated leaf spec:
 - `rpc.mainnet.fastnear.com`, `rpc.testnet.fastnear.com`
 - `archival-rpc.mainnet.fastnear.com`, `archival-rpc.testnet.fastnear.com`
+
+Archival is an additional endpoint, not a replacement — every method is served by the standard RPC for recent data. Operations whose *examples* pin a record older than the standard RPC's ~29 hour retention window are listed in `ARCHIVAL_EXAMPLES` in `scripts/rpc-example-config.js`; that is what points the docs widget and the live audit at `archival-rpc`. See PORTAL_WORKFLOW.md → Archival Examples.
 
 ## Testing
 
@@ -261,7 +261,7 @@ Four RPC server URLs are configured in `rpcs/openapi.yaml`:
 - This repo validates generation and builds the standalone verification runtime, but it does not publish the public docs site. If `docs.fastnear.com` is stale after a push, the missing step is usually a `builder-docs` deployment, not anything in the generated `mike-docs` output.
 - Workspace stale-spec enforcement depends on the sibling service repos being present. In a standalone `mike-docs` checkout, `npm run check:external-openapi` skips those checks and CI validates the committed vendored `apis/<service>/` trees instead.
 - `npm run refresh-examples` mutates current-chain example values in several `rpcs/*.yaml` files. Those diffs are expected.
-- `scripts/rpc-example-config.js` is the shared source for curated static RPC params, manual per-network overrides, and the allowlisted placeholder follow-ups that still need real examples.
+- `scripts/rpc-example-config.js` is the shared source for curated static RPC params, manual per-network overrides, live-audit exclusions, the allowlisted placeholder follow-ups that still need real examples, and the per-operation archival declarations.
 - Docs-only or ingestion-only repos without a public HTTP surface are out of scope for the OpenAPI flow.
 
 ## Other Commands

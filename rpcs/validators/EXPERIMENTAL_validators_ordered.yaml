@@ -8,6 +8,10 @@ servers:
     description: Mainnet
   - url: "https://rpc.testnet.fastnear.com"
     description: Testnet
+  - url: "https://archival-rpc.mainnet.fastnear.com"
+    description: Mainnet Archival
+  - url: "https://archival-rpc.testnet.fastnear.com"
+    description: Testnet Archival
 paths:
   /:
     post:

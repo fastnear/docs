@@ -140,15 +140,46 @@ The vendored copy at `../fn/builder-docs/src/data/generatedFastnearPageModels.js
 
 - `metrics` on mainnet and testnet is modeled as HTTP `GET /metrics`, not JSON-RPC.
   It requires `FASTNEAR_API_KEY` for live validation, so unauthenticated audit runs will continue to report it as a tracked skip.
-- `light_client_proof` and `EXPERIMENTAL_light_client_proof` examples pin `type: receipt`.
-  Nearcore narrowed the enum to `[receipt]`; the generator, `scripts/refresh-examples.js`, `scripts/rpc-example-config.js`, and `MANUAL_RPC_EXAMPLE_OVERRIDES` are all aligned on `receipt` so a refresh does not regress. If nearcore ever widens the enum, these overrides need to be revisited in lockstep.
+- `light_client_proof` and `EXPERIMENTAL_light_client_proof` examples use `type: transaction`, matching their `transaction_hash` + `sender_id` fields (`type: receipt` would require `receipt_id` + `receiver_id`).
+  Nearcore's schemars annotation states the enum more narrowly than the running node accepts, so `PARAM_ENUM_OVERRIDES` in `scripts/nearcore-operation-map.js` widens it to `[transaction, receipt]`; without that the generated schema forbids the value its own example sends. Delete that entry once nearcore widens the enum upstream.
 - `view_global_contract_code` and `view_global_contract_code_by_account_id` on mainnet still need a curated account/hash pair.
   Testnet examples are verified; mainnet remains intentionally tracked until we confirm a real example that succeeds on load.
-- `scripts/rpc-example-config.js` is the shared source for curated static RPC params, manual per-network overrides, tracked follow-ups, and the small allowlist of known placeholder gaps that still need real curation.
+- `scripts/rpc-example-config.js` is the shared source for curated static RPC params (`CURATED_RPC_EXAMPLE_PARAMS`), manual per-network overrides (`MANUAL_RPC_EXAMPLE_OVERRIDES`), tracked follow-ups (`TRACKED_RPC_EXAMPLE_FOLLOWUPS`), live-audit exclusions (`AUDIT_SKIPS`), the allowlist of known placeholder gaps (`ALLOWED_RPC_PLACEHOLDERS`), and the per-operation archival declarations (`ARCHIVAL_EXAMPLES`) described below.
 - `broadcast_tx_async`, `broadcast_tx_commit`, and `send_tx` are intentionally excluded from the live audit.
   They require a freshly signed transaction, so the automated audit keeps them out of CI and treats them as manual-only validation.
 
+## Archival Examples
+
+Sixteen RPC operations document a *historical lookup*: their examples pin a
+specific past block, chunk, transaction, receipt, or epoch. The standard RPC
+retains roughly 113,750 blocks (~29 hours) and then drops them, so those pinned
+examples return `UNKNOWN_*` — or, for `tx_status`, hang for 50+ seconds rather
+than erroring. They are therefore executed against `archival-rpc`.
+
+This is declared in `ARCHIVAL_EXAMPLES` in `scripts/rpc-example-config.js`, not
+in the specs. The distinction matters:
+
+- **`servers:` is contract data.** It says where an operation lives, and every
+  one of these methods is served correctly by the standard RPC for recent data.
+  Leaf specs therefore declare all four endpoints, labelled `Mainnet`,
+  `Testnet`, `Mainnet Archival`, `Testnet Archival` — archival as an
+  *additional* endpoint, never as a replacement. Putting the archival host in
+  `servers:` alone would tell SDK generators, MCP tools, and agents reading the
+  spec that the method requires archival, which is false.
+- **The archival requirement belongs to the example**, so it is portal-owned.
+  `scripts/generate-page-models.js` applies it to `networks[].url` and adds
+  additive `archival` / `archivalReason` fields, which both runtimes surface as
+  a note under the endpoint. `scripts/audit-rpc-examples.js` applies the same
+  declaration when resolving its endpoint, so the live audit and the docs widget
+  never diverge.
+
+To add or remove one, edit `ARCHIVAL_EXAMPLES` and regenerate the page models.
+Do not touch `servers:` in a leaf spec.
+
 ## What Will Not Work
+
+- Hand-editing `servers:` (or any other top-level key) in `rpcs/<category>/*.yaml` is not durable.
+  `scripts/generate-from-nearcore.js` rebuilds each leaf spec from a fresh object literal, consulting the existing file only for `info.description`, `info.version`, the `JsonRpcResponse` schema, and the examples. Everything else is overwritten on the next `npm run generate-rpc`. Server declarations belong in `DEFAULT_SERVERS`; per-operation schema corrections belong in `scripts/nearcore-operation-map.js`.
 
 - Hand-editing vendored files under `apis/<service>/` is not durable.
   `npm run sync:apis` and `npm run lint` overwrite them from the owning service repo.
